@@ -27,57 +27,36 @@
   </script>
 
   <style>
-    /* Hilangkan background gelap & garis hitam dari SweetAlert2 */
-.swal2-popup .swal2-html-container,
-.swal2-popup .swal2-actions,
-.swal2-popup .swal2-validation-message {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Sembunyikan container HTML jika kosong */
-.swal2-html-container:empty {
-  display: none !important;
-}
-
-/* Hilangkan garis/border hitam bawaan SweetAlert2 */
-.swal2-popup {
-  border: none !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-}
+    <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
-    /* CSS ANIMASI DIALOG POP-UP MODAL */
-    .dialog-backdrop { transition: opacity 0.25s ease-out; }
-    .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
-    .dialog-hidden { visibility: hidden; pointer-events: none; }
-    .dialog-hidden .dialog-backdrop { opacity: 0; }
-    .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
-
-    /* STYLE DRAG & DROP & TOUCH HANDLES */
-    .drag-item {
-      cursor: grab;
-      touch-action: manipulation;
-      user-select: none;
-    }
-    .drag-item:active { cursor: grabbing; }
-    .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
-    .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
-
-    /* STYLE KOTAK MISTERI (BABAK 3) */
-    .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .box-card:hover:not(.opened) {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
-    }
-    #gameCanvas {
-      background: linear-gradient(to bottom, #0f172a, #1e1b4b);
-      border-radius: 12px;
-      cursor: pointer;
-      touch-action: none;
+    /* FIX SWETALERT2 LOADING: HILANGKAN KOTAK/GARIS HITAM KOSONG */
+    .swal2-popup .swal2-html-container,
+    .swal2-popup .swal2-actions,
+    .swal2-popup .swal2-validation-message {
+      background: transparent !important;
+      box-shadow: none !important;
     }
 
-    .swal2-radio {
+    /* Sembunyikan elemen container, radio, dan actions jika kosong */
+    .swal2-html-container:empty,
+    .swal2-radio:empty,
+    .swal2-actions:empty {
+      display: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      background: transparent !important;
+    }
+
+    /* Hilangkan border/garis bawaan popup SweetAlert2 */
+    .swal2-popup {
+      border: none !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* STYLE RADIO HANYA BERLAKU JIKA ADA ISINYA (NOT EMPTY) */
+    .swal2-radio:not(:empty) {
       background: #0f172a !important;
       border: 1px solid #334155 !important;
       border-radius: 12px !important;
@@ -110,12 +89,44 @@
       cursor: pointer !important;
       flex-shrink: 0 !important;
     }
+
+    /* CSS CHECKBOX GROUP BABAK 3 */
     .swal2-checkbox-group {
       display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px;
     }
     .swal2-checkbox-group label {
       background: #0f172a; border: 1px solid #334155; padding: 10px 14px;
       border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc;
+    }
+
+    /* CSS ANIMASI DIALOG POP-UP MODAL */
+    .dialog-backdrop { transition: opacity 0.25s ease-out; }
+    .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
+    .dialog-hidden { visibility: hidden; pointer-events: none; }
+    .dialog-hidden .dialog-backdrop { opacity: 0; }
+    .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
+
+    /* STYLE DRAG & DROP & TOUCH HANDLES */
+    .drag-item {
+      cursor: grab;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .drag-item:active { cursor: grabbing; }
+    .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
+    .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
+
+    /* STYLE KOTAK MISTERI (BABAK 3) */
+    .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .box-card:hover:not(.opened) {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+    }
+    #gameCanvas {
+      background: linear-gradient(to bottom, #0f172a, #1e1b4b);
+      border-radius: 12px;
+      cursor: pointer;
+      touch-action: none;
     }
   </style>
 </head>
@@ -860,7 +871,7 @@
       if (data.role === "admin") {
         document.getElementById("secLogin").classList.add("hidden");
         document.getElementById("secAdmin").classList.remove("hidden");
-        document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, Admin ${siswaCurrent.nama}!`;
+        document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, ${siswaCurrent.nama}!`;
         renderAdminTab(1);
       } else {
         initLoginBerandaSiswa();
@@ -1069,7 +1080,7 @@
         judulPanduanEl.innerText = "Panduan Pengerjaan Babak 1 (Tahap 1):";
         teksPanduanEl.innerHTML = `
           <ul class="list-disc list-inside space-y-1">
-            <li>Hapus <strong>5 tanggal pengecoh</strong> dengan menekan tombol sampah (<i class="fa-solid fa-trash-can text-rose-500"></i>).</li>
+            <li>Hapus <strong>5 tanggal yang tidak sesuai</strong> dengan menekan tombol sampah (<i class="fa-solid fa-trash-can text-rose-500"></i>).</li>
             <li>Geser & urutkan <strong>20 tanggal sisanya</strong> secara kronologis dari paling awal hingga paling akhir.</li>
             <li><strong>Sentuh & geser pada seluruh area kartu</strong> untuk memindahkan posisinya secara bebas.</li>
             <li>Setelah urutan tepat, klik tombol <strong>"Lanjut ke Tahap 2"</strong>.</li>
@@ -1205,7 +1216,7 @@
       const currentOrderIds = sortableInstance.toArray().map(id => parseInt(id));
       
       if (!isAdminPreviewMode && currentOrderIds.length > 20) {
-        tampilkanDialogNotif('PERHATIAN', `Masih ada ${currentOrderIds.length - 20} tanggal pengecoh! Hapus tanggal yang tidak berkaitan hingga tersisa 20 tanggal.`, 'warning');
+        tampilkanDialogNotif('PERHATIAN', `Masih ada ${currentOrderIds.length - 20} tanggal yang tidak berkaitan! Hapus tanggal tersebut hingga tersisa 20 tanggal.`, 'warning');
         return;
       }
 
