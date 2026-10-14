@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kuis Pendidikan Pancasila Bab 1 Kelas X</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .dialog-backdrop { transition: opacity 0.25s ease-out; }
+    .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
+    .dialog-hidden { visibility: hidden; pointer-events: none; }
+    .dialog-hidden .dialog-backdrop { opacity: 0; }
+    .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
+    .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
+    .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
+    .touch-handle { touch-action: none; }
+    .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .box-card:hover:not(.opened) { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
+    #gameCanvas { background: linear-gradient(to bottom, #0f172a, #1e1b4b); border-radius: 12px; cursor: pointer; touch-action: none; }
+    .swal2-radio { background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 12px !important; padding: 16px !important; display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; margin-top: 15px !important; }
+    .swal2-radio label { color: #f8fafc !important; font-size: 0.9rem !important; text-align: left !important; cursor: pointer !important; display: flex !important; align-items: center !important; gap: 12px !important; width: 100% !important; padding: 10px 14px !important; border-radius: 8px !important; background: #1e293b !important; transition: background 0.2s !important; }
+    .swal2-radio label:hover { background: #334155 !important; }
+    .swal2-radio input[type="radio"] { margin: 0 !important; accent-color: #6366f1 !important; transform: scale(1.2) !important; cursor: pointer !important; flex-shrink: 0 !important; }
+    .swal2-checkbox-group { display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px; }
+    .swal2-checkbox-group label { background: #0f172a; border: 1px solid #334155; padding: 10px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased relative text-base">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl font-black shadow-md shadow-blue-500/20">🇮🇩</div>
+        <div>
+          <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Pendidikan Pancasila</h1>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">Evaluasi Bab 1 • Kelas X</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-bold border border-emerald-200">
+          <i class="fa-solid fa-shield-halved text-emerald-500"></i> <span class="hidden sm:inline">Target Lolos:</span> 85%
+        </span>
+        <button id="navBtnBeranda" onclick="kembaliKeDashboard()" class="hidden px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-1.5">
+          <i class="fa-solid fa-house"></i> <span class="hidden sm:inline">Beranda</span>
+        </button>
+        <button id="navBtnLogout" onclick="logout()" class="hidden px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-1.5">
+          <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Keluar</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BANNER PRATINJAU ADMIN -->
+  <div id="bannerAdminPreview" class="hidden bg-amber-500 text-white px-4 py-2.5 text-xs sm:text-sm font-bold text-center flex justify-between items-center sticky top-[65px] z-30 shadow-md">
+    <div class="flex items-center gap-2 mx-auto">
+      <i class="fa-solid fa-eye text-base"></i>
+      <span>Mode Pratinjau Siswa (Pengawas Admin) — Semua Babak Terbuka</span>
+    </div>
+    <button onclick="kembaliKePanelAdmin()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold transition">Kembali ke Admin</button>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full flex flex-col justify-center">
+
+    <!-- 1. HALAMAN LOGIN -->
+    <section id="secLogin" class="max-w-md mx-auto w-full my-auto">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 border border-blue-100 shadow-inner">
+            <i class="fa-solid fa-user-lock"></i>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Portal Masuk Kuis</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Masukkan User ID & Kata Sandi Anda</p>
+        </div>
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">User ID / Username:</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm"><i class="fa-solid fa-user"></i></span>
+              <input type="text" id="inputNisn" placeholder="NISN Siswa / Username Admin" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Kata Sandi / Password:</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm"><i class="fa-solid fa-key"></i></span>
+              <input type="password" id="inputPassword" placeholder="Masukkan kata sandi" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+            </div>
+          </div>
+          <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center justify-center gap-2 mt-2">
+            <span>Masuk Sesi Kuis</span> <i class="fa-solid fa-right-to-bracket"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. BERANDA / DASHBOARD SISWA -->
+    <section id="secDashboard" class="hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-500/20 shrink-0">
+            <i class="fa-solid fa-user-graduate"></i>
+          </div>
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-widest text-blue-600 block" id="labelUserRole">Profil Siswa Aktif</span>
+            <h3 id="dispNama" class="font-extrabold text-slate-900 text-lg sm:text-xl leading-tight"></h3>
+            <div class="flex items-center gap-2 mt-1">
+              <span id="dispNisn" class="text-xs sm:text-sm font-mono font-semibold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-lg border border-slate-200"></span>
+              <span id="dispKelas" class="text-xs sm:text-sm font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg border border-blue-200"></span>
+            </div>
+          </div>
+        </div>
+        <div class="w-full md:w-auto bg-slate-50 border border-slate-200 rounded-2xl p-3 flex items-center justify-between md:justify-end gap-4">
+          <div class="text-left md:text-right">
+            <span class="text-xs font-bold text-slate-400 block uppercase">Total Progres Selesai</span>
+            <span id="txtTotalProgres" class="text-base font-black text-slate-800">0 / 5 Babak</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 font-black text-lg flex items-center justify-center border border-emerald-200">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID KOTAK KUIS 5 BABAK -->
+      <div>
+        <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-cubes text-blue-600"></i> Modul Kuis Babak Evaluasi
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="gridMenuBabak">
+          <!-- CARD BABAK 1 SAMPAI 5 TERBANGUN SECARA DINAMIS -->
+          <script>
+            for(let b=1; b<=5; b++){
+              const titles = ["Timeline Perumusan", "Gagasan Tokoh", "Kotak Misteri (50 Soal)", "Drag & Drop HOTS", "Esai Susun Kata"];
+              const icons = ["fa-timeline", "fa-users-gear", "fa-box-open", "fa-hand-pointer", "fa-puzzle-piece"];
+              document.write(`
+                <div id="cardBabak${b}" class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between transition">
+                  <div>
+                    <div class="flex justify-between items-center mb-3">
+                      <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid ${icons[b-1]}"></i>
+                      </div>
+                      <span id="badgeStatusB${b}" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 text-base mb-1">BABAK ${b}</h4>
+                    <p class="text-xs text-slate-500 font-semibold mb-4">${titles[b-1]}</p>
+                  </div>
+                  <div class="space-y-3 pt-3 border-t border-slate-200/60">
+                    <div class="bg-white p-2.5 rounded-xl space-y-1 text-xs">
+                      <div class="flex justify-between font-medium text-slate-500"><span>Nilai Akhir:</span><strong id="valScoreB${b}" class="text-slate-900 font-extrabold">--</strong></div>
+                      <div class="flex justify-between font-medium text-slate-500"><span>Percobaan:</span><strong id="valPercobaanB${b}" class="text-slate-700 font-bold">0x</strong></div>
+                    </div>
+                    <button id="btnActionB${b}" onclick="bukaBabak(${b})" class="w-full py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                      <span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+              `);
+            }
+          </script>
+        </div>
+      </div>
+
+      <!-- AREA SOAL KUIS -->
+      <div id="areaKuis" class="hidden bg-white border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-xl mt-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-4 mb-6">
+          <div>
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-600 block">Modul Evaluasi</span>
+            <h2 id="judulBabak" class="text-lg sm:text-2xl font-extrabold text-slate-900"></h2>
+          </div>
+          <span id="infoPercobaan" class="px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-rotate-right text-amber-500"></i> Percobaan Ke-1
+          </span>
+        </div>
+
+        <!-- PANDUAN PENGERJAAN -->
+        <div id="panduanBabak" class="bg-blue-50/80 border border-blue-200/80 rounded-2xl p-4 sm:p-5 mb-6">
+          <div class="flex items-center gap-2 mb-2 text-blue-900 font-extrabold text-sm sm:text-base border-b border-blue-200/60 pb-2">
+            <i class="fa-solid fa-circle-info text-blue-600 text-lg"></i>
+            <span id="judulPanduan">Panduan Pengerjaan Babak:</span>
+          </div>
+          <div id="teksPanduan" class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium"></div>
+        </div>
+
+        <div id="kontenBabak"></div>
+
+        <!-- CONTROLS FOOTER -->
+        <div id="footerControls" class="mt-8 flex justify-between items-center border-t border-slate-100 pt-6 gap-2">
+          <button onclick="kembaliKeDashboard()" class="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+          </button>
+          <button id="btnTahap2Next" onclick="lanjutKeTahap2Babak1()" class="hidden px-5 sm:px-7 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition flex items-center gap-2">
+            <span>Lanjut ke Tahap 2</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button id="btnKirimBabak" onclick="submitBabakCurrent()" class="px-5 sm:px-7 py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Kirim Jawaban ke Spreadsheet
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DASHBOARD MODE ADMIN -->
+    <section id="secAdmin" class="hidden space-y-6">
+      <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <span class="text-xs font-bold text-blue-400 uppercase tracking-widest block mb-1">Panel Pengawas / Admin Guru</span>
+          <h2 class="text-xl sm:text-2xl font-black" id="adminWelcomeTitle">Mode Admin</h2>
+          <p class="text-xs sm:text-sm text-slate-400">Pemeriksaan bank soal dan verifikasi kunci jawaban.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="lihatModeSiswaPreview()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs sm:text-sm font-extrabold rounded-xl transition flex items-center gap-2 shadow-lg">
+            <i class="fa-solid fa-eye"></i> Lihat Mode Siswa
+          </button>
+          <button onclick="logout()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-2">
+            <i class="fa-solid fa-right-from-bracket"></i> Keluar
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3" id="adminTabs">
+        <button onclick="renderAdminTab(1)" class="admin-tab-btn active px-4 py-2 bg-blue-600 text-white font-bold rounded-xl text-xs sm:text-sm transition">Babak 1</button>
+        <button onclick="renderAdminTab(2)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 2</button>
+        <button onclick="renderAdminTab(3)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 3</button>
+        <button onclick="renderAdminTab(4)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 4</button>
+        <button onclick="renderAdminTab(5)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 5</button>
+      </div>
+      <div id="adminContent" class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DIALOG NOTIFIKASI -->
+  <div id="dialogNotifikasiWrapper" class="fixed inset-0 z-50 flex items-center justify-center p-4 dialog-hidden">
+    <div onclick="tutupDialogNotifikasi()" class="dialog-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+    <div class="dialog-card bg-white rounded-3xl max-w-md w-full p-6 sm:p-10 text-center shadow-2xl relative z-10 border border-slate-100">
+      <div id="dialogIconContainer" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-5 sm:mb-6">
+        <div id="dialogIconInner"></div>
+      </div>
+      <h2 id="dialogTitle" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight mb-2 uppercase">NOTIFIKASI</h2>
+      <p id="dialogMessage" class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 max-w-xs mx-auto">Pesan detail.</p>
+      <button id="dialogBtnAction" onclick="tutupDialogNotifikasi()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition text-xs sm:text-sm">Tutup</button>
+    </div>
+  </div>
+
+  <!-- LOAD FILE SCRIPT LOGIKA UTAMA -->
+  <script src="script.js"></script>
+</body>
+</html>
