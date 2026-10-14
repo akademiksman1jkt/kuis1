@@ -5,53 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kuis Pendidikan Pancasila Bab 1 Kelas X</title>
   
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SweetAlert2 & Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- SortableJS untuk Drag and Drop Interaktif -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <!-- FontAwesome Icons & Plus Jakarta Sans Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    /* CSS ANIMASI DIALOG POP-UP MODAL */
     .dialog-backdrop { transition: opacity 0.25s ease-out; }
     .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
     .dialog-hidden { visibility: hidden; pointer-events: none; }
     .dialog-hidden .dialog-backdrop { opacity: 0; }
     .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
+
+    /* STYLE DRAG & DROP SERTA KURSOR */
+    .drag-item {
+      cursor: grab;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .drag-item:active { cursor: grabbing; }
     .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
     .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
-    .touch-handle { touch-action: none; }
+
+    /* STYLE KOTAK MISTERI (BABAK 3) */
     .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .box-card:hover:not(.opened) { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
-    #gameCanvas { background: linear-gradient(to bottom, #0f172a, #1e1b4b); border-radius: 12px; cursor: pointer; touch-action: none; }
-    .swal2-radio { background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 12px !important; padding: 16px !important; display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; margin-top: 15px !important; }
-    .swal2-radio label { color: #f8fafc !important; font-size: 0.9rem !important; text-align: left !important; cursor: pointer !important; display: flex !important; align-items: center !important; gap: 12px !important; width: 100% !important; padding: 10px 14px !important; border-radius: 8px !important; background: #1e293b !important; transition: background 0.2s !important; }
+    .box-card:hover:not(.opened) {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+    }
+    #gameCanvas {
+      background: linear-gradient(to bottom, #0f172a, #1e1b4b);
+      border-radius: 12px;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .swal2-radio {
+      background: #0f172a !important;
+      border: 1px solid #334155 !important;
+      border-radius: 12px !important;
+      padding: 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 12px !important;
+      margin-top: 15px !important;
+    }
+    .swal2-radio label {
+      color: #f8fafc !important;
+      font-size: 0.9rem !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      width: 100% !important;
+      padding: 10px 14px !important;
+      border-radius: 8px !important;
+      background: #1e293b !important;
+      transition: background 0.2s !important;
+    }
     .swal2-radio label:hover { background: #334155 !important; }
-    .swal2-radio input[type="radio"] { margin: 0 !important; accent-color: #6366f1 !important; transform: scale(1.2) !important; cursor: pointer !important; flex-shrink: 0 !important; }
-    .swal2-checkbox-group { display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px; }
-    .swal2-checkbox-group label { background: #0f172a; border: 1px solid #334155; padding: 10px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc; }
+    .swal2-radio input[type="radio"] {
+      margin: 0 !important;
+      accent-color: #6366f1 !important;
+      transform: scale(1.2) !important;
+      cursor: pointer !important;
+      flex-shrink: 0 !important;
+    }
+    .swal2-checkbox-group {
+      display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px;
+    }
+    .swal2-checkbox-group label {
+      background: #0f172a; border: 1px solid #334155; padding: 10px 14px;
+      border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased relative text-base">
 
-  <!-- NAVBAR -->
-  <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+  <!-- NAVBAR RESPONSIF (DISEMBUNYIKAN SAAT LOGIN, HANYA MUNCUL SETELAH LOGIN) -->
+  <nav id="mainNavbar" class="hidden bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl font-black shadow-md shadow-blue-500/20">🇮🇩</div>
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl font-black shadow-md shadow-blue-500/20">
+          🇮🇩
+        </div>
         <div>
           <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Pendidikan Pancasila</h1>
           <p class="text-xs sm:text-sm text-slate-500 font-medium">Evaluasi Bab 1 • Kelas X</p>
         </div>
       </div>
+
+      <!-- KONTROL NAVIGASI TERPADU -->
       <div class="flex items-center gap-2 sm:gap-3">
         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-bold border border-emerald-200">
           <i class="fa-solid fa-shield-halved text-emerald-500"></i> <span class="hidden sm:inline">Target Lolos:</span> 85%
         </span>
+
         <button id="navBtnBeranda" onclick="kembaliKeDashboard()" class="hidden px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-1.5">
           <i class="fa-solid fa-house"></i> <span class="hidden sm:inline">Beranda</span>
         </button>
+
         <button id="navBtnLogout" onclick="logout()" class="hidden px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-1.5">
           <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Keluar</span>
         </button>
@@ -59,18 +133,21 @@
     </div>
   </nav>
 
-  <!-- BANNER PRATINJAU ADMIN -->
+  <!-- BANNER NOTIFIKASI PRATINJAU ADMIN -->
   <div id="bannerAdminPreview" class="hidden bg-amber-500 text-white px-4 py-2.5 text-xs sm:text-sm font-bold text-center flex justify-between items-center sticky top-[65px] z-30 shadow-md">
     <div class="flex items-center gap-2 mx-auto">
       <i class="fa-solid fa-eye text-base"></i>
-      <span>Mode Pratinjau Siswa (Pengawas Admin) — Semua Babak Terbuka</span>
+      <span>Mode Pratinjau Siswa (Pengawas Admin) — Semua Babak Terbuka Tanpa Wajib Mengisi Jawaban</span>
     </div>
-    <button onclick="kembaliKePanelAdmin()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold transition">Kembali ke Admin</button>
+    <button onclick="kembaliKePanelAdmin()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold transition">
+      Kembali ke Panel Admin
+    </button>
   </div>
 
+  <!-- CONTAINER UTAMA -->
   <main class="max-w-6xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full flex flex-col justify-center">
 
-    <!-- 1. HALAMAN LOGIN -->
+    <!-- 1. HALAMAN LOGIN (BERSIH TANPA NAVBAR) -->
     <section id="secLogin" class="max-w-md mx-auto w-full my-auto">
       <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
         <div class="text-center mb-6">
@@ -80,107 +157,239 @@
           <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Portal Masuk Kuis</h2>
           <p class="text-xs sm:text-sm text-slate-500 mt-1">Masukkan User ID & Kata Sandi Anda</p>
         </div>
+
         <form onsubmit="handleLogin(event)" class="space-y-4">
           <div>
             <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">User ID / Username:</label>
             <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm"><i class="fa-solid fa-user"></i></span>
-              <input type="text" id="inputNisn" placeholder="NISN Siswa / Username Admin" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">
+                <i class="fa-solid fa-user"></i>
+              </span>
+              <input type="text" id="inputNisn" placeholder="NISN Siswa / Username Admin" required
+                     class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm sm:text-base font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             </div>
           </div>
+
           <div>
             <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Kata Sandi / Password:</label>
             <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm"><i class="fa-solid fa-key"></i></span>
-              <input type="password" id="inputPassword" placeholder="Masukkan kata sandi" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">
+                <i class="fa-solid fa-key"></i>
+              </span>
+              <input type="password" id="inputPassword" placeholder="Masukkan kata sandi" required
+                     class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm sm:text-base focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             </div>
           </div>
-          <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center justify-center gap-2 mt-2">
-            <span>Masuk Sesi Kuis</span> <i class="fa-solid fa-right-to-bracket"></i>
+
+          <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-blue-500/20 transition transform active:scale-95 flex items-center justify-center gap-2 mt-2">
+            <span>Masuk Sesi Kuis</span>
+            <i class="fa-solid fa-right-to-bracket"></i>
           </button>
         </form>
       </div>
     </section>
 
-    <!-- 2. BERANDA / DASHBOARD SISWA -->
+    <!-- 2. HALAMAN BERANDA / DASHBOARD SISWA -->
     <section id="secDashboard" class="hidden space-y-6">
-      <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="flex items-center gap-4">
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-500/20 shrink-0">
-            <i class="fa-solid fa-user-graduate"></i>
+      
+      <!-- GRID KOTAK MENU BABAK KUIS & IDENTITAS (WADAH CONTAINER) -->
+      <div id="containerMenuBabak" class="space-y-6">
+        <!-- IDENTITAS SISWA TERSTRUKTUR -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-500/20 shrink-0">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-widest text-blue-600 block" id="labelUserRole">Profil Siswa Aktif</span>
+              <h3 id="dispNama" class="font-extrabold text-slate-900 text-lg sm:text-xl leading-tight"></h3>
+              <div class="flex items-center gap-2 mt-1">
+                <span id="dispNisn" class="text-xs sm:text-sm font-mono font-semibold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-lg border border-slate-200"></span>
+                <span id="dispKelas" class="text-xs sm:text-sm font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg border border-blue-200"></span>
+              </div>
+            </div>
           </div>
-          <div>
-            <span class="text-xs font-extrabold uppercase tracking-widest text-blue-600 block" id="labelUserRole">Profil Siswa Aktif</span>
-            <h3 id="dispNama" class="font-extrabold text-slate-900 text-lg sm:text-xl leading-tight"></h3>
-            <div class="flex items-center gap-2 mt-1">
-              <span id="dispNisn" class="text-xs sm:text-sm font-mono font-semibold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-lg border border-slate-200"></span>
-              <span id="dispKelas" class="text-xs sm:text-sm font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg border border-blue-200"></span>
+
+          <div class="w-full md:w-auto bg-slate-50 border border-slate-200 rounded-2xl p-3 flex items-center justify-between md:justify-end gap-4">
+            <div class="text-left md:text-right">
+              <span class="text-xs font-bold text-slate-400 block uppercase">Total Progres Selesai</span>
+              <span id="txtTotalProgres" class="text-base font-black text-slate-800">0 / 5 Babak</span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 font-black text-lg flex items-center justify-center border border-emerald-200">
+              <i class="fa-solid fa-chart-line"></i>
             </div>
           </div>
         </div>
-        <div class="w-full md:w-auto bg-slate-50 border border-slate-200 rounded-2xl p-3 flex items-center justify-between md:justify-end gap-4">
-          <div class="text-left md:text-right">
-            <span class="text-xs font-bold text-slate-400 block uppercase">Total Progres Selesai</span>
-            <span id="txtTotalProgres" class="text-base font-black text-slate-800">0 / 5 Babak</span>
-          </div>
-          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 font-black text-lg flex items-center justify-center border border-emerald-200">
-            <i class="fa-solid fa-chart-line"></i>
-          </div>
-        </div>
-      </div>
 
-      <!-- GRID KOTAK KUIS 5 BABAK -->
-      <div>
         <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-4 flex items-center gap-2">
           <i class="fa-solid fa-cubes text-blue-600"></i> Modul Kuis Babak Evaluasi
         </h3>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="gridMenuBabak">
-          <!-- CARD BABAK 1 SAMPAI 5 TERBANGUN SECARA DINAMIS -->
-          <script>
-            for(let b=1; b<=5; b++){
-              const titles = ["Timeline Perumusan", "Gagasan Tokoh", "Kotak Misteri (50 Soal)", "Drag & Drop HOTS", "Esai Susun Kata"];
-              const icons = ["fa-timeline", "fa-users-gear", "fa-box-open", "fa-hand-pointer", "fa-puzzle-piece"];
-              document.write(`
-                <div id="cardBabak${b}" class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between transition">
-                  <div>
-                    <div class="flex justify-between items-center mb-3">
-                      <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg font-bold">
-                        <i class="fa-solid ${icons[b-1]}"></i>
-                      </div>
-                      <span id="badgeStatusB${b}" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
-                    </div>
-                    <h4 class="font-black text-slate-900 text-base mb-1">BABAK ${b}</h4>
-                    <p class="text-xs text-slate-500 font-semibold mb-4">${titles[b-1]}</p>
-                  </div>
-                  <div class="space-y-3 pt-3 border-t border-slate-200/60">
-                    <div class="bg-white p-2.5 rounded-xl space-y-1 text-xs">
-                      <div class="flex justify-between font-medium text-slate-500"><span>Nilai Akhir:</span><strong id="valScoreB${b}" class="text-slate-900 font-extrabold">--</strong></div>
-                      <div class="flex justify-between font-medium text-slate-500"><span>Percobaan:</span><strong id="valPercobaanB${b}" class="text-slate-700 font-bold">0x</strong></div>
-                    </div>
-                    <button id="btnActionB${b}" onclick="bukaBabak(${b})" class="w-full py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
-                      <span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                  </div>
+          <!-- CARD BABAK 1 -->
+          <div id="cardBabak1" class="bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition group">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+                  <i class="fa-solid fa-timeline"></i>
                 </div>
-              `);
-            }
-          </script>
+                <span id="badgeStatusB1" class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Terbuka</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base mb-1">BABAK 1</h4>
+              <p class="text-xs text-slate-500 font-semibold mb-4">Timeline Perumusan</p>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-slate-100">
+              <div class="bg-slate-50 p-2.5 rounded-xl space-y-1 text-xs">
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Nilai Akhir:</span>
+                  <strong id="valScoreB1" class="text-slate-900 font-extrabold">--</strong>
+                </div>
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Percobaan:</span>
+                  <strong id="valPercobaanB1" class="text-slate-700 font-bold">0x</strong>
+                </div>
+              </div>
+              <button onclick="bukaBabak(1)" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+                <span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- CARD BABAK 2 -->
+          <div id="cardBabak2" class="bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg font-bold">
+                  <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <span id="badgeStatusB2" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-base mb-1">BABAK 2</h4>
+              <p class="text-xs text-slate-500 font-semibold mb-4">Gagasan Tokoh</p>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-slate-200/60">
+              <div class="bg-white p-2.5 rounded-xl space-y-1 text-xs">
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Nilai Akhir:</span>
+                  <strong id="valScoreB2" class="text-slate-900 font-extrabold">--</strong>
+                </div>
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Percobaan:</span>
+                  <strong id="valPercobaanB2" class="text-slate-700 font-bold">0x</strong>
+                </div>
+              </div>
+              <button id="btnActionB2" disabled onclick="bukaBabak(2)" class="w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                <span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- CARD BABAK 3 -->
+          <div id="cardBabak3" class="bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg font-bold">
+                  <i class="fa-solid fa-box-open"></i>
+                </div>
+                <span id="badgeStatusB3" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-base mb-1">BABAK 3</h4>
+              <p class="text-xs text-slate-500 font-semibold mb-4">Kotak Misteri</p>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-slate-200/60">
+              <div class="bg-white p-2.5 rounded-xl space-y-1 text-xs">
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Nilai Akhir:</span>
+                  <strong id="valScoreB3" class="text-slate-900 font-extrabold">--</strong>
+                </div>
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Percobaan:</span>
+                  <strong id="valPercobaanB3" class="text-slate-700 font-bold">0x</strong>
+                </div>
+              </div>
+              <button id="btnActionB3" disabled onclick="bukaBabak(3)" class="w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                <span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- CARD BABAK 4 -->
+          <div id="cardBabak4" class="bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg font-bold">
+                  <i class="fa-solid fa-hand-pointer"></i>
+                </div>
+                <span id="badgeStatusB4" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-base mb-1">BABAK 4</h4>
+              <p class="text-xs text-slate-500 font-semibold mb-4">Drag & Drop HOTS</p>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-slate-200/60">
+              <div class="bg-white p-2.5 rounded-xl space-y-1 text-xs">
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Nilai Akhir:</span>
+                  <strong id="valScoreB4" class="text-slate-900 font-extrabold">--</strong>
+                </div>
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Percobaan:</span>
+                  <strong id="valPercobaanB4" class="text-slate-700 font-bold">0x</strong>
+                </div>
+              </div>
+              <button id="btnActionB4" disabled onclick="bukaBabak(4)" class="w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                <span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- CARD BABAK 5 -->
+          <div id="cardBabak5" class="bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition sm:col-span-2 md:col-span-1">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg font-bold">
+                  <i class="fa-solid fa-puzzle-piece"></i>
+                </div>
+                <span id="badgeStatusB5" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-base mb-1">BABAK 5</h4>
+              <p class="text-xs text-slate-500 font-semibold mb-4">Esai Susun Kata</p>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-slate-200/60">
+              <div class="bg-white p-2.5 rounded-xl space-y-1 text-xs">
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Nilai Akhir:</span>
+                  <strong id="valScoreB5" class="text-slate-900 font-extrabold">--</strong>
+                </div>
+                <div class="flex justify-between font-medium text-slate-500">
+                  <span>Percobaan:</span>
+                  <strong id="valPercobaanB5" class="text-slate-700 font-bold">0x</strong>
+                </div>
+              </div>
+              <button id="btnActionB5" disabled onclick="bukaBabak(5)" class="w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                <span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- AREA SOAL KUIS -->
-      <div id="areaKuis" class="hidden bg-white border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-xl mt-6">
+      <!-- AREA SOAL KUIS LAYAR PENUH (KOTAK BERANDA AKAN HILANG SAAT DIBUKA) -->
+      <div id="areaKuis" class="hidden bg-white border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-xl shadow-slate-200/50">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-4 mb-6">
           <div>
             <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-600 block">Modul Evaluasi</span>
             <h2 id="judulBabak" class="text-lg sm:text-2xl font-extrabold text-slate-900"></h2>
           </div>
-          <span id="infoPercobaan" class="px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+          <span id="infoPercobaan" class="px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-bold text-xs sm:text-sm flex items-center gap-1.5 self-start sm:self-auto">
             <i class="fa-solid fa-rotate-right text-amber-500"></i> Percobaan Ke-1
           </span>
         </div>
 
-        <!-- PANDUAN PENGERJAAN -->
         <div id="panduanBabak" class="bg-blue-50/80 border border-blue-200/80 rounded-2xl p-4 sm:p-5 mb-6">
           <div class="flex items-center gap-2 mb-2 text-blue-900 font-extrabold text-sm sm:text-base border-b border-blue-200/60 pb-2">
             <i class="fa-solid fa-circle-info text-blue-600 text-lg"></i>
@@ -191,14 +400,15 @@
 
         <div id="kontenBabak"></div>
 
-        <!-- CONTROLS FOOTER -->
         <div id="footerControls" class="mt-8 flex justify-between items-center border-t border-slate-100 pt-6 gap-2">
           <button onclick="kembaliKeDashboard()" class="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
             <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
           </button>
+          
           <button id="btnTahap2Next" onclick="lanjutKeTahap2Babak1()" class="hidden px-5 sm:px-7 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition flex items-center gap-2">
             <span>Lanjut ke Tahap 2</span> <i class="fa-solid fa-arrow-right"></i>
           </button>
+
           <button id="btnKirimBabak" onclick="submitBabakCurrent()" class="px-5 sm:px-7 py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center gap-2">
             <i class="fa-solid fa-paper-plane"></i> Kirim Jawaban ke Spreadsheet
           </button>
@@ -211,44 +421,489 @@
       <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <span class="text-xs font-bold text-blue-400 uppercase tracking-widest block mb-1">Panel Pengawas / Admin Guru</span>
-          <h2 class="text-xl sm:text-2xl font-black" id="adminWelcomeTitle">Mode Admin</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Pemeriksaan bank soal dan verifikasi kunci jawaban.</p>
+          <h2 class="text-xl sm:text-2xl font-black" id="adminWelcomeTitle">Mode Admin: Bank Soal & Pratinjau</h2>
+          <p class="text-xs sm:text-sm text-slate-400">Pemeriksaan struktur bentuk soal dan verifikasi kunci jawaban kuis.</p>
         </div>
-        <div class="flex items-center gap-2">
+
+        <div class="flex items-center gap-2 self-end sm:self-auto">
           <button onclick="lihatModeSiswaPreview()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs sm:text-sm font-extrabold rounded-xl transition flex items-center gap-2 shadow-lg">
             <i class="fa-solid fa-eye"></i> Lihat Mode Siswa
           </button>
+
           <button onclick="logout()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-2">
             <i class="fa-solid fa-right-from-bracket"></i> Keluar
           </button>
         </div>
       </div>
+
       <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3" id="adminTabs">
-        <button onclick="renderAdminTab(1)" class="admin-tab-btn active px-4 py-2 bg-blue-600 text-white font-bold rounded-xl text-xs sm:text-sm transition">Babak 1</button>
-        <button onclick="renderAdminTab(2)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 2</button>
-        <button onclick="renderAdminTab(3)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 3</button>
-        <button onclick="renderAdminTab(4)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 4</button>
-        <button onclick="renderAdminTab(5)" class="admin-tab-btn px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 5</button>
+        <button onclick="renderAdminTab(1)" class="admin-tab-btn active px-4 py-2 bg-blue-600 text-white font-bold rounded-xl text-xs sm:text-sm transition">Babak 1 (Timeline)</button>
+        <button onclick="renderAdminTab(2)" class="admin-tab-btn px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 2 (Gagasan)</button>
+        <button onclick="renderAdminTab(3)" class="admin-tab-btn px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 3 (Kotak Misteri)</button>
+        <button onclick="renderAdminTab(4)" class="admin-tab-btn px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 4 (Drag & Drop HOTS)</button>
+        <button onclick="renderAdminTab(5)" class="admin-tab-btn px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition">Babak 5 (Esai)</button>
       </div>
+
       <div id="adminContent" class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4"></div>
     </section>
 
   </main>
 
-  <!-- MODAL DIALOG NOTIFIKASI -->
-  <div id="dialogNotifikasiWrapper" class="fixed inset-0 z-50 flex items-center justify-center p-4 dialog-hidden">
-    <div onclick="tutupDialogNotifikasi()" class="dialog-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-    <div class="dialog-card bg-white rounded-3xl max-w-md w-full p-6 sm:p-10 text-center shadow-2xl relative z-10 border border-slate-100">
-      <div id="dialogIconContainer" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-5 sm:mb-6">
-        <div id="dialogIconInner"></div>
+  <!-- MODAL GAME MISTERI (UNTUK BABAK 3) -->
+  <div id="gameModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="relative bg-slate-800 p-6 rounded-2xl max-w-4xl w-full border border-indigo-500/30 text-center shadow-2xl overflow-hidden text-white">
+      
+      <div id="gameStartOverlay" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center p-6 z-20">
+        <div id="gameIcon" class="text-6xl mb-2 animate-bounce">🔥</div>
+        <h3 id="overlayTitle" class="text-2xl md:text-3xl font-black text-yellow-400 mb-2">TANTANGAN MINI GAME!</h3>
+        
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 max-w-lg mb-6 text-left shadow-inner">
+          <h4 class="text-amber-400 font-bold text-sm uppercase tracking-wider mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info"></i> Cara Bermain (Tutorial):
+          </h4>
+          <p id="overlayTutorial" class="text-slate-300 text-sm leading-relaxed">
+            Ikuti petunjuk di layar untuk menyelesaikan mini-game ini.
+          </p>
+        </div>
+
+        <button onclick="runMiniGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-3.5 px-8 rounded-full text-lg shadow-xl hover:shadow-emerald-500/30 transform transition hover:scale-105 active:scale-95 flex items-center gap-3 cursor-pointer">
+          <i class="fa-solid fa-play text-xl"></i> Mulai Main (Durasi 30 Detik)
+        </button>
       </div>
-      <h2 id="dialogTitle" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight mb-2 uppercase">NOTIFIKASI</h2>
-      <p id="dialogMessage" class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 max-w-xs mx-auto">Pesan detail.</p>
-      <button id="dialogBtnAction" onclick="tutupDialogNotifikasi()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition text-xs sm:text-sm">Tutup</button>
+
+      <h2 id="gameTitle" class="text-2xl md:text-3xl font-bold text-yellow-400 mb-1">🎮 TANTANGAN MINI-GAME!</h2>
+      <p id="gameDesc" class="text-slate-300 text-sm md:text-base mb-3">Selesaikan tantangan!</p>
+      
+      <div class="flex justify-between items-center px-4 mb-3 text-base md:text-lg font-bold">
+        <span class="text-emerald-400">Target: <span id="gameTarget">0/12</span></span>
+        <span id="livesContainer" class="hidden text-rose-400">Nyawa: <span id="livesDisplay">❤️❤️❤️</span></span>
+        <span class="text-rose-400">Sisa Waktu: <span id="gameTimer">30</span>s</span>
+      </div>
+
+      <div class="relative w-full max-w-[800px] mx-auto">
+        <canvas id="gameCanvas" width="800" height="500" class="w-full h-auto mx-auto border-2 border-indigo-500/50 shadow-inner rounded-xl"></canvas>
+        
+        <div id="typingContainer" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden flex gap-2 w-11/12 max-w-md z-10">
+          <input type="text" id="typingInput" placeholder="Ketik kata di atas..." class="w-full px-4 py-3 bg-slate-900/90 border-2 border-yellow-400 rounded-xl text-yellow-300 font-bold text-xl uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-2xl">
+          <button onclick="checkTypedWord()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg flex items-center justify-center">
+            <i class="fa-solid fa-paper-plane text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="gameControls" class="mt-3 flex justify-center gap-3 hidden">
+        <button onclick="handleControl('left')" class="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-arrow-left"></i> Kiri</button>
+        <button onclick="handleControl('rotate')" class="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-rotate-right"></i> Putar</button>
+        <button onclick="handleControl('right')" class="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-arrow-right"></i> Kanan</button>
+        <button onclick="handleControl('down')" class="bg-emerald-600 hover:bg-emerald-700 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-arrow-down"></i> Jatuh</button>
+      </div>
     </div>
   </div>
 
-  <!-- LOAD FILE SCRIPT LOGIKA UTAMA -->
-  <script src="script.js"></script>
+  <!-- MODAL DIALOG NOTIFIKASI -->
+  <div id="dialogNotifikasiWrapper" class="fixed inset-0 z-50 flex items-center justify-center p-4 dialog-hidden">
+    <div onclick="tutupDialogNotifikasi()" class="dialog-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+    <div class="dialog-card bg-white rounded-3xl max-w-[92vw] sm:max-w-md w-full p-6 sm:p-10 text-center shadow-2xl relative z-10 border border-slate-100">
+      <div id="dialogIconContainer" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-5 sm:mb-6">
+        <div id="dialogIconInner"></div>
+      </div>
+      <h2 id="dialogTitle" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight mb-2 sm:mb-3 uppercase">JUDUL NOTIFIKASI</h2>
+      <p id="dialogMessage" class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 max-w-xs mx-auto">Pesan informasi detail.</p>
+      <button id="dialogBtnAction" onclick="tutupDialogNotifikasi()" class="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition duration-200 text-xs sm:text-sm">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjVVRr5QAeZQXD18eKIjlrj-dU-Fuk6xPGTuElMyIaTkR08L5idRVhOtd8aSczXKGG8g/exec";
+
+    let siswaCurrent = { nisn: "", nama: "", role: "siswa", kelas: "X-1" };
+    let isAdminPreviewMode = false;
+    let babakActive = 1;
+    let babak1SubTahap = 1; 
+
+    let rekapSiswa = {
+      1: { percobaan: 0, skor: null, status: 'terbuka' },
+      2: { percobaan: 0, skor: null, status: 'terkunci' },
+      3: { percobaan: 0, skor: null, status: 'terkunci' },
+      4: { percobaan: 0, skor: null, status: 'terkunci' },
+      5: { percobaan: 0, skor: null, status: 'terkunci' }
+    };
+
+    let onDialogConfirmCallback = null;
+    let sortableInstance = null;
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+
+      if (type === 'open') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.2);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        osc.start(now); osc.stop(now + 0.2);
+      } else if (type === 'win') {
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+          const noteOsc = audioCtx.createOscillator(); const noteGain = audioCtx.createGain();
+          noteOsc.connect(noteGain); noteOsc.connect(audioCtx.destination);
+          noteOsc.frequency.setValueAtTime(freq, now + i * 0.08); noteGain.gain.setValueAtTime(0.2, now + i * 0.08);
+          noteGain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.25);
+          noteOsc.start(now + i * 0.08); noteOsc.stop(now + i * 0.08 + 0.25);
+        });
+      } else if (type === 'fail') {
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+        gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now); osc.stop(now + 0.4);
+      } else if (type === 'pop') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.start(now); osc.stop(now + 0.05);
+      }
+    }
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function tampilkanDialogNotif(judul, pesan, jenis = 'error', teksTombol = 'Tutup', onConfirm = null) {
+      document.getElementById('dialogTitle').innerText = judul;
+      document.getElementById('dialogMessage').innerText = pesan;
+      document.getElementById('dialogBtnAction').innerText = teksTombol;
+      onDialogConfirmCallback = onConfirm;
+
+      const container = document.getElementById('dialogIconContainer');
+      const inner = document.getElementById('dialogIconInner');
+
+      if (jenis === 'error') {
+        container.className = "w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-red-400 flex items-center justify-center mx-auto mb-5 sm:mb-6 text-red-500";
+        inner.innerHTML = `<svg class="w-10 h-10 sm:w-12 sm:h-12 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>`;
+      } else if (jenis === 'warning') {
+        container.className = "w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-amber-400 flex items-center justify-center mx-auto mb-5 sm:mb-6 text-amber-500";
+        inner.innerHTML = `<svg class="w-10 h-10 sm:w-12 sm:h-12 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
+      } else {
+        container.className = "w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-400 flex items-center justify-center mx-auto mb-5 sm:mb-6 text-blue-500";
+        inner.innerHTML = `<svg class="w-10 h-10 sm:w-12 sm:h-12 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+      }
+
+      document.getElementById('dialogNotifikasiWrapper').classList.remove('dialog-hidden');
+    }
+
+    function tutupDialogNotifikasi() {
+      document.getElementById('dialogNotifikasiWrapper').classList.add('dialog-hidden');
+      if (typeof onDialogConfirmCallback === 'function') {
+        onDialogConfirmCallback();
+        onDialogConfirmCallback = null;
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById("inputNisn").value.trim();
+      const passwordInput = document.getElementById("inputPassword").value.trim();
+
+      Swal.fire({ title: "Memeriksa Akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+      const payload = { action: "login", username: usernameInput, password: passwordInput };
+
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        Swal.close();
+        if (data.status === "success") {
+          siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
+
+          if (data.role === "admin") {
+            document.getElementById("secLogin").classList.add("hidden");
+            document.getElementById("secAdmin").classList.remove("hidden");
+            document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, Admin ${siswaCurrent.nama}!`;
+            renderAdminTab(1);
+          } else {
+            initLoginBerandaSiswa();
+          }
+        } else {
+          tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
+        }
+      })
+      .catch(() => {
+        Swal.close();
+        if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
+          siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
+          document.getElementById("secLogin").classList.add("hidden");
+          document.getElementById("secAdmin").classList.remove("hidden");
+          renderAdminTab(1);
+        } else {
+          siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
+          initLoginBerandaSiswa();
+        }
+      });
+    }
+
+    function initLoginBerandaSiswa() {
+      document.getElementById("labelUserRole").innerText = "Profil Siswa Aktif";
+      document.getElementById("dispNama").innerText = siswaCurrent.nama;
+      document.getElementById("dispNisn").innerText = `NISN: ${siswaCurrent.nisn}`;
+      document.getElementById("dispKelas").innerText = `Kelas: ${siswaCurrent.kelas}`;
+
+      // BUKA NAVBAR UTAMA SETELAH LOGIN BERHASIL
+      document.getElementById("mainNavbar").classList.remove("hidden");
+      document.getElementById("navBtnBeranda").classList.remove("hidden");
+      document.getElementById("navBtnLogout").classList.remove("hidden");
+
+      document.getElementById("secLogin").classList.add("hidden");
+      document.getElementById("secDashboard").classList.remove("hidden");
+
+      updateBerandaCardsUI();
+    }
+    /* ==========================================================================
+       KELANJUTAN SCRIPT.JS - LOGIKA LENGKAP KUIS, TRANSISI & MINI GAME
+       ========================================================================== */
+
+    function updateBerandaCardsUI() {
+      isAdminPreviewMode = false;
+      document.getElementById("bannerAdminPreview").classList.add("hidden");
+
+      let totalPassed = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        const item = rekapSiswa[i];
+        const card = document.getElementById(`cardBabak${i}`);
+        const badge = document.getElementById(`badgeStatusB${i}`);
+        const valScore = document.getElementById(`valScoreB${i}`);
+        const valPercobaan = document.getElementById(`valPercobaanB${i}`);
+        const btnAction = document.getElementById(`btnActionB${i}`);
+
+        if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
+        if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
+
+        if (item.status === 'lolos') {
+          totalPassed++;
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
+            badge.innerText = "🎉 Lolos (≥85%)";
+          }
+          if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+          if (btnAction && i > 1) {
+            btnAction.disabled = false;
+            btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
+            btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
+          }
+        } else if (item.status === 'terbuka') {
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
+            badge.innerText = "Terbuka";
+          }
+          if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+          if (btnAction && i > 1) {
+            btnAction.disabled = false;
+            btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
+            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
+          }
+        } else {
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
+            badge.innerText = "🔒 Terkunci";
+          }
+          if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
+          if (btnAction && i > 1) {
+            btnAction.disabled = true;
+            btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
+            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
+          }
+        }
+      }
+
+      document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
+    }
+
+    // 1. MEMBUKA BABAK (MENGHILANGKAN KOTAK BERANDA -> MENJADI FULL SCREEN KUIS)
+    function bukaBabak(n) {
+      babakActive = n;
+      if (typeof babak4TimerInterval !== 'undefined' && babak4TimerInterval) clearInterval(babak4TimerInterval);
+
+      rekapSiswa[n].percobaan++;
+
+      // Sembunyikan Kotak Beranda
+      document.getElementById("containerMenuBabak").classList.add("hidden");
+
+      // Tampilkan Area Kuis secara Penuh
+      document.getElementById("areaKuis").classList.remove("hidden");
+      document.getElementById("infoPercobaan").innerHTML = `<i class="fa-solid fa-rotate-right text-amber-500"></i> Percobaan Ke-${rekapSiswa[n].percobaan}`;
+      
+      const container = document.getElementById("kontenBabak");
+      const judulEl = document.getElementById("judulBabak");
+      const judulPanduanEl = document.getElementById("judulPanduan");
+      const teksPanduanEl = document.getElementById("teksPanduan");
+
+      container.innerHTML = "";
+
+      if (n === 1) {
+        babak1SubTahap = 1;
+        document.getElementById("btnTahap2Next").classList.remove("hidden");
+        document.getElementById("btnKirimBabak").classList.add("hidden");
+
+        judulEl.innerText = "Babak 1: Timeline Perumusan (Tahap 1 dari 2)";
+        judulPanduanEl.innerText = "Panduan Pengerjaan Babak 1 (Tahap 1):";
+        teksPanduanEl.innerHTML = `
+          <ul class="list-disc list-inside space-y-1">
+            <li>Hapus <strong>5 tanggal pengecoh</strong> dengan menekan tombol sampah (<i class="fa-solid fa-trash-can text-rose-500"></i>).</li>
+            <li>Geser & urutkan <strong>20 tanggal sisanya</strong> secara kronologis dari paling awal hingga paling akhir.</li>
+            <li><strong>Sentuh & geser pada seluruh area kartu</strong> untuk memindahkan posisinya.</li>
+            <li>Setelah urutan tepat, klik tombol <strong>"Lanjut ke Tahap 2"</strong>.</li>
+          </ul>
+        `;
+        renderBabak1Tahap1(container);
+      } else if (n === 3) {
+        document.getElementById("btnTahap2Next").classList.add("hidden");
+        document.getElementById("btnKirimBabak").classList.remove("hidden");
+
+        judulEl.innerText = "Babak 3: Kuis Kotak Misteri Pancasila (50 Soal)";
+        judulPanduanEl.innerText = "Panduan Pengerjaan Babak 3:";
+        teksPanduanEl.innerHTML = `
+          <ul class="list-disc list-inside space-y-1">
+            <li>Pilih & buka kotak misteri bertahap pada grid di bawah ini.</li>
+            <li>Jika berisi <strong>Mini-Game</strong>, selesaikan tantangan untuk meraih skor dasar 85 + Soal Bonus untuk Skor Maksimal 100!</li>
+          </ul>
+        `;
+        if (typeof initBoxesMisteri === 'function') initBoxesMisteri();
+        if (typeof renderGridKotakMisteri === 'function') renderGridKotakMisteri(container);
+      } else {
+        document.getElementById("btnTahap2Next").classList.add("hidden");
+        document.getElementById("btnKirimBabak").classList.remove("hidden");
+
+        if (n === 2) {
+          judulEl.innerText = "Babak 2: Kategori Gagasan Tokoh (Interaktif)";
+          judulPanduanEl.innerText = "Panduan Pengerjaan Babak 2:";
+          teksPanduanEl.innerHTML = `<p>Tentukan Tokoh Pendiri Bangsa yang Tepat dari pilihan menu interaktif di bawah setiap kutipan.</p>`;
+          if (typeof renderBabak2 === 'function') renderBabak2(container);
+        } else if (n === 4) {
+          judulEl.innerText = "Babak 4: Drag & Drop Isian HOTS";
+          judulPanduanEl.innerText = "Panduan Pengerjaan Babak 4:";
+          teksPanduanEl.innerHTML = `<p>Tarik kartu pilihan jawaban ke dalam Kotak Area Jawaban.</p>`;
+          if (typeof renderBabak4 === 'function') renderBabak4(container);
+        } else if (n === 5) {
+          judulEl.innerText = "Babak 5: Esai Susun Kata";
+          judulPanduanEl.innerText = "Panduan Pengerjaan Babak 5:";
+          teksPanduanEl.innerHTML = `<p>Klik kepingan kata acak secara berurutan hingga membentuk kalimat esai utuh.</p>`;
+          if (typeof renderBabak5 === 'function') renderBabak5(container);
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 2. KEMBALI KE BERANDA (MENGEMBALIKAN KOTAK BERANDA KEMBALI MUNCUL)
+    function kembaliKeDashboard() {
+      if (typeof babak4TimerInterval !== 'undefined' && babak4TimerInterval) clearInterval(babak4TimerInterval);
+      document.getElementById("areaKuis").classList.add("hidden");
+      
+      // Tampilkan Kembali Kotak Menu Beranda
+      document.getElementById("containerMenuBabak").classList.remove("hidden");
+
+      updateBerandaCardsUI();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 3. RENDER TIMELINE BABAK 1 (SELURUH KARTU BISA DI-DRAG DARI MANA SAJA)
+    function renderBabak1Tahap1(c) {
+      c.innerHTML = `<div id="timelineTahap1List" class="space-y-3"></div>`;
+      if (typeof timelineEvents !== 'undefined' && typeof tanggalPengecoh !== 'undefined') {
+        const combined = [...timelineEvents.map(e => ({ id: e.id, date: e.date, isPengecoh: false })), ...tanggalPengecoh];
+        activeTahap1Dates = shuffleArray(combined);
+      }
+      renderTimelineTahap1Items();
+    }
+
+    function renderTimelineTahap1Items() {
+      const listEl = document.getElementById("timelineTahap1List");
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      activeTahap1Dates.forEach((item) => {
+        // SELURUH ELEMEN KARTU MENJADI DRAG-ITEM (TANPA TOUCH-HANDLE KETAT)
+        listEl.innerHTML += `
+          <div data-id="${item.id}" class="drag-item p-4 bg-white border-2 border-slate-200 hover:border-blue-400 rounded-2xl transition shadow-sm flex items-center justify-between gap-3 select-none cursor-grab active:cursor-grabbing">
+            <div class="flex items-center gap-3">
+              <span class="p-1.5 text-slate-300 hover:text-blue-600 transition shrink-0">
+                <i class="fa-solid fa-grip-vertical text-lg"></i>
+              </span>
+              <span class="font-extrabold text-slate-800 text-sm sm:text-base">${item.date}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="hapusTanggalTahap1(${item.id})" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Hapus Tanggal Pengecoh">
+                <i class="fa-solid fa-trash-can text-base"></i>
+              </button>
+            </div>
+          </div>`;
+      });
+
+      if (sortableInstance) sortableInstance.destroy();
+      
+      // OPSI 'HANDLE' DIHAPUS SEHINGGA SELURUH KARTU BISA DI-DRAG DENGAN MUDAH
+      sortableInstance = new Sortable(listEl, {
+        draggable: '.drag-item',
+        animation: 200,
+        ghostClass: 'drag-ghost',
+        chosenClass: 'drag-chosen',
+        forceFallback: true,
+        fallbackTolerance: 3
+      });
+    }
+
+    function hapusTanggalTahap1(id) {
+      activeTahap1Dates = activeTahap1Dates.filter(d => d.id !== id);
+      renderTimelineTahap1Items();
+    }
+
+    function logout() {
+      isAdminPreviewMode = false;
+      document.getElementById("bannerAdminPreview").classList.add("hidden");
+
+      // Sembunyikan Navbar saat Logout
+      document.getElementById("mainNavbar").classList.add("hidden");
+      document.getElementById("navBtnBeranda").classList.add("hidden");
+      document.getElementById("navBtnLogout").classList.add("hidden");
+
+      document.getElementById("inputNisn").value = "";
+      document.getElementById("inputPassword").value = "";
+      document.getElementById("secLogin").classList.remove("hidden");
+      document.getElementById("secDashboard").classList.add("hidden");
+      document.getElementById("secAdmin").classList.add("hidden");
+      document.getElementById("areaKuis").classList.add("hidden");
+    }
+
+    function lihatModeSiswaPreview() {
+      isAdminPreviewMode = true;
+      document.getElementById("secAdmin").classList.add("hidden");
+      document.getElementById("secDashboard").classList.remove("hidden");
+      document.getElementById("bannerAdminPreview").classList.remove("hidden");
+
+      document.getElementById("mainNavbar").classList.remove("hidden");
+      document.getElementById("navBtnBeranda").classList.remove("hidden");
+      document.getElementById("navBtnLogout").classList.remove("hidden");
+
+      document.getElementById("labelUserRole").innerText = "Pengawas Admin";
+      document.getElementById("dispNama").innerText = siswaCurrent.nama + " (Mode Pratinjau)";
+      document.getElementById("dispNisn").innerText = `AKUN: ${siswaCurrent.nisn}`;
+    }
+
+    function kembaliKePanelAdmin() {
+      document.getElementById("bannerAdminPreview").classList.add("hidden");
+      document.getElementById("areaKuis").classList.add("hidden");
+      document.getElementById("secDashboard").classList.add("hidden");
+      document.getElementById("secAdmin").classList.remove("hidden");
+    }
+  </script>
 </body>
 </html>
