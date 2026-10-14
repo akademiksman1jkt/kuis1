@@ -27,6 +27,12 @@
   </script>
 
   <style>
+    .swal2-html-container:empty {
+    display: none !important;
+  }
+  .swal2-popup .swal2-html-container {
+    background: transparent !important;
+  }
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
     /* CSS ANIMASI DIALOG POP-UP MODAL */
@@ -212,7 +218,7 @@
 
           <div class="w-full md:w-auto bg-slate-50 border border-slate-200 rounded-2xl p-3 flex items-center justify-between md:justify-end gap-4">
             <div class="text-left md:text-right">
-              <span class="text-xs font-bold text-slate-400 block uppercase">Total Progres Selesai</span>
+              <span class="text-xs font-bold text-slate-400 block uppercase">Total Progres</span>
               <span id="txtTotalProgres" class="text-base font-black text-slate-800">0 / 5 Babak</span>
             </div>
             <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 font-black text-lg flex items-center justify-center border border-emerald-200">
@@ -224,7 +230,7 @@
         <!-- GRID KOTAK MENU BABAK KUIS (DENGAN PROGRES, NILAI, & PERCOBAAN) -->
         <div>
           <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-cubes text-blue-600"></i> Modul Kuis Babak Evaluasi
+            <i class="fa-solid fa-cubes text-blue-600"></i> Soal
           </h3>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="gridMenuBabak">
@@ -238,7 +244,7 @@
                   <span id="badgeStatusB1" class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Terbuka</span>
                 </div>
                 <h4 class="font-black text-slate-900 text-base mb-1">BABAK 1</h4>
-                <p class="text-xs text-slate-500 font-semibold mb-4">Timeline Perumusan (2 Tahap)</p>
+                <p class="text-xs text-slate-500 font-semibold mb-4">Timeline Perumusan Pancasila</p>
               </div>
 
               <div class="space-y-3 pt-3 border-t border-slate-100">
@@ -268,7 +274,7 @@
                   <span id="badgeStatusB2" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
                 </div>
                 <h4 class="font-black text-slate-800 text-base mb-1">BABAK 2</h4>
-                <p class="text-xs text-slate-500 font-semibold mb-4">Interaktif Gagasan Tokoh</p>
+                <p class="text-xs text-slate-500 font-semibold mb-4">Gagasan Tokoh Sidang BPUPK</p>
               </div>
 
               <div class="space-y-3 pt-3 border-t border-slate-200/60">
@@ -298,7 +304,7 @@
                   <span id="badgeStatusB3" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
                 </div>
                 <h4 class="font-black text-slate-800 text-base mb-1">BABAK 3</h4>
-                <p class="text-xs text-slate-500 font-semibold mb-4">Kotak Misteri (50 Soal)</p>
+                <p class="text-xs text-slate-500 font-semibold mb-4">Kotak Misteri </p>
               </div>
 
               <div class="space-y-3 pt-3 border-t border-slate-200/60">
@@ -328,7 +334,7 @@
                   <span id="badgeStatusB4" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
                 </div>
                 <h4 class="font-black text-slate-800 text-base mb-1">BABAK 4</h4>
-                <p class="text-xs text-slate-500 font-semibold mb-4">Drag & Drop HOTS</p>
+                <p class="text-xs text-slate-500 font-semibold mb-4">Isian Singkat</p>
               </div>
 
               <div class="space-y-3 pt-3 border-t border-slate-200/60">
@@ -358,7 +364,7 @@
                   <span id="badgeStatusB5" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
                 </div>
                 <h4 class="font-black text-slate-800 text-base mb-1">BABAK 5</h4>
-                <p class="text-xs text-slate-500 font-semibold mb-4">Esai Susun Kata</p>
+                <p class="text-xs text-slate-500 font-semibold mb-4">Susun Kata</p>
               </div>
 
               <div class="space-y-3 pt-3 border-t border-slate-200/60">
@@ -415,7 +421,7 @@
           </button>
 
           <button id="btnKirimBabak" onclick="submitBabakCurrent()" class="px-5 sm:px-7 py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Kirim Jawaban ke Spreadsheet
+            <i class="fa-solid fa-paper-plane"></i> Kirim Jawaban
           </button>
         </div>
       </div>
@@ -685,56 +691,56 @@
     ];
 
     const quizQuestions = [
-      { question: "Siapakah Ketua BPUPK yang melontarkan pertanyaan utama mengenai dasar negara Indonesia merdeka pada pembukaan sidang pertama?", options: ["Ir. Sukarno", "Drs. Mohammad Hatta", "dr. K.R.T. Radjiman Wedyodiningrat", "Mr. Muhammad Yamin", "Prof. Dr. Mr. R. Soepomo"], answer: 2 },
-      { question: "Kapan sidang pertama Dokuritsu Zyunbi Tyoosakai (BPUPK) dilaksanakan?", options: ["28 Mei – 1 Juni 1945", "29 Mei – 1 Juni 1945", "1 Juni – 18 Agustus 1945", "22 Juni – 18 Agustus 1945", "10 Juli – 17 Juli 1945"], answer: 1 },
-      { question: "Apa pertanyaan mendasar yang disampaikan Ketua BPUPK kepada para anggota sidang pada hari pertama?", options: ["Kapan Proklamasi Kemerdekaan dilaksanakan?", "Siapa yang akan menjadi Presiden pertama?", "Apa dasar negara Indonesia yang akan kita bentuk?", "Bagaimana bentuk sistem pemerintahan Indonesia?", "Di mana wilayah kedaulatan negara Indonesia?"], answer: 2 },
-      { question: "Mengapa suasana persidangan pertama BPUPK memungkinkan para anggota mengemukakan gagasan secara leluasa?", options: ["Dikawal langsung oleh tentara Sekutu", "Relatif bebas dari gangguan dan tekanan penguasa Jepang", "Hanya dihadiri oleh kelompok kebangsaan", "Dilakukan secara rahasia di luar negeri", "Telah disetujui penuh oleh Kaisar Jepang"], answer: 1 },
-      { question: "Menurut Mohammad Hatta dkk. dalam 'Uraian Pancasila' (1984), mengapa sebagian besar anggota BPUPK tidak langsung menjawab soal dasar negara secara utuh?", options: ["Karena belum siap berpidato tanpa teks", "Dilarang keras oleh pihak militer Jepang", "Khawatir jawaban tidak diterima keseluruhan dan memicu perdebatan panjang", "Fokus utama rapat hanya membahas UUD", "Menunggu kedatangan tokoh-tokoh dari daerah"], answer: 2 },
-      { question: "Berdasarkan notulensi 29 Mei 1945, manakah gagasan 'dasar yang tiga' yang dikemukakan oleh Mohammad Yamin?", options: ["Ketuhanan, Kemanusiaan, Keadilan", "Permusyawaratan (Quran)-mufakat (adat), Perwakilan (adat), Kebijaksanaan (rationalism)", "Kebangsaan, Internasionalisme, Demokrasi", "Persatuan, Kekeluargaan, Gotong Royong", "Peri Kebangsaan, Peri Kemanusiaan, Peri Ketuhanan"], answer: 1 },
-      { question: "Tokoh yang menekankan pentingnya keselarasan dengan kehendak Tuhan YME serta rasa persatuan tanpa membeda-bedakan pada 29 Mei 1945 adalah:", options: ["R.A.A. Wiranatakoesoema", "K.R.M.T.H. Woerjaningrat", "Soesanto Tirtoprodjo", "A.M. Dasaad", "Ki Bagoes Hadikoesoemo"], answer: 0 },
-      { question: "Gagasan bahwa kemerdekaan Indonesia harus 'bersendi kekeluargaan bangsa Indonesia' disampaikan pada 29 Mei 1945 oleh:", options: ["Prof. Dr. Mr. R. Soepomo", "K.R.M.T.H. Woerjaningrat", "Drs. Mohammad Hatta", "Ki Bagoes Hadikoesoemo", "R. Abdoelrahim Pratalykrama"], answer: 1 },
-      { question: "Soesanto Tirtoprodjo pada sidang 29 Mei 1945 menyebutkan tiga dasar fundamental negara, yaitu:", options: ["Persatuan rakyat, Agama Islam, dan Kemerdekaan", "Semangat kebangsaan, hasrat persatuan, dan rasa kekeluargaan", "Iman, tawakal, dan keadilan sosial", "Mufakat, perwakilan, dan kebijaksanaan", "Ketuhanan, perikemanusiaan, dan kerakyatan"], answer: 1 },
-      { question: "Siapakah tokoh yang menyatakan bahwa Indonesia merdeka harus berdasar pada 'iman dan tawakal kepada Tuhan Allah Yang Mengendalikan langit dan bumi'?", options: ["Ki Bagoes Hadikoesoemo", "A.M. Dasaad", "R. Abdoelrahim Pratalykrama", "Drs. Mohammad Hatta", "K.H. Wachid Hasjim"], answer: 1 },
-      { question: "Pada pidato tanggal 30 Mei 1945, Moh. Hatta mengemukakan gagasan bahwa dasar ketuhanan harus diwujudkan dengan cara:", options: ["Mewajibkan syariat bagi seluruh pemeluknya", "Memisahkan urusan agama dari urusan negara", "Menjadikan satu agama sebagai agama resmi negara", "Menghapus lembaga keagamaan dari pemerintahan", "Menggabungkan ajaran agama dengan hukum adat"], answer: 1 },
-      { question: "Tokoh yang mengusulkan dasar negara berupa 'persatuan rakyat' dan 'agama Islam dengan kemerdekaan seluas-luasnya bagi pemeluk agama lain' pada 30 Mei 1945 adalah:", options: ["R. Abdoelrahim Pratalykrama", "Ki Bagoes Hadikoesoemo", "Mr. Muhammad Yamin", "A.M. Dasaad", "R.A.A. Wiranatakoesoema"], answer: 0 },
-      { question: "Dalam pidatonya tanggal 31 Mei 1945, Soepomo menyatakan tiga dasar yang sangat relevan dengan corak masyarakat Indonesia, yaitu:", options: ["Persatuan, semangat kekeluargaan, dan semangat gotong royong", "Kebangsaan, internasionalisme, dan ketuhanan", "Iman, musyawarah, dan perwakilan", "Demokrasi, keadilan, dan kemakmuran", "Ketuhanan, kemanusiaan, dan keadilan sosial"], answer: 0 },
-      { question: "Siapakah tokoh yang dalam pidato tanggal 31 Mei 1945 secara tegas meminta agar Islam dijadikan dasar dan sendi negara?", options: ["Ki Bagoes Hadikoesoemo", "R.A.A. Wiranatakoesoema", "A.M. Dasaad", "Mr. Muhammad Yamin", "Soesanto Tirtoprodjo"], answer: 0 },
-      { question: "Siapakah satu-satunya anggota BPUPK yang menjawab pertanyaan Ketua BPUPK tentang dasar negara secara utuh dan komprehensif pada 1 Juni 1945?", options: ["Drs. Mohammad Hatta", "Ir. Sukarno", "Prof. Dr. Mr. R. Soepomo", "Mr. Muhammad Yamin", "dr. K.R.T. Radjiman Wedyodiningrat"], answer: 1 },
-      { question: "Istilah bahasa Belanda yang digunakan Sukarno untuk menyebut dasar atau filsafat mendasar bagi negara Indonesia merdeka adalah:", options: ["Staatsfundamentalnorm", "Leitstar", "Filosofische Grondslag", "Weltanschauung", "Rechtsidee"], answer: 2 },
-      { question: "Sebutkan urutan 5 dasar negara yang dipaparkan Sukarno pada pidato 1 Juni 1945!", options: ["Ketuhanan, Kemanusiaan, Persatuan, Demokrasi, Keadilan", "Kebangsaan, Internasionalisme (perikemanusiaan), Mufakat (demokrasi), Kesejahteraan sosial, Ketuhanan", "Persatuan, Kekeluargaan, Keseimbangan, Musyawarah, Keadilan", "Peri Kebangsaan, Peri Kemanusiaan, Peri Ketuhanan, Peri Kerakyatan, Kesejahteraan Rakyat", "Ketuhanan Yang Maha Esa, Kemanusiaan Adil dan Beradab, Persatuan Indonesia, Demokrasi, Keadilan Sosial"], answer: 1 },
-      { question: "Apa arti istilah 'le desir d'etre ensemble' yang dikutip Sukarno dalam menjelaskan dasar Kebangsaan?", options: ["Keinginan untuk hidup bersama", "Persaudaraan antar bangsa-bangsa", "Kemerdekaan atas tanah air", "Keadilan bagi seluruh rakyat", "Perjuangan melawan penjajahan"], answer: 0 },
-      { question: "Menurut Sukarno, batas cakupan wilayah 'Natie Indonesia' atau Bangsa Indonesia adalah:", options: ["Wilayah Jawa dan Sumatra saja", "Seluruh pulau-pulau Indonesia dari ujung Utara Sumatra sampai Irian", "Wilayah bekas kekuasaan Majapahit", "Seluruh kawasan Asia Tenggara", "Hanya wilayah yang berpenduduk mayoritas"], answer: 1 },
-      { question: "Apakah yang dimaksud dengan prinsip Internasionalisme (Perikemanusiaan) oleh Sukarno?", options: ["Menganggap bangsa Indonesia paling mulia dibanding bangsa lain", "Penghargaan terhadap nilai-nilai kemanusiaan universal & menuju persaudaraan dunia", "Mengutamakan kepentingan internasional di atas kepentingan nasional", "Menolak batas-batas kedaulatan negara", "Menghapuskan identitas kebangsaan demi dunia global"], answer: 1 },
-      { question: "Dalam menjelaskan dasar Mufakat/Demokrasi, Sukarno menegaskan bahwa negara Indonesia didirikan atas prinsip:", options: ["Satu untuk golongan kaya", "Semua buat semua, satu buat semua, semua buat satu", "Mayoritas menguasai minoritas", "Kekuasaan mutlak pimpinan negara", "Satu golongan menguasai golongan lain"], answer: 1 },
-      { question: "Gagasan Sukarno agar tidak ada kemiskinan di Indonesia merdeka dan rakyat menikmati keadilan tertuang dalam prinsip:", options: ["Kebangsaan", "Internasionalisme", "Mufakat/Demokrasi", "Kesejahteraan Sosial", "Ketuhanan"], answer: 3 },
-      { question: "Sifat 'Ketuhanan' yang diusulkan oleh Sukarno dalam pidatonya pada 1 Juni 1945 adalah Ketuhanan yang:", options: ["Memaksa satu ajaran agama tertentu", "Berkebudayaan, berbudi pekerti luhur, dan saling hormat-menghormati", "Apatis terhadap ajaran keagamaan", "Hanya berlaku bagi pimpinan lembaga negara", "Mengabaikan kebebasan beragama"], answer: 1 },
-      { question: "Secara etimologi menurut Sukarno, kata 'Pancasila' berasal dari bahasa Sanskerta, yaitu 'panca' dan 'sila' yang artinya:", options: ["Lima aturan", "Lima dasar", "Lima tiang", "Lima ajaran", "Lima hukum"], answer: 1 },
-      { question: "Semboyan penutup pidato Sukarno tanggal 1 Juni 1945 yang menggelorakan semangat tekad kemerdekaan adalah:", options: ["Bhinneka Tunggal Ika!", "Merdeka atau Mati!", "Sekali Merdeka Tetap Merdeka!", "Bersatu Kita Teguh!", "Rawe-rawe Rantas Malang-malang Putung!"], answer: 1 },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah dari peristiwa berikut yang merupakan satu kesatuan proses perumusan dan pengesahan Pancasila yang tidak berdiri sendiri? (Pilih 3 Jawaban)", options: ["Pidato Sukarno pada 1 Juni 1945", "Penandatanganan Piagam Jakarta pada 22 Juni 1945", "Pengesahan Pancasila oleh PPKI pada 18 Agustus 1945", "Pembentukan organisasi Boedi Oetomo pada 1908", "Peristiwa Rengasdengklok pada 16 Agustus 1945"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Berdasarkan Tabel 1.1 materi pembelajaran, siapakah tokoh-tokoh yang menyampaikan gagasannya pada hari pertama sidang BPUPK (29 Mei 1945)? (Pilih 3 Jawaban)", options: ["Mohammad Yamin", "R.A.A. Wiranatakoesoema", "A.M. Dasaad", "Drs. Mohammad Hatta", "Ki Bagoes Hadikoesoemo"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah di antara pernyataan berikut yang sesuai dengan prinsip 'Kebangsaan' menurut pidato Sukarno 1 Juni 1945? (Pilih 2 Jawaban)", options: ["Menjelaskan bahwa bangsa Indonesia mencakup seluruh pulau dari ujung Utara Sumatra sampai Irian", "Didasarkan pada konsep 'le desir d'etre ensemble' (keinginan untuk hidup bersama)", "Menolak persaudaraan antar bangsa-bangsa di dunia", "Hanya mewakili golongan masyarakat di pulau Jawa", "Mengharuskan pemisahan tegas antara agama dan negara"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Apa saja 3 kedudukan Pancasila yang dikaji dan dianalisis dalam Bab 1 buku Pendidikan Pancasila Kelas X? (Pilih 3 Jawaban)", options: ["Dasar negara", "Pandangan hidup bangsa", "Ideologi negara", "Sistem hukum tunggal", "Naskah konstitusi tertulis"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah tiga prinsip dasar yang disampaikan oleh Soepomo pada sidang BPUPK tanggal 31 Mei 1945? (Pilih 3 Jawaban)", options: ["Dasar persatuan", "Semangat kekeluargaan", "Semangat gotong royong", "Internasionalisme", "Kesejahteraan sosial"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Ciri-ciri utama Ketuhanan yang diusulkan oleh Sukarno dalam pidato 1 Juni 1945 meliputi: (Pilih 3 Jawaban)", options: ["Ketuhanan yang berkebudayaan", "Ketuhanan yang berbudi pekerti luhur", "Ketuhanan yang saling hormat-menghormati", "Ketuhanan yang memaksakan satu agama resmi", "Ketuhanan yang melarang ibadah di luar tempat resmi"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah tokoh-tokoh yang menyampaikan gagasan berkaitan dengan agama/Islam sebagai dasar atau sendi negara dalam sidang BPUPK? (Pilih 3 Jawaban)", options: ["A.M. Dasaad", "R. Abdoelrahim Pratalykrama", "Ki Bagoes Hadikoesoemo", "Soesanto Tirtoprodjo", "K.R.M.T.H. Woerjaningrat"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Siapakah tokoh pendiri bangsa yang termasuk ke dalam anggota Panitia Sembilan yang merumuskan Piagam Jakarta pada 22 Juni 1945? (Pilih 3 Jawaban)", options: ["Ir. Sukarno", "Drs. Mohammad Hatta", "Mr. A.A. Maramis", "dr. K.R.T. Radjiman Wedyodiningrat", "Prof. Dr. Mr. R. Soepomo"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Apa saja hal-hal yang ditekankan Sukarno mengenai dasar Mufakat dan Permusyawaratan/Perwakilan (Demokrasi)? (Pilih 2 Jawaban)", options: ["Negara didirikan atas prinsip 'semua buat semua, satu buat semua, semua buat satu'", "Aspirasi rakyat dimusyawarahkan melalui lembaga perwakilan rakyat", "Negara hanya diperuntukkan bagi golongan kaya", "Keputusan diambil secara sepihak oleh pimpinan negara", "Hak bersuara hanya dimiliki oleh anggota pergerakan"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Berdasarkan teks materi, fakta sejarah yang benar mengenai Pidato Sukarno 1 Juni 1945 adalah: (Pilih 3 Jawaban)", options: ["Disampaikan tanpa teks di hadapan sidang BPUPK", "Berlangsung selama kurang lebih satu jam (pukul 09.00 – 10.00)", "Menjawab secara utuh dan komprehensif pertanyaan dr. Radjiman Wedyodiningrat", "Ditulis dan dirumuskan bersama oleh Panitia Sembilan", "Dibacakan di Gedung Pegangsaan Timur No. 56"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Tokoh-tokoh yang menyampaikan gagasannya pada sidang BPUPK tanggal 30 Mei 1945 adalah: (Pilih 2 Jawaban)", options: ["Drs. Mohammad Hatta", "R. Abdoelrahim Pratalykrama", "Sukarno", "Mohammad Yamin", "Soepomo"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah pernyataan yang benar mengenai konsep Internasionalisme menurut Sukarno? (Pilih 2 Jawaban)", options: ["Bangsa Indonesia tidak boleh meremehkan bangsa-bangsa lain", "Bangsa Indonesia menuju pada persaudaraan dan kekeluargaan bangsa-bangsa", "Bangsa Indonesia harus menguasai bangsa lain yang lebih lemah", "Internasionalisme berarti menghapus semangat kebangsaan Indonesia", "Internasionalisme menolak adanya kerja sama antar negara"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Mengapa gagasan-gagasan yang disampaikan anggota BPUPK pada sidang pertama murni aspirasi para tokoh? (Pilih 2 Jawaban)", options: ["Persidangan relatif bebas dari gangguan dan tekanan penguasa Jepang", "Setiap anggota leluasa mengemukakan pendapatnya secara terbuka", "Dipandu dan diawasi ketat oleh PBB", "Hanya menyalin konsep dasar negara dari Jepang", "Ditulis berdasarkan undang-undang kolonial Belanda"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah di antara pilihan berikut yang termasuk dalam 5 dasar negara usulan Sukarno pada 1 Juni 1945? (Pilih 3 Jawaban)", options: ["Kebangsaan", "Kesejahteraan Sosial", "Ketuhanan", "Persatuan Indonesia", "Keadilan Sosial bagi Seluruh Rakyat Indonesia"], answer: [0, 1, 2] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Pembahasan dalam Bab 1 buku Teks Pendidikan Pancasila Kelas X mengajak siswa untuk berpikir kritis dan reflektif mengenai: (Pilih 2 Jawaban)", options: ["Apakah kehidupan bermasyarakat, berbangsa, dan bernegara saat ini sudah menerapkan Pancasila", "Apakah diri sendiri telah mengamalkan Pancasila dalam kehidupan sehari-hari", "Berapa estimasi biaya pembangunan gedung sidang BPUPK", "Siapa nama komandan pasukan militer Jepang di Jakarta", "Bagaimana cara memenangkan pemilu tingkat daerah"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Menurut Soepomo (31 Mei 1945), hal-hal penting yang harus dipelihara oleh negara adalah: (Pilih 2 Jawaban)", options: ["Budi pekerti kemanusiaan yang luhur", "Cita-cita moral rakyat yang luhur", "Sistem monopoli perdagangan nasional", "Persaingan politik antar golongan secara bebas", "Kekuasaan pemerintah yang tidak terbatas"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Pernyataan yang benar mengenai penutupan pidato Sukarno 1 Juni 1945 adalah: (Pilih 2 Jawaban)", options: ["Kemerdekaan hanyalah didapat oleh bangsa yang jiwanya berkobar-kobar", "Semboyan yang diucapkan adalah 'Merdeka atau Mati!'", "Menyatakan bahwa perjuangan bangsa telah selesai sepenuhnya", "Meminta rakyat berhenti berjuang setelah merdeka", "Menolak risiko dan tantangan di masa depan"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Siapakah tokoh-tokoh yang berpidato pada tanggal 31 Mei 1945 di sidang BPUPK berdasarkan Tabel 1.1? (Pilih 2 Jawaban)", options: ["Prof. Dr. Mr. R. Soepomo", "Ki Bagoes Hadikoesoemo", "A.M. Dasaad", "Sukarno", "R.A.A. Wiranatakoesoema"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Asal usul kata 'Pancasila' yang dipaparkan oleh Sukarno mencakup fakta bahwa: (Pilih 2 Jawaban)", options: ["Berasal dari bahasa Sanskerta", "Terdiri dari kata 'Panca' (lima) dan 'Sila' (dasar)", "Diberikan oleh ketua BPUPK dr. Radjiman", "Diambil dari kitab Sutasoma karya Mpu Tantular", "Diterjemahkan langsung dari bahasa Belanda"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Prinsip 'Kesejahteraan Sosial' yang diusulkan oleh Sukarno menekankan hal-hal berikut: (Pilih 2 Jawaban)", options: ["Prinsip tidak akan ada kemiskinan di dalam Indonesia merdeka", "Menciptakan dunia baru yang di dalamnya ada keadilan sosial bagi rakyat", "Kesejahteraan yang hanya diprioritaskan bagi pejabat negara", "Sistem pasar bebas tanpa campur tangan negara", "Penghapusan seluruh bentuk bantuan sosial"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Mengapa pertanyaan dr. K.R.T. Radjiman Wedyodiningrat sangat penting dalam sejarah perumusan dasar negara? (Pilih 2 Jawaban)", options: ["Menjadi pokok pembahasan utama selama empat hari sidang pertama BPUPK", "Mendorong para pendiri bangsa menyampaikan gagasan filosofis dasar negara", "Merupakan perintah langsung dari Kaisar Jepang", "Menyebabkan pembatalan pembentukan Panitia Sembilan", "Memaksa sidang berlangsung secara tertutup"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Dua tokoh yang mengemukakan gagasan pada sidang pertama BPUPK mengenai pentingnya rasa kekeluargaan adalah: (Pilih 2 Jawaban)", options: ["K.R.M.T.H. Woerjaningrat", "Soesanto Tirtoprodjo", "Ki Bagoes Hadikoesoemo", "Moh. Hatta", "A.M. Dasaad"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Hal-hal yang menunjukkan bahwa perumusan Pancasila melibatkan dinamika penting para pendiri bangsa adalah: (Pilih 2 Jawaban)", options: ["Adanya perbedaan gagasan meskipun terdapat kemiripan satu sama lain", "Diskusi terbuka dan dialog antar berbagai aliran pemikiran (kebangsaan & keagamaan)", "Penetapan dasar negara tanpa melalui proses perdebatan", "Penggunaan naskah tunggal buatan pemerintah Jepang", "Penolakan total terhadap semua pemikiran barat"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah yang termasuk sumber resmi dan dokumen sejarah yang memuat gagasan dasar negara dalam materi ini? (Pilih 2 Jawaban)", options: ["Notulensi Rapat Rapat Sidang BPUPK (29 Mei – 1 Juni 1945)", "Buku 'Uraian Pancasila' (1984) karya Mohammad Hatta dkk.", "Buku sejarah terbitan luar negeri tahun 2020", "Catatan harian tentara militer Jepang", "Arsip perdagangan kolonial VOC"], answer: [0, 1] },
-      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Tujuan pembelajaran Bab 1 Pendidikan Pancasila Kelas X sebagaimana tercantum dalam naskah materi adalah: (Pilih 2 Jawaban)", options: ["Mengkaji cara pandang para pendiri bangsa dalam merumuskan Pancasila", "Menganalisis pentingnya memahami 3 kedudukan Pancasila serta merefleksikan pengamalannya", "Menghafal seluruh isi notulensi sidang BPUPK kata demi kata", "Membandingkan konstitusi Indonesia dengan negara-negara Eropa", "Menyusun undang-undang baru di bidang ekonomi nasional"], answer: [0, 1] }
+      { question: "Siapakah Ketua BPUPK yang melontarkan pertanyaan utama mengenai dasar negara Indonesia merdeka pada pembukaan sidang pertama?", options: ["Ir. Sukarno", "Drs. Mohammad Hatta", "Mr. Muhammad Yamin", "Prof. Dr. Mr. R. Soepomo", "dr. K.R.T. Radjiman Wedyodiningrat"], answer: 4 },
+      { question: "Kapan sidang pertama Dokuritsu Zyunbi Tyoosakai (BPUPK) dilaksanakan?", options: ["29 Mei – 1 Juni 1945", "28 Mei – 1 Juni 1945", "1 Juni – 18 Agustus 1945", "22 Juni – 18 Agustus 1945", "10 Juli – 17 Juli 1945"], answer: 0 },
+      { question: "Apa pertanyaan mendasar yang disampaikan Ketua BPUPK kepada para anggota sidang pada hari pertama?", options: ["Kapan Proklamasi Kemerdekaan dilaksanakan?", "Siapa yang akan menjadi Presiden pertama?", "Di mana wilayah kedaulatan negara Indonesia?", "Apa dasar negara Indonesia yang akan kita bentuk?", "Bagaimana bentuk sistem pemerintahan Indonesia?"], answer: 3 },
+      { question: "Mengapa suasana persidangan pertama BPUPK memungkinkan para anggota mengemukakan gagasan secara leluasa?", options: ["Dikawal langsung oleh tentara Sekutu", "Hanya dihadiri oleh kelompok kebangsaan", "Relatif bebas dari gangguan dan tekanan penguasa Jepang", "Dilakukan secara rahasia di luar negeri", "Telah disetujui penuh oleh Kaisar Jepang"], answer: 2 },
+      { question: "Menurut Mohammad Hatta dkk. dalam 'Uraian Pancasila' (1984), mengapa sebagian besar anggota BPUPK tidak langsung menjawab soal dasar negara secara utuh?", options: ["Khawatir jawaban tidak diterima keseluruhan dan memicu perdebatan panjang", "Karena belum siap berpidato tanpa teks", "Dilarang keras oleh pihak militer Jepang", "Fokus utama rapat hanya membahas UUD", "Menunggu kedatangan tokoh-tokoh dari daerah"], answer: 0 },
+      { question: "Berdasarkan notulensi 29 Mei 1945, manakah gagasan 'dasar yang tiga' yang dikemukakan oleh Mohammad Yamin?", options: ["Ketuhanan, Kemanusiaan, Keadilan", "Kebangsaan, Internasionalisme, Demokrasi", "Persatuan, Kekeluargaan, Gotong Royong", "Permusyawaratan (Quran)-mufakat (adat), Perwakilan (adat), Kebijaksanaan (rationalism)", "Peri Kebangsaan, Peri Kemanusiaan, Peri Ketuhanan"], answer: 3 },
+      { question: "Tokoh yang menekankan pentingnya keselarasan dengan kehendak Tuhan YME serta rasa persatuan tanpa membeda-bedakan pada 29 Mei 1945 adalah:", options: ["K.R.M.T.H. Woerjaningrat", "Soesanto Tirtoprodjo", "A.M. Dasaad", "R.A.A. Wiranatakoesoema", "Ki Bagoes Hadikoesoemo"], answer: 3 },
+      { question: "Gagasan bahwa kemerdekaan Indonesia harus 'bersendi kekeluargaan bangsa Indonesia' disampaikan pada 29 Mei 1945 oleh:", options: ["Prof. Dr. Mr. R. Soepomo", "Drs. Mohammad Hatta", "K.R.M.T.H. Woerjaningrat", "Ki Bagoes Hadikoesoemo", "R. Abdoelrahim Pratalykrama"], answer: 2 },
+      { question: "Soesanto Tirtoprodjo pada sidang 29 Mei 1945 menyebutkan tiga dasar fundamental negara, yaitu:", options: ["Persatuan rakyat, Agama Islam, dan Kemerdekaan", "Iman, tawakal, dan keadilan sosial", "Mufakat, perwakilan, dan kebijaksanaan", "Ketuhanan, perikemanusiaan, dan kerakyatan", "Semangat kebangsaan, hasrat persatuan, dan rasa kekeluargaan"], answer: 4 },
+      { question: "Siapakah tokoh yang menyatakan bahwa Indonesia merdeka harus berdasar pada 'iman dan tawakal kepada Tuhan Allah Yang Mengendalikan langit dan bumi'?", options: ["Ki Bagoes Hadikoesoemo", "R. Abdoelrahim Pratalykrama", "A.M. Dasaad", "Drs. Mohammad Hatta", "K.H. Wachid Hasjim"], answer: 2 },
+      { question: "Pada pidato tanggal 30 Mei 1945, Moh. Hatta mengemukakan gagasan bahwa dasar ketuhanan harus diwujudkan dengan cara:", options: ["Memisahkan urusan agama dari urusan negara", "Mewajibkan syariat bagi seluruh pemeluknya", "Menjadikan satu agama sebagai agama resmi negara", "Menghapus lembaga keagamaan dari pemerintahan", "Menggabungkan ajaran agama dengan hukum adat"], answer: 0 },
+      { question: "Tokoh yang mengusulkan dasar negara berupa 'persatuan rakyat' dan 'agama Islam dengan kemerdekaan seluas-luasnya bagi pemeluk agama lain' pada 30 Mei 1945 adalah:", options: ["Ki Bagoes Hadikoesoemo", "Mr. Muhammad Yamin", "R. Abdoelrahim Pratalykrama", "A.M. Dasaad", "R.A.A. Wiranatakoesoema"], answer: 2 },
+      { question: "Dalam pidatonya tanggal 31 Mei 1945, Soepomo menyatakan tiga dasar yang sangat relevan dengan corak masyarakat Indonesia, yaitu:", options: ["Kebangsaan, internasionalisme, dan ketuhanan", "Persatuan, semangat kekeluargaan, dan semangat gotong royong", "Iman, musyawarah, dan perwakilan", "Demokrasi, keadilan, dan kemakmuran", "Ketuhanan, kemanusiaan, dan keadilan sosial"], answer: 1 },
+      { question: "Siapakah tokoh yang dalam pidato tanggal 31 Mei 1945 secara tegas meminta agar Islam dijadikan dasar dan sendi negara?", options: ["R.A.A. Wiranatakoesoema", "A.M. Dasaad", "Mr. Muhammad Yamin", "Ki Bagoes Hadikoesoemo", "Soesanto Tirtoprodjo"], answer: 3 },
+      { question: "Siapakah satu-satunya anggota BPUPK yang menjawab pertanyaan Ketua BPUPK tentang dasar negara secara utuh dan komprehensif pada 1 Juni 1945?", options: ["Drs. Mohammad Hatta", "Prof. Dr. Mr. R. Soepomo", "Ir. Sukarno", "Mr. Muhammad Yamin", "dr. K.R.T. Radjiman Wedyodiningrat"], answer: 2 },
+      { question: "Istilah bahasa Belanda yang digunakan Sukarno untuk menyebut dasar atau filsafat mendasar bagi negara Indonesia merdeka adalah:", options: ["Staatsfundamentalnorm", "Filosofische Grondslag", "Leitstar", "Weltanschauung", "Rechtsidee"], answer: 1 },
+      { question: "Sebutkan urutan 5 dasar negara yang dipaparkan Sukarno pada pidato 1 Juni 1945!", options: ["Ketuhanan, Kemanusiaan, Persatuan, Demokrasi, Keadilan", "Persatuan, Kekeluargaan, Keseimbangan, Musyawarah, Keadilan", "Peri Kebangsaan, Peri Kemanusiaan, Peri Ketuhanan, Peri Kerakyatan, Kesejahteraan Rakyat", "Kebangsaan, Internasionalisme (perikemanusiaan), Mufakat (demokrasi), Kesejahteraan sosial, Ketuhanan", "Ketuhanan Yang Maha Esa, Kemanusiaan Adil dan Beradab, Persatuan Indonesia, Demokrasi, Keadilan Sosial"], answer: 3 },
+      { question: "Apa arti istilah 'le desir d'etre ensemble' yang dikutip Sukarno dalam menjelaskan dasar Kebangsaan?", options: ["Persaudaraan antar bangsa-bangsa", "Kemerdekaan atas tanah air", "Keinginan untuk hidup bersama", "Keadilan bagi seluruh rakyat", "Perjuangan melawan penjajahan"], answer: 2 },
+      { question: "Menurut Sukarno, batas cakupan wilayah 'Natie Indonesia' atau Bangsa Indonesia adalah:", options: ["Wilayah Jawa dan Sumatra saja", "Wilayah bekas kekuasaan Majapahit", "Seluruh pulau-pulau Indonesia dari ujung Utara Sumatra sampai Irian", "Seluruh kawasan Asia Tenggara", "Hanya wilayah yang berpenduduk mayoritas"], answer: 2 },
+      { question: "Apakah yang dimaksud dengan prinsip Internasionalisme (Perikemanusiaan) oleh Sukarno?", options: ["Menganggap bangsa Indonesia paling mulia dibanding bangsa lain", "Mengutamakan kepentingan internasional di atas kepentingan nasional", "Menolak batas-batas kedaulatan negara", "Penghargaan terhadap nilai-nilai kemanusiaan universal & menuju persaudaraan dunia", "Menghapuskan identitas kebangsaan demi dunia global"], answer: 3 },
+      { question: "Dalam menjelaskan dasar Mufakat/Demokrasi, Sukarno menegaskan bahwa negara Indonesia didirikan atas prinsip:", options: ["Satu untuk golongan kaya", "Mayoritas menguasai minoritas", "Semua buat semua, satu buat semua, semua buat satu", "Kekuasaan mutlak pimpinan negara", "Satu golongan menguasai golongan lain"], answer: 2 },
+      { question: "Gagasan Sukarno agar tidak ada kemiskinan di Indonesia merdeka dan rakyat menikmati keadilan tertuang dalam prinsip:", options: ["Kebangsaan", "Kesejahteraan Sosial", "Internasionalisme", "Mufakat/Demokrasi", "Ketuhanan"], answer: 1 },
+      { question: "Sifat 'Ketuhanan' yang diusulkan oleh Sukarno dalam pidatonya pada 1 Juni 1945 adalah Ketuhanan yang:", options: ["Memaksa satu ajaran agama tertentu", "Apatis terhadap ajaran keagamaan", "Hanya berlaku bagi pimpinan lembaga negara", "Mengabaikan kebebasan beragama", "Berkebudayaan, berbudi pekerti luhur, dan saling hormat-menghormati"], answer: 4 },
+      { question: "Secara etimologi menurut Sukarno, kata 'Pancasila' berasal dari bahasa Sanskerta, yaitu 'panca' dan 'sila' yang artinya:", options: ["Lima aturan", "Lima tiang", "Lima dasar", "Lima ajaran", "Lima hukum"], answer: 2 },
+      { question: "Semboyan penutup pidato Sukarno tanggal 1 Juni 1945 yang menggelorakan semangat tekad kemerdekaan adalah:", options: ["Bhinneka Tunggal Ika!", "Sekali Merdeka Tetap Merdeka!", "Bersatu Kita Teguh!", "Merdeka atau Mati!", "Rawe-rawe Rantas Malang-malang Putung!"], answer: 3 },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah dari peristiwa berikut yang merupakan satu kesatuan proses perumusan dan pengesahan Pancasila yang tidak berdiri sendiri? (Pilih 3 Jawaban)", options: ["Pembentukan organisasi Boedi Oetomo pada 1908", "Pidato Sukarno pada 1 Juni 1945", "Penandatanganan Piagam Jakarta pada 22 Juni 1945", "Pengesahan Pancasila oleh PPKI pada 18 Agustus 1945", "Peristiwa Rengasdengklok pada 16 Agustus 1945"], answer: [1, 2, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Siapakah tokoh-tokoh pendiri bangsa yang menyampaikan usulan pemikiran dasar negara pada hari pertama sidang BPUPK (29 Mei 1945)? (Pilih 3 Jawaban)", options: ["Mohammad Yamin", "Drs. Mohammad Hatta", "R.A.A. Wiranatakoesoema", "Ki Bagoes Hadikoesoemo", "A.M. Dasaad"], answer: [0, 2, 4] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah di antara pernyataan berikut yang sesuai dengan prinsip 'Kebangsaan' menurut pidato Sukarno 1 Juni 1945? (Pilih 2 Jawaban)", options: ["Menjelaskan bahwa bangsa Indonesia mencakup seluruh pulau dari ujung Utara Sumatra sampai Irian", "Menolak persaudaraan antar bangsa-bangsa di dunia", "Hanya mewakili golongan masyarakat di pulau Jawa", "Didasarkan pada konsep 'le desir d'etre ensemble' (keinginan untuk hidup bersama)", "Mengharuskan pemisahan tegas antara agama dan negara"], answer: [0, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Apa saja kedudukan utama Pancasila bagi bangsa dan negara Indonesia? (Pilih 3 Jawaban)", options: ["Pandangan hidup bangsa", "Sistem hukum tunggal", "Dasar negara", "Naskah konstitusi tertulis", "Ideologi negara"], answer: [0, 2, 4] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah tiga prinsip dasar yang disampaikan oleh Soepomo pada sidang BPUPK tanggal 31 Mei 1945? (Pilih 3 Jawaban)", options: ["Semangat kekeluargaan", "Internasionalisme", "Dasar persatuan", "Kesejahteraan sosial", "Semangat gotong royong"], answer: [0, 2, 4] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Ciri-ciri utama Ketuhanan yang diusulkan oleh Sukarno dalam pidato 1 Juni 1945 meliputi: (Pilih 3 Jawaban)", options: ["Ketuhanan yang memaksakan satu agama resmi", "Ketuhanan yang berkebudayaan", "Ketuhanan yang saling hormat-menghormati", "Ketuhanan yang melarang ibadah di luar tempat resmi", "Ketuhanan yang berbudi pekerti luhur"], answer: [1, 2, 4] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah tokoh-tokoh yang menyampaikan gagasan berkaitan dengan agama/Islam sebagai dasar atau sendi negara dalam sidang BPUPK? (Pilih 3 Jawaban)", options: ["Soesanto Tirtoprodjo", "A.M. Dasaad", "R. Abdoelrahim Pratalykrama", "K.R.M.T.H. Woerjaningrat", "Ki Bagoes Hadikoesoemo"], answer: [1, 2, 4] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Siapakah tokoh pendiri bangsa yang termasuk ke dalam anggota Panitia Sembilan yang merumuskan Piagam Jakarta pada 22 Juni 1945? (Pilih 3 Jawaban)", options: ["dr. K.R.T. Radjiman Wedyodiningrat", "Ir. Sukarno", "Prof. Dr. Mr. R. Soepomo", "Drs. Mohammad Hatta", "Mr. A.A. Maramis"], answer: [1, 3, 4] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Apa saja hal-hal yang ditekankan Sukarno mengenai dasar Mufakat dan Permusyawaratan/Perwakilan (Demokrasi)? (Pilih 2 Jawaban)", options: ["Negara hanya diperuntukkan bagi golongan kaya", "Aspirasi rakyat dimusyawarahkan melalui lembaga perwakilan rakyat", "Keputusan diambil secara sepihak oleh pimpinan negara", "Negara didirikan atas prinsip 'semua buat semua, satu buat semua, semua buat satu'", "Hak bersuara hanya dimiliki oleh anggota pergerakan"], answer: [1, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Berdasarkan fakta sejarah, pernyataan yang BENAR mengenai Pidato Sukarno 1 Juni 1945 adalah: (Pilih 3 Jawaban)", options: ["Berlangsung selama kurang lebih satu jam (pukul 09.00 – 10.00)", "Disampaikan tanpa teks di hadapan sidang BPUPK", "Ditulis dan dirumuskan bersama oleh Panitia Sembilan", "Menjawab secara utuh dan komprehensif pertanyaan dr. Radjiman Wedyodiningrat", "Dibacakan di Gedung Pegangsaan Timur No. 56"], answer: [0, 1, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Tokoh-tokoh yang menyampaikan gagasannya pada sidang BPUPK tanggal 30 Mei 1945 adalah: (Pilih 2 Jawaban)", options: ["Sukarno", "R. Abdoelrahim Pratalykrama", "Mohammad Yamin", "Drs. Mohammad Hatta", "Soepomo"], answer: [1, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah pernyataan yang benar mengenai konsep Internasionalisme menurut Sukarno? (Pilih 2 Jawaban)", options: ["Bangsa Indonesia harus menguasai bangsa lain yang lebih lemah", "Bangsa Indonesia menuju pada persaudaraan dan kekeluargaan bangsa-bangsa", "Internasionalisme berarti menghapus semangat kebangsaan Indonesia", "Bangsa Indonesia tidak boleh meremehkan bangsa-bangsa lain", "Internasionalisme menolak adanya kerja sama antar negara"], answer: [1, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Mengapa gagasan-gagasan yang disampaikan anggota BPUPK pada sidang pertama murni aspirasi para tokoh? (Pilih 2 Jawaban)", options: ["Persidangan relatif bebas dari gangguan dan tekanan penguasa Jepang", "Dipandu dan diawasi ketat oleh PBB", "Setiap anggota leluasa mengemukakan pendapatnya secara terbuka", "Hanya menyalin konsep dasar negara dari Jepang", "Ditulis berdasarkan undang-undang kolonial Belanda"], answer: [0, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah di antara pilihan berikut yang termasuk dalam 5 dasar negara usulan Sukarno pada 1 Juni 1945? (Pilih 3 Jawaban)", options: ["Persatuan Indonesia", "Kesejahteraan Sosial", "Kebangsaan", "Ketuhanan", "Keadilan Sosial bagi Seluruh Rakyat Indonesia"], answer: [1, 2, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Manakah refleksi perilaku yang menunjukkan penerapan nilai-nilai Pancasila dalam kehidupan sehari-hari? (Pilih 2 Jawaban)", options: ["Memaksa orang lain mengikuti keyakinan agama pribadi", "Menghargai perbedaan pendapat saat berdiskusi di kelas", "Gotong royong membersihkan lingkungan sekolah secara bersama-sama", "Menolak berteman dengan siswa dari suku yang berbeda", "Mengabaikan peraturan lalu lintas demi kepentingan pribadi"], answer: [1, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Menurut Soepomo (31 Mei 1945), hal-hal penting yang harus dipelihara oleh negara adalah: (Pilih 2 Jawaban)", options: ["Budi pekerti kemanusiaan yang luhur", "Sistem monopoli perdagangan nasional", "Cita-cita moral rakyat yang luhur", "Persaingan politik antar golongan secara bebas", "Kekuasaan pemerintah yang tidak terbatas"], answer: [0, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Pernyataan yang benar mengenai penutupan pidato Sukarno 1 Juni 1945 adalah: (Pilih 2 Jawaban)", options: ["Semboyan yang diucapkan adalah 'Merdeka atau Mati!'", "Kemerdekaan hanyalah didapat oleh bangsa yang jiwanya berkobar-kobar", "Menyatakan bahwa perjuangan bangsa telah selesai sepenuhnya", "Meminta rakyat berhenti berjuang setelah merdeka", "Menolak risiko dan tantangan di masa depan"], answer: [0, 1] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Siapakah tokoh-tokoh pendiri bangsa yang menyampaikan gagasannya pada persidangan BPUPK tanggal 31 Mei 1945? (Pilih 2 Jawaban)", options: ["A.M. Dasaad", "Prof. Dr. Mr. R. Soepomo", "Sukarno", "Ki Bagoes Hadikoesoemo", "R.A.A. Wiranatakoesoema"], answer: [1, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Asal usul kata 'Pancasila' yang dipaparkan oleh Sukarno mencakup fakta bahwa: (Pilih 2 Jawaban)", options: ["Diberikan oleh ketua BPUPK dr. Radjiman", "Berasal dari bahasa Sanskerta", "Terdiri dari kata 'Panca' (lima) dan 'Sila' (dasar)", "Diambil dari kitab Sutasoma karya Mpu Tantular", "Diterjemahkan langsung dari bahasa Belanda"], answer: [1, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Prinsip 'Kesejahteraan Sosial' yang diusulkan oleh Sukarno menekankan hal-hal berikut: (Pilih 2 Jawaban)", options: ["Kesejahteraan yang hanya diprioritaskan bagi pejabat negara", "Menciptakan dunia baru yang di dalamnya ada keadilan sosial bagi rakyat", "Prinsip tidak akan ada kemiskinan di dalam Indonesia merdeka", "Sistem pasar bebas tanpa campur tangan negara", "Penghapusan seluruh bentuk bantuan sosial"], answer: [1, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Mengapa pertanyaan dr. K.R.T. Radjiman Wedyodiningrat sangat penting dalam sejarah perumusan dasar negara? (Pilih 2 Jawaban)", options: ["Mendorong para pendiri bangsa menyampaikan gagasan filosofis dasar negara", "Merupakan perintah langsung dari Kaisar Jepang", "Menjadi pokok pembahasan utama selama empat hari sidang pertama BPUPK", "Menyebabkan pembatalan pembentukan Panitia Sembilan", "Memaksa sidang berlangsung secara tertutup"], answer: [0, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Dua tokoh yang mengemukakan gagasan pada sidang pertama BPUPK mengenai pentingnya rasa kekeluargaan adalah: (Pilih 2 Jawaban)", options: ["Ki Bagoes Hadikoesoemo", "K.R.M.T.H. Woerjaningrat", "Moh. Hatta", "Soesanto Tirtoprodjo", "A.M. Dasaad"], answer: [1, 3] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Hal-hal yang menunjukkan bahwa perumusan Pancasila melibatkan dinamika penting para pendiri bangsa adalah: (Pilih 2 Jawaban)", options: ["Penetapan dasar negara tanpa melalui proses perdebatan", "Adanya perbedaan gagasan meskipun terdapat kemiripan satu sama lain", "Diskusi terbuka dan dialog antar berbagai aliran pemikiran (kebangsaan & keagamaan)", "Penggunaan naskah tunggal buatan pemerintah Jepang", "Penolakan total terhadap semua pemikiran barat"], answer: [1, 2] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Sikap keteladanan apakah yang ditunjukkan para pendiri bangsa saat mengatasi perbedaan pendapat dalam sidang BPUPK? (Pilih 2 Jawaban)", options: ["Mengutamakan semangat persatuan dan kesatuan nasional", "Mengedepankan musyawarah untuk mencapai mufakat demi kepentingan bersama", "Memaksa kehendak pribadi agar diterima oleh seluruh anggota", "Keluar dari ruangan persidangan saat pendapatnya disanggah", "Menolak kompromi dalam pembentukan naskah Piagam Jakarta"], answer: [0, 1] },
+      { isComplex: true, question: "[PILIHAN GANDA KOMPLEKS] Mengapa kita perlu mempelajari dan menganalisis cara pandang para pendiri bangsa dalam merumuskan Pancasila? (Pilih 2 Jawaban)", options: ["Memahami nilai-nilai keteladanan, kompromi, dan toleransi para tokoh pendiri bangsa", "Menjadikan Pancasila sebagai pedoman dalam kehidupan berbangsa dan bernegara", "Menghafal nama-nama peserta sidang BPUPK tanpa memahami isinya", "Membandingkan keunggulan sistem pemerintahan negara lain", "Mengabaikan sejarah perjuangan masa lalu"], answer: [0, 1] }
     ];
 
     const isianQuestions = [
@@ -806,49 +812,66 @@
     // =========================================================================
 
     function handleLogin(e) {
-      e.preventDefault();
-      const usernameInput = document.getElementById("inputNisn").value.trim();
-      const passwordInput = document.getElementById("inputPassword").value.trim();
+  e.preventDefault();
+  const usernameInput = document.getElementById("inputNisn").value.trim();
+  const passwordInput = document.getElementById("inputPassword").value.trim();
 
-      Swal.fire({ title: "Memeriksa Akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  // PERBAIKAN: Menambahkan properti UI agar kotak hitam tidak muncul
+  Swal.fire({ 
+    title: "Memeriksa Akun...", 
+    html: "", // Mengosongkan HTML container agar tidak membuat space/elemen kosong
+    showConfirmButton: false, // Menghilangkan tombol konfirmasi bawaan
+    allowOutsideClick: false,
+    background: '#ffffff', // Latar belakang modal putih bersih
+    color: '#0f172a', // Warna teks judul
+    didOpen: () => {
+      Swal.showLoading();
+      
+      // Menghilangkan latar belakang gelap pada container html bawaan SweetAlert2 jika ada
+      const htmlContainer = Swal.getHtmlContainer();
+      if (htmlContainer) {
+        htmlContainer.style.display = 'none';
+      }
+    } 
+  });
 
-      const payload = { action: "login", username: usernameInput, password: passwordInput };
+  const payload = { action: "login", username: usernameInput, password: passwordInput };
 
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        Swal.close();
-        if (data.status === "success") {
-          siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    Swal.close();
+    if (data.status === "success") {
+      siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
 
-          if (data.role === "admin") {
-            document.getElementById("secLogin").classList.add("hidden");
-            document.getElementById("secAdmin").classList.remove("hidden");
-            document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, Admin ${siswaCurrent.nama}!`;
-            renderAdminTab(1);
-          } else {
-            initLoginBerandaSiswa();
-          }
-        } else {
-          tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
-        }
-      })
-      .catch(() => {
-        Swal.close();
-        if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
-          siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
-          document.getElementById("secLogin").classList.add("hidden");
-          document.getElementById("secAdmin").classList.remove("hidden");
-          renderAdminTab(1);
-        } else {
-          siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
-          initLoginBerandaSiswa();
-        }
-      });
+      if (data.role === "admin") {
+        document.getElementById("secLogin").classList.add("hidden");
+        document.getElementById("secAdmin").classList.remove("hidden");
+        document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, Admin ${siswaCurrent.nama}!`;
+        renderAdminTab(1);
+      } else {
+        initLoginBerandaSiswa();
+      }
+    } else {
+      tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
     }
+  })
+  .catch(() => {
+    Swal.close();
+    if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
+      siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
+      document.getElementById("secLogin").classList.add("hidden");
+      document.getElementById("secAdmin").classList.remove("hidden");
+      renderAdminTab(1);
+    } else {
+      siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
+      initLoginBerandaSiswa();
+    }
+  });
+}
 
     function initLoginBerandaSiswa() {
       document.getElementById("labelUserRole").innerText = "Profil Siswa Aktif";
@@ -868,61 +891,86 @@
     }
 
     function updateBerandaCardsUI() {
-      isAdminPreviewMode = false;
-      document.getElementById("bannerAdminPreview").classList.add("hidden");
+  // JIKA SEDANG DALAM MODE PRATINJAU ADMIN: Tetapkan semua babak terbuka
+  if (isAdminPreviewMode) {
+    document.getElementById("bannerAdminPreview").classList.remove("hidden");
+    document.getElementById("labelUserRole").innerText = "Pengawas Admin";
+    document.getElementById("dispNama").innerText = siswaCurrent.nama + " (Mode Pratinjau)";
+    document.getElementById("dispNisn").innerText = `AKUN: ${siswaCurrent.nisn}`;
 
-      let totalPassed = 0;
+    for (let i = 1; i <= 5; i++) {
+      const card = document.getElementById(`cardBabak${i}`);
+      const badge = document.getElementById(`badgeStatusB${i}`);
+      const btnAction = document.getElementById(`btnActionB${i}`);
 
-      for (let i = 1; i <= 5; i++) {
-        const item = rekapSiswa[i];
-        const card = document.getElementById(`cardBabak${i}`);
-        const badge = document.getElementById(`badgeStatusB${i}`);
-        const valScore = document.getElementById(`valScoreB${i}`);
-        const valPercobaan = document.getElementById(`valPercobaanB${i}`);
-        const btnAction = document.getElementById(`btnActionB${i}`);
-
-        if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
-        if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
-
-        if (item.status === 'lolos') {
-          totalPassed++;
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
-            badge.innerText = "🎉 Lolos (≥85%)";
-          }
-          if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-          if (btnAction && i > 1) {
-            btnAction.disabled = false;
-            btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
-            btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
-          }
-        } else if (item.status === 'terbuka') {
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
-            badge.innerText = "Terbuka";
-          }
-          if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-          if (btnAction && i > 1) {
-            btnAction.disabled = false;
-            btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
-            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
-          }
-        } else {
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
-            badge.innerText = "🔒 Terkunci";
-          }
-          if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
-          if (btnAction && i > 1) {
-            btnAction.disabled = true;
-            btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
-            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
-          }
-        }
+      if (card) card.className = "bg-white border-2 border-amber-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700";
+        badge.innerText = "Pratinjau Admin";
       }
-
-      document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
+      if (btnAction) {
+        btnAction.disabled = false;
+        btnAction.className = "w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+        btnAction.innerHTML = `<span>Buka Babak</span> <i class="fa-solid fa-eye"></i>`;
+      }
     }
+    return; // Hentikan eksekusi agar tidak tertimpa status siswa biasa
+  }
+
+  // JIKA SISWA BIASA: Terapkan aturan penguncian normal
+  document.getElementById("bannerAdminPreview").classList.add("hidden");
+  let totalPassed = 0;
+
+  for (let i = 1; i <= 5; i++) {
+    const item = rekapSiswa[i];
+    const card = document.getElementById(`cardBabak${i}`);
+    const badge = document.getElementById(`badgeStatusB${i}`);
+    const valScore = document.getElementById(`valScoreB${i}`);
+    const valPercobaan = document.getElementById(`valPercobaanB${i}`);
+    const btnAction = document.getElementById(`btnActionB${i}`);
+
+    if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
+    if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
+
+    if (item.status === 'lolos') {
+      totalPassed++;
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
+        badge.innerText = "🎉 Lolos (≥85%)";
+      }
+      if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+      if (btnAction && i > 1) {
+        btnAction.disabled = false;
+        btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+        btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
+      }
+    } else if (item.status === 'terbuka') {
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
+        badge.innerText = "Terbuka";
+      }
+      if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+      if (btnAction && i > 1) {
+        btnAction.disabled = false;
+        btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+        btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
+      }
+    } else {
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
+        badge.innerText = "🔒 Terkunci";
+      }
+      if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
+      if (btnAction && i > 1) {
+        btnAction.disabled = true;
+        btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
+        btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
+      }
+    }
+  }
+
+  document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
+}
 
     function lihatModeSiswaPreview() {
       isAdminPreviewMode = true;
@@ -1215,19 +1263,22 @@
     let questionTimerInterval = null;
 
     function initBoxesMisteri() {
-      if (boxesData.length > 0) return;
-      const fixedGameBoxes = [3, 5, 6, 7, 10, 11, 14, 18, 19, 21, 23, 27, 28, 29, 30, 31, 33, 35, 36, 37, 43, 44, 45, 47, 48];
+  if (boxesData.length > 0) return;
+  const fixedGameBoxes = [3, 5, 6, 7, 10, 11, 14, 18, 19, 21, 23, 27, 28, 29, 30, 31, 33, 35, 36, 37, 43, 44, 45, 47, 48];
 
-      for (let i = 1; i <= TOTAL_BOXES; i++) {
-        boxesData.push({
-          id: i,
-          type: fixedGameBoxes.includes(i) ? 'game' : 'question',
-          questionData: quizQuestions[i - 1],
-          status: 'closed',
-          scoreEarned: 0
-        });
-      }
-    }
+  // 1. Acak daftar soal quizQuestions agar setiap siswa mendapat urutan soal berbeda
+  const shuffledQuestions = shuffleArray(quizQuestions);
+
+  for (let i = 1; i <= TOTAL_BOXES; i++) {
+    boxesData.push({
+      id: i,
+      type: fixedGameBoxes.includes(i) ? 'game' : 'question',
+      questionData: shuffledQuestions[i - 1], // Mengambil dari array yang sudah diacak
+      status: 'closed',
+      scoreEarned: 0
+    });
+  }
+}
 
     function renderGridKotakMisteri(c) {
       c.innerHTML = `
@@ -1278,84 +1329,117 @@
     }
 
     function showQuestionModal(box, isBonusStage = false, gameSuccess = false) {
-      const q = box.questionData;
-      let questionTimeLeft = 45;
-      
-      let titleText = `📝 SOAL KOTAK #${box.id}`;
-      if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
+  const q = box.questionData;
+  let questionTimeLeft = 45;
+  
+  let titleText = `📝 SOAL KOTAK #${box.id}`;
+  if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
 
-      const timerHeaderHtml = `
-        <div class="flex justify-between items-center bg-slate-800 p-2.5 rounded-lg mb-3 border border-slate-700 text-sm font-bold text-white">
-          <span class="text-indigo-400">⏱️ Sisa Waktu Jawab:</span>
-          <span id="swalQTimer" class="text-amber-400 text-base">45s</span>
-        </div>
-      `;
+  const timerHeaderHtml = `
+    <div class="flex justify-between items-center bg-slate-800 p-2.5 rounded-lg mb-3 border border-slate-700 text-sm font-bold text-white">
+      <span class="text-indigo-400">⏱️ Sisa Waktu Jawab:</span>
+      <span id="swalQTimer" class="text-amber-400 text-base">45s</span>
+    </div>
+  `;
 
-      clearInterval(questionTimerInterval);
+  clearInterval(questionTimerInterval);
 
-      if (q.isComplex) {
-        let htmlOptions = '<div class="swal2-checkbox-group">';
-        q.options.forEach((opt, idx) => {
-          htmlOptions += `<label><input type="checkbox" name="complexOpt" value="${idx}" class="accent-indigo-500 transform scale-125"><span>${opt}</span></label>`;
-        });
-        htmlOptions += '</div>';
-
-        Swal.fire({
-          title: titleText, html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold">${q.question}</p>` + htmlOptions,
-          confirmButtonText: 'Kirim Jawaban', confirmButtonColor: '#4f46e5', allowOutsideClick: false, background: '#1e293b', color: '#fff',
-          didOpen: () => {
-            const timerEl = document.getElementById('swalQTimer');
-            questionTimerInterval = setInterval(() => {
-              questionTimeLeft--;
-              if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
-              if (questionTimeLeft <= 0) {
-                clearInterval(questionTimerInterval); Swal.close();
-                evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
-              }
-            }, 1000);
-          },
-          preConfirm: () => {
-            clearInterval(questionTimerInterval);
-            const checked = Array.from(document.querySelectorAll('input[name="complexOpt"]:checked')).map(cb => parseInt(cb.value));
-            if (checked.length === 0) { Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); return false; }
-            return checked;
-          }
-        }).then((result) => {
-          clearInterval(questionTimerInterval);
-          if (result.isConfirmed) {
-            const userAnswers = result.value.sort(); const correctAnswers = q.answer.sort();
-            const isCorrect = userAnswers.length === correctAnswers.length && userAnswers.every((val, index) => val === correctAnswers[index]);
-            evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q);
-          }
-        });
-      } else {
-        Swal.fire({
-          title: titleText, html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold mb-2">${q.question}</p>`,
-          input: 'radio', inputOptions: q.options.reduce((acc, opt, i) => ({ ...acc, [i]: opt }), {}),
-          inputValidator: (value) => { if (!value) return 'Kamu harus memilih satu jawaban!'; },
-          confirmButtonText: 'Kirim Jawaban', confirmButtonColor: '#4f46e5', allowOutsideClick: false, background: '#1e293b', color: '#fff',
-          didOpen: () => {
-            const timerEl = document.getElementById('swalQTimer');
-            questionTimerInterval = setInterval(() => {
-              questionTimeLeft--;
-              if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
-              if (questionTimeLeft <= 0) {
-                clearInterval(questionTimerInterval); Swal.close();
-                evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
-              }
-            }, 1000);
-          },
-          preConfirm: () => { clearInterval(questionTimerInterval); }
-        }).then((result) => {
-          clearInterval(questionTimerInterval);
-          if (result.isConfirmed) {
-            const selectedIdx = parseInt(result.value);
-            const isCorrect = selectedIdx === q.answer;
-            evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q);
-          }
-        });
-      }
+  // --- LOGIKA MENGACAK PILIHAN JAWABAN ---
+  // Buat array objek opsi yang menyimpan teks & status kebenaran aslinya
+  let mappedOptions = q.options.map((optText, origIdx) => {
+    let isCorrect = false;
+    if (q.isComplex) {
+      isCorrect = q.answer.includes(origIdx);
+    } else {
+      isCorrect = (origIdx === q.answer);
     }
+    return { text: optText, isCorrect: isCorrect };
+  });
+
+  // Acak pilihan jawaban untuk siswa
+  let shuffledOptions = shuffleArray(mappedOptions);
+
+  if (q.isComplex) {
+    let htmlOptions = '<div class="swal2-checkbox-group">';
+    shuffledOptions.forEach((optObj, idx) => {
+      // Simpan status kebenaran di attribute data-correct
+      htmlOptions += `<label><input type="checkbox" name="complexOpt" value="${optObj.isCorrect ? '1' : '0'}" class="accent-indigo-500 transform scale-125"><span>${optObj.text}</span></label>`;
+    });
+    htmlOptions += '</div>';
+
+    Swal.fire({
+      title: titleText, html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold">${q.question}</p>` + htmlOptions,
+      confirmButtonText: 'Kirim Jawaban', confirmButtonColor: '#4f46e5', allowOutsideClick: false, background: '#1e293b', color: '#fff',
+      didOpen: () => {
+        const timerEl = document.getElementById('swalQTimer');
+        questionTimerInterval = setInterval(() => {
+          questionTimeLeft--;
+          if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
+          if (questionTimeLeft <= 0) {
+            clearInterval(questionTimerInterval); Swal.close();
+            evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
+          }
+        }, 1000);
+      },
+      preConfirm: () => {
+        clearInterval(questionTimerInterval);
+        const checkboxes = Array.from(document.querySelectorAll('input[name="complexOpt"]'));
+        const checkedBoxes = checkboxes.filter(cb => cb.checked);
+
+        if (checkedBoxes.length === 0) { 
+          Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); 
+          return false; 
+        }
+
+        // Cek apakah semua jawaban benar dicentang DAN tidak ada jawaban salah yang dicentang
+        const totalCorrectInQuestion = checkboxes.filter(cb => cb.value === '1').length;
+        const correctCheckedCount = checkedBoxes.filter(cb => cb.value === '1').length;
+        const wrongCheckedCount = checkedBoxes.filter(cb => cb.value === '0').length;
+
+        const isAllCorrect = (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
+        return isAllCorrect;
+      }
+    }).then((result) => {
+      clearInterval(questionTimerInterval);
+      if (result.isConfirmed) {
+        evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
+      }
+    });
+  } else {
+    // Pilihan Ganda Biasa
+    const radioInputOptions = shuffledOptions.reduce((acc, optObj, i) => {
+      acc[i] = optObj.text;
+      return acc;
+    }, {});
+
+    Swal.fire({
+      title: titleText, html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold mb-2">${q.question}</p>`,
+      input: 'radio', 
+      inputOptions: radioInputOptions,
+      inputValidator: (value) => { if (!value) return 'Kamu harus memilih satu jawaban!'; },
+      confirmButtonText: 'Kirim Jawaban', confirmButtonColor: '#4f46e5', allowOutsideClick: false, background: '#1e293b', color: '#fff',
+      didOpen: () => {
+        const timerEl = document.getElementById('swalQTimer');
+        questionTimerInterval = setInterval(() => {
+          questionTimeLeft--;
+          if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
+          if (questionTimeLeft <= 0) {
+            clearInterval(questionTimerInterval); Swal.close();
+            evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
+          }
+        }, 1000);
+      },
+      preConfirm: () => { clearInterval(questionTimerInterval); }
+    }).then((result) => {
+      clearInterval(questionTimerInterval);
+      if (result.isConfirmed) {
+        const selectedIdx = parseInt(result.value);
+        const isCorrect = shuffledOptions[selectedIdx].isCorrect;
+        evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q);
+      }
+    });
+  }
+}
 
     function evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q, isTimeout = false) {
       if (isTimeout) {
@@ -2223,63 +2307,60 @@
       }
     }
 
+  
     // SUBMIT DAN PENGIRIMAN HASIL BABAK KE SPREADSHEET
-    function submitBabakCurrent() {
-      if (isAdminPreviewMode) {
-        tampilkanDialogNotif('MODE PRATINJAU ADMIN', `Ini adalah simulasi tampilan siswa untuk Babak ${babakActive}. Nilai tidak akan dikirimkan ke Spreadsheet.`, 'info', 'Paham');
-        return;
-      }
+function submitBabakCurrent() {
+  let skorMurni = 0;
 
-      let skorMurni = 0;
+  if (babakActive === 1) {
+    let correctOrderCount = 0;
+    let correctMatchCount = 0;
 
-      if (babakActive === 1) {
-        let correctOrderCount = 0;
-        let correctMatchCount = 0;
+    savedTahap1UserOrder.forEach((id, idx) => {
+      if (id === idx + 1) correctOrderCount++;
+      const selectedText = document.getElementById(`selTahap2Text_${id}`) ? document.getElementById(`selTahap2Text_${id}`).value : "";
+      const targetObj = timelineEvents.find(e => e.id === id);
+      if (targetObj && selectedText === targetObj.text) correctMatchCount++;
+    });
 
-        savedTahap1UserOrder.forEach((id, idx) => {
-          if (id === idx + 1) correctOrderCount++;
-          const selectedText = document.getElementById(`selTahap2Text_${id}`) ? document.getElementById(`selTahap2Text_${id}`).value : "";
-          const targetObj = timelineEvents.find(e => e.id === id);
-          if (targetObj && selectedText === targetObj.text) correctMatchCount++;
-        });
-
-        const scoreOrder = (correctOrderCount / timelineEvents.length) * 50;
-        const scoreMatch = (correctMatchCount / timelineEvents.length) * 50;
-        skorMurni = Math.round(scoreOrder + scoreMatch);
-      } else if (babakActive === 2) {
-        let correctCount = 0;
-        gagasanCards.forEach((item, idx) => {
-          const val = document.getElementById(`selGagasan_${idx}`) ? document.getElementById(`selGagasan_${idx}`).value : "";
-          if (val === item.tokoh) correctCount++;
-        });
-        skorMurni = Math.round((correctCount / gagasanCards.length) * 100);
-      } else if (babakActive === 3) {
-        if (openedCountMisteri === 0) {
-          tampilkanDialogNotif('PERHATIAN', 'Buka & selesaikan setidaknya beberapa Kotak Misteri terlebih dahulu!', 'warning');
-          return;
-        }
-        skorMurni = Math.min(100, Math.round(scoreMisteriTotal / openedCountMisteri));
-      } else if (babakActive === 4) {
-        if (babak4TimerInterval) clearInterval(babak4TimerInterval);
-
-        let correctCount = 0;
-        isianQuestions.forEach((item, idx) => {
-          const val = babak4UserAnswers[idx];
-          if (val === item.a) correctCount++;
-        });
-        skorMurni = Math.round((correctCount / isianQuestions.length) * 100);
-      } else if (babakActive === 5) {
-        let correctCount = 0;
-        esaiData.forEach((item, qIdx) => {
-          const targetAnswer = item.words.join(" ");
-          const userAns = (userEsaiAnswers[qIdx] || []).join(" ");
-          if (userAns === targetAnswer) correctCount++;
-        });
-        skorMurni = Math.round((correctCount / esaiData.length) * 100);
-      }
-
-      kirimKeAppsScript(babakActive, rekapSiswa[babakActive].percobaan, skorMurni);
+    const scoreOrder = (correctOrderCount / timelineEvents.length) * 50;
+    const scoreMatch = (correctMatchCount / timelineEvents.length) * 50;
+    skorMurni = Math.round(scoreOrder + scoreMatch);
+  } else if (babakActive === 2) {
+    let correctCount = 0;
+    gagasanCards.forEach((item, idx) => {
+      const val = document.getElementById(`selGagasan_${idx}`) ? document.getElementById(`selGagasan_${idx}`).value : "";
+      if (val === item.tokoh) correctCount++;
+    });
+    skorMurni = Math.round((correctCount / gagasanCards.length) * 100);
+  } else if (babakActive === 3) {
+    if (openedCountMisteri === 0 && !isAdminPreviewMode) {
+      tampilkanDialogNotif('PERHATIAN', 'Buka & selesaikan setidaknya beberapa Kotak Misteri terlebih dahulu!', 'warning');
+      return;
     }
+    skorMurni = openedCountMisteri > 0 ? Math.min(100, Math.round(scoreMisteriTotal / openedCountMisteri)) : 0;
+  } else if (babakActive === 4) {
+    if (babak4TimerInterval) clearInterval(babak4TimerInterval);
+
+    let correctCount = 0;
+    isianQuestions.forEach((item, idx) => {
+      const val = babak4UserAnswers[idx];
+      if (val === item.a) correctCount++;
+    });
+    skorMurni = Math.round((correctCount / isianQuestions.length) * 100);
+  } else if (babakActive === 5) {
+    let correctCount = 0;
+    esaiData.forEach((item, qIdx) => {
+      const targetAnswer = item.words.join(" ");
+      const userAns = (userEsaiAnswers[qIdx] || []).join(" ");
+      if (userAns === targetAnswer) correctCount++;
+    });
+    skorMurni = Math.round((correctCount / esaiData.length) * 100);
+  }
+
+  // Kirim data ke Apps Script (termasuk untuk mode Admin)
+  kirimKeAppsScript(babakActive, rekapSiswa[babakActive].percobaan, skorMurni);
+}
 
     function kirimKeAppsScript(babak, percobaan, skorMurni) {
       Swal.fire({ title: "Mengirim Hasil Nilai ke Spreadsheet...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
