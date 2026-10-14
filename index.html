@@ -27,12 +27,24 @@
   </script>
 
   <style>
-    .swal2-html-container:empty {
-    display: none !important;
-  }
-  .swal2-popup .swal2-html-container {
-    background: transparent !important;
-  }
+    /* Hilangkan background gelap & garis hitam dari SweetAlert2 */
+.swal2-popup .swal2-html-container,
+.swal2-popup .swal2-actions,
+.swal2-popup .swal2-validation-message {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Sembunyikan container HTML jika kosong */
+.swal2-html-container:empty {
+  display: none !important;
+}
+
+/* Hilangkan garis/border hitam bawaan SweetAlert2 */
+.swal2-popup {
+  border: none !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
     /* CSS ANIMASI DIALOG POP-UP MODAL */
@@ -816,22 +828,20 @@
   const usernameInput = document.getElementById("inputNisn").value.trim();
   const passwordInput = document.getElementById("inputPassword").value.trim();
 
-  // PERBAIKAN: Menambahkan properti UI agar kotak hitam tidak muncul
+  // PEMBAHARUAN SWAL: Mengabaikan container HTML agar tidak muncul garis/kotak hitam
   Swal.fire({ 
     title: "Memeriksa Akun...", 
-    html: "", // Mengosongkan HTML container agar tidak membuat space/elemen kosong
-    showConfirmButton: false, // Menghilangkan tombol konfirmasi bawaan
+    showConfirmButton: false, 
     allowOutsideClick: false,
-    background: '#ffffff', // Latar belakang modal putih bersih
-    color: '#0f172a', // Warna teks judul
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: {
+      htmlContainer: 'hidden' // Sembunyikan elemen HTML container via Tailwind
+    },
     didOpen: () => {
       Swal.showLoading();
-      
-      // Menghilangkan latar belakang gelap pada container html bawaan SweetAlert2 jika ada
-      const htmlContainer = Swal.getHtmlContainer();
-      if (htmlContainer) {
-        htmlContainer.style.display = 'none';
-      }
+      const htmlEl = Swal.getHtmlContainer();
+      if (htmlEl) htmlEl.style.display = 'none';
     } 
   });
 
@@ -1055,7 +1065,7 @@
         document.getElementById("btnTahap2Next").classList.remove("hidden");
         document.getElementById("btnKirimBabak").classList.add("hidden");
 
-        judulEl.innerText = "Babak 1: Timeline Perumusan (Tahap 1 dari 2)";
+        judulEl.innerText = "Babak 1: Timeline Perumusan Pancasila (Tahap 1 dari 2)";
         judulPanduanEl.innerText = "Panduan Pengerjaan Babak 1 (Tahap 1):";
         teksPanduanEl.innerHTML = `
           <ul class="list-disc list-inside space-y-1">
@@ -1087,7 +1097,7 @@
         document.getElementById("btnKirimBabak").classList.remove("hidden");
 
         if (n === 2) {
-          judulEl.innerText = "Babak 2: Kategori Gagasan Tokoh (Interaktif)";
+          judulEl.innerText = "Babak 2: Gagasan Tokoh Pendiri Negara saat Sidang BPUPK";
           judulPanduanEl.innerText = "Panduan Pengerjaan Babak 2:";
           teksPanduanEl.innerHTML = `
             <ul class="list-disc list-inside space-y-1">
@@ -1098,7 +1108,7 @@
           `;
           renderBabak2(container);
         } else if (n === 4) {
-          judulEl.innerText = "Babak 4: Drag & Drop Isian HOTS (1 per 1 - Timer 120 Detik)";
+          judulEl.innerText = "Babak 4: Drag & Drop Isian Singkat (1 per 1 - Timer 120 Detik)";
           judulPanduanEl.innerText = "Panduan Pengerjaan Babak 4:";
           teksPanduanEl.innerHTML = `
             <ul class="list-disc list-inside space-y-1">
@@ -2363,61 +2373,76 @@ function submitBabakCurrent() {
 }
 
     function kirimKeAppsScript(babak, percobaan, skorMurni) {
-      Swal.fire({ title: "Mengirim Hasil Nilai ke Spreadsheet...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  // PERBAIKAN: Menambahkan opsi agar tidak memunculkan kotak/garis hitam
+  Swal.fire({ 
+    title: "Mengirim ...", 
+    html: "", 
+    showConfirmButton: false, 
+    allowOutsideClick: false,
+    background: '#ffffff',
+    color: '#0f172a',
+    didOpen: () => {
+      Swal.showLoading();
+      const htmlContainer = Swal.getHtmlContainer();
+      if (htmlContainer) {
+        htmlContainer.style.display = 'none';
+      }
+    } 
+  });
 
-      const payload = {
-        action: "submitScore",
-        idSiswa: siswaCurrent.nisn,
-        namaSiswa: siswaCurrent.nama,
-        babak: babak,
-        percobaan: percobaan,
-        skorMurni: skorMurni,
-        jawaban: { timestamp: new Date() }
-      };
+  const payload = {
+    action: "submitScore",
+    idSiswa: siswaCurrent.nisn,
+    namaSiswa: siswaCurrent.nama,
+    babak: babak,
+    percobaan: percobaan,
+    skorMurni: skorMurni,
+    jawaban: { timestamp: new Date() }
+  };
 
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        Swal.close();
-        if (data.status === "success") {
-          const skorAkhir = data.skorAkhir || skorMurni;
-          
-          rekapSiswa[babak].skor = skorAkhir;
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    Swal.close();
+    if (data.status === "success") {
+      const skorAkhir = data.skorAkhir || skorMurni;
+      
+      rekapSiswa[babak].skor = skorAkhir;
 
-          if (skorAkhir >= 85 || data.bisaLanjut) {
-            rekapSiswa[babak].status = 'lolos';
-            
-            // Buka babak berikutnya jika lolos
-            if (babak < 5) {
-              rekapSiswa[babak + 1].status = 'terbuka';
-            }
-
-            tampilkanDialogNotif('SELAMAT! 🎉', `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan ke Spreadsheet!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
-          } else {
-            rekapSiswa[babak].status = 'terbuka';
-            tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Data tersimpan di Spreadsheet. Silakan ulangi babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
-          }
-        } else {
-          tampilkanDialogNotif('ERROR SERVER', data.message, 'error');
+      if (skorAkhir >= 85 || data.bisaLanjut) {
+        rekapSiswa[babak].status = 'lolos';
+        
+        // Buka babak berikutnya jika lolos
+        if (babak < 5) {
+          rekapSiswa[babak + 1].status = 'terbuka';
         }
-      })
-      .catch(() => {
-        Swal.close();
-        rekapSiswa[babak].skor = skorMurni;
 
-        if (skorMurni >= 85) {
-          rekapSiswa[babak].status = 'lolos';
-          if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
-          tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
-        } else {
-          rekapSiswa[babak].status = 'terbuka';
-          tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
-        }
-      });
+        tampilkanDialogNotif('SELAMAT! 🎉', `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan ke Spreadsheet!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
+      } else {
+        rekapSiswa[babak].status = 'terbuka';
+        tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Data tersimpan di Spreadsheet. Silakan ulangi babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+      }
+    } else {
+      tampilkanDialogNotif('ERROR SERVER', data.message, 'error');
     }
+  })
+  .catch(() => {
+    Swal.close();
+    rekapSiswa[babak].skor = skorMurni;
+
+    if (skorMurni >= 85) {
+      rekapSiswa[babak].status = 'lolos';
+      if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
+      tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
+    } else {
+      rekapSiswa[babak].status = 'terbuka';
+      tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+    }
+  });
+}
   </script>
 </body>
 </html>
