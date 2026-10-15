@@ -1410,18 +1410,22 @@
   let titleText = `📝 SOAL KOTAK #${box.id}`;
   if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
 
-  // Hentikan timer yang sedang berjalan sebelumnya
+  // Hentikan interval timer sebelumnya jika ada
   if (questionTimerInterval) clearInterval(questionTimerInterval);
 
-  // Acak urutan pilihan jawaban
+  // Merekam status kebenaran tiap opsi jawaban
   let mappedOptions = q.options.map((optText, origIdx) => {
     let isCorrect = q.isComplex ? q.answer.includes(origIdx) : (origIdx === q.answer);
     return { text: optText, isCorrect: isCorrect };
   });
+
+  // Acak pilihan jawaban
   let shuffledOptions = shuffleArray(mappedOptions);
 
   if (q.isComplex) {
-    // === 1. SOAL PILIHAN GANDA KOMPLEKS (CHECKBOX) ===
+    // =========================================================================
+    // 1. POPUP SOAL PILIHAN GANDA KOMPLEKS (CHECKBOX)
+    // =========================================================================
     let htmlOptions = '<div id="complexOptionsContainer" class="swal2-checkbox-group select-none" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
     shuffledOptions.forEach((optObj, idx) => {
       htmlOptions += `
@@ -1464,7 +1468,7 @@
         const checkboxes = Array.from(document.querySelectorAll('input[name="complexOpt"]'));
         const checkedBoxes = checkboxes.filter(cb => cb.checked);
 
-        // Validasi wajib memilih minimal 1 opsi
+        // Validasi: Wajib memilih minimal 1 opsi
         if (checkedBoxes.length === 0) { 
           Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); 
           return false; 
@@ -1474,19 +1478,21 @@
         const correctCheckedCount = checkedBoxes.filter(cb => cb.value === '1').length;
         const wrongCheckedCount = checkedBoxes.filter(cb => cb.value === '0').length;
 
-        // Kembalikan boolean hasil evaluasi ke .then()
-        return (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
+        // Mengembalikan object status agar tidak memicu pembekuan modal
+        const isAllCorrect = (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
+        return { isCorrect: isAllCorrect };
       }
     }).then((result) => {
       clearInterval(questionTimerInterval);
       if (result.isConfirmed) {
-        // result.value berisi true/false dari preConfirm
-        evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
+        evaluateAnswerResult(box, result.value.isCorrect, isBonusStage, gameSuccess, q);
       }
     });
 
   } else {
-    // === 2. SOAL PILIHAN GANDA BIASA (RADIO HTML MANUAL) ===
+    // =========================================================================
+    // 2. POPUP SOAL PILIHAN GANDA BIASA (RADIO HTML MANUAL)
+    // =========================================================================
     let htmlRadioOptions = '<div id="radioOptionsContainer" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:12px;">';
     shuffledOptions.forEach((optObj, idx) => {
       htmlRadioOptions += `
@@ -1532,12 +1538,12 @@
           return false;
         }
         const selectedIdx = parseInt(selectedRadio.value);
-        return shuffledOptions[selectedIdx].isCorrect;
+        return { isCorrect: shuffledOptions[selectedIdx].isCorrect };
       }
     }).then((result) => {
       clearInterval(questionTimerInterval);
       if (result.isConfirmed) {
-        evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
+        evaluateAnswerResult(box, result.value.isCorrect, isBonusStage, gameSuccess, q);
       }
     });
   }
