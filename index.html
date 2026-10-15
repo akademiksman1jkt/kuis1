@@ -234,7 +234,7 @@
           </div>
 
           <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-blue-500/20 transition transform active:scale-95 flex items-center justify-center gap-2 mt-2">
-            <span>Masuk Sesi Kuis</span>
+            <span>Masuk</span>
             <i class="fa-solid fa-right-to-bracket"></i>
           </button>
         </form>
@@ -1597,6 +1597,10 @@
     const livesDisplay = document.getElementById('livesDisplay');
     const typingContainer = document.getElementById('typingContainer');
     const typingInput = document.getElementById('typingInput');
+
+    let isFlappyStarted = false;
+    let activeSilaQuestions = [];
+    let activeSilaButtons = [1, 2, 3, 4, 5];
     
     let gameTimerInterval, animationFrameId, scoreCount = 0, targetPops = 12, timeLeft = 30, currentBoxForGame = null, selectedGameMode = 0;
     let balloons = [], basket = { x: 350, width: 110, height: 20 }, fallingItems = [], bird = { y: 250, velocity: 0, gravity: 0.6 }, pipes = [], paddle = { x: 350, width: 110 }, ball = { x: 400, y: 200, dx: 7, dy: -7 }, pingpongLives = 3, fallingStars = [], silaIdx = 0, mathIdx = 0, typingIdx = 0;
@@ -1625,7 +1629,7 @@
         case 0:
           targetPops = 18; iconEl.innerText = '🎈'; titleEl.innerText = 'PECAHKAN BALON!';
           tutorialEl.innerText = 'Klik atau sentuh balon cepat yang terbang ke atas. Target: Pecahkan 18 balon dalam 30 detik!';
-          gameTitleEl.innerText = '🎈 PECAH BALON PANCASILA!'; gameDescEl.innerText = 'Pecahkan 18 balon cepat!'; break;
+          gameTitleEl.innerText = '🎈 PECAH BALON!'; gameDescEl.innerText = 'Pecahkan 18 balon cepat!'; break;
         case 1:
           targetPops = 15; iconEl.innerText = '🧺'; titleEl.innerText = 'TANGKAP LAMBANG PANCASILA!';
           tutorialEl.innerText = 'Geser keranjang untuk menangkap simbol Pancasila. Target: Tangkap 15 simbol!';
@@ -1641,12 +1645,12 @@
         case 4:
           targetPops = 3; iconEl.innerText = '🧩'; titleEl.innerText = 'TETRIS PANCASILA!';
           tutorialEl.innerText = 'Gunakan tombol Kiri/Kanan/Putar/Jatuh untuk menyusun balok. Bersihkan 3 baris.';
-          gameTitleEl.innerText = '🧩 TETRIS PANCASILA!'; gameDescEl.innerText = 'Susun & bersihkan 3 baris balok!';
+          gameTitleEl.innerText = '🧩 TETRIS!'; gameDescEl.innerText = 'Susun & bersihkan 3 baris balok!';
           gameControls.classList.remove('hidden'); break;
         case 5:
           targetPops = 12; pingpongLives = 3; iconEl.innerText = '🏓'; titleEl.innerText = 'PING-PONG PANCASILA!';
           tutorialEl.innerText = 'Pantulkan bola cepat sebanyak 12 kali. Kamu Memiliki 3 Nyawa (❤️❤️❤️)!';
-          gameTitleEl.innerText = '🏓 PING-PONG PANCASILA!'; gameDescEl.innerText = 'Pantulkan bola 12 kali!';
+          gameTitleEl.innerText = '🏓 PING-PONG!'; gameDescEl.innerText = 'Pantulkan bola 12 kali!';
           livesContainer.classList.remove('hidden'); updatePingpongLivesUI(); break;
         case 6:
           targetPops = 1; iconEl.innerText = '⭐'; titleEl.innerText = 'PUZZLE GESER BINTANG PANCASILA!';
@@ -1679,16 +1683,29 @@
     function runMiniGame() {
       overlay.classList.add('hidden');
       balloons = []; fallingItems = []; pipes = []; fallingStars = [];
-      basket.x = canvas.width / 2 - basket.width / 2; bird.y = 250; bird.velocity = 0; ball.x = 400; ball.y = 150; ball.dx = 7; ball.dy = -7;
+      basket.x = canvas.width / 2 - basket.width / 2; 
+      
+      // Reset Burung Garuda untuk Mode 3
+      bird.y = 250; 
+      bird.velocity = 0; 
+      isFlappyStarted = false; // Game Garuda tidak langsung jalan sebelum disentuh
+
+      ball.x = 400; ball.y = 150; ball.dx = 7; ball.dy = -7;
 
       if (selectedGameMode === 0) { for(let i=0; i<8; i++) spawnBalloon(); }
       else if (selectedGameMode === 1) { for(let i=0; i<4; i++) spawnFallingItem(); }
       else if (selectedGameMode === 2) { initMemoryCards16(); }
-      else if (selectedGameMode === 3) { spawnPipe(); }
+      else if (selectedGameMode === 3) { 
+        pipes = []; // Kosongkan pipa awal, baru spawn setelah layar disentuh
+      }
       else if (selectedGameMode === 4) { initTetris(); }
       else if (selectedGameMode === 6) { initSlidingPuzzle(); }
       else if (selectedGameMode === 7) { for(let i=0; i<6; i++) spawnStar(); }
-      else if (selectedGameMode === 8) { silaIdx = 0; }
+      else if (selectedGameMode === 8) { 
+        silaIdx = 0; 
+        activeSilaQuestions = shuffleArray(silaSortQuestions); // Acak urutan 5 soal
+        activeSilaButtons = shuffleArray([1, 2, 3, 4, 5]);    // Acak posisi tombol
+      }
       else if (selectedGameMode === 9) {
         typingIdx = 0;
         typingInput.value = '';
@@ -1697,12 +1714,16 @@
 
       clearInterval(gameTimerInterval);
       gameTimerInterval = setInterval(() => {
-        timeLeft--;
-        document.getElementById('gameTimer').innerText = timeLeft;
-        if (timeLeft <= 0) endMiniGame(false);
+        // Khusus Mode 3, timer 30s baru berkurang jika layar SUDAH disentuh (isFlappyStarted === true)
+        if (selectedGameMode !== 3 || isFlappyStarted) {
+          timeLeft--;
+          document.getElementById('gameTimer').innerText = timeLeft;
+          if (timeLeft <= 0) endMiniGame(false);
+        }
       }, 1000);
 
-      cancelAnimationFrame(animationFrameId); gameLoop();
+      cancelAnimationFrame(animationFrameId); 
+      gameLoop();
     }
 
     function gameLoop() {
@@ -1772,26 +1793,50 @@
     }
 
     function drawFlappyGame() {
-      bird.velocity += bird.gravity; bird.y += bird.velocity;
-      ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(150, bird.y, 18, 0, Math.PI*2); ctx.fill();
-      ctx.font = '20px sans-serif'; ctx.fillText('🦅', 140, bird.y + 6);
+  if (isFlappyStarted) {
+    // Gravitasi dan pergerakan hanya berjalan jika sudah disentuh
+    bird.velocity += bird.gravity; 
+    bird.y += bird.velocity;
 
-      if (pipes.length === 0 || pipes[pipes.length-1].x < canvas.width - 240) spawnPipe();
+    if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 240) spawnPipe();
 
-      pipes.forEach((p) => {
-        p.x -= 4.5;
-        ctx.fillStyle = '#10b981'; ctx.fillRect(p.x, 0, 60, p.top); ctx.fillRect(p.x, p.top + p.gap, 60, canvas.height - (p.top + p.gap));
-        if (!p.passed && p.x < 150) {
-          p.passed = true; scoreCount++; playSound('pop');
-          document.getElementById('gameTarget').innerText = `${scoreCount}/${targetPops}`;
-          if (scoreCount >= targetPops) endMiniGame(true);
-        }
-        if (p.x < 168 && p.x + 60 > 132) {
-          if (bird.y - 18 < p.top || bird.y + 18 > p.top + p.gap) endMiniGame(false);
-        }
-      });
-      if (bird.y > canvas.height - 18 || bird.y < 18) endMiniGame(false);
-    }
+    pipes.forEach((p) => {
+      p.x -= 4.5;
+      ctx.fillStyle = '#10b981'; 
+      ctx.fillRect(p.x, 0, 60, p.top); 
+      ctx.fillRect(p.x, p.top + p.gap, 60, canvas.height - (p.top + p.gap));
+
+      if (!p.passed && p.x < 150) {
+        p.passed = true; 
+        scoreCount++; 
+        playSound('pop');
+        document.getElementById('gameTarget').innerText = `${scoreCount}/${targetPops}`;
+        if (scoreCount >= targetPops) endMiniGame(true);
+      }
+      if (p.x < 168 && p.x + 60 > 132) {
+        if (bird.y - 18 < p.top || bird.y + 18 > p.top + p.gap) endMiniGame(false);
+      }
+    });
+
+    if (bird.y > canvas.height - 18 || bird.y < 18) endMiniGame(false);
+
+  } else {
+    // Tampilan awal sebelum ada sentuhan pertama (Burung melayang diam)
+    ctx.font = 'bold 22px sans-serif';
+    ctx.fillStyle = '#facc15';
+    ctx.textAlign = 'center';
+    ctx.fillText('👇 SENTUH / KLIK LAYAR UNTUK MULAI TERBANG!', canvas.width / 2, 180);
+  }
+
+  // Gambar Burung Garuda
+  ctx.fillStyle = '#f59e0b'; 
+  ctx.beginPath(); 
+  ctx.arc(150, bird.y, 18, 0, Math.PI * 2); 
+  ctx.fill();
+  ctx.font = '20px sans-serif'; 
+  ctx.textAlign = 'center';
+  ctx.fillText('🦅', 150, bird.y + 7);
+}
 
     function initTetris() { tetrisBoard = Array(tetrisRows).fill().map(() => Array(tetrisCols).fill(0)); spawnTetromino(); }
     function spawnTetromino() {
@@ -1943,21 +1988,37 @@
     }
 
     function drawSilaSortGame() {
-      const q = silaSortQuestions[silaIdx];
-      ctx.font = 'bold 22px sans-serif'; ctx.fillStyle = '#f8fafc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const q = activeSilaQuestions[silaIdx];
+      ctx.font = 'bold 22px sans-serif'; 
+      ctx.fillStyle = '#f8fafc'; 
+      ctx.textAlign = 'center'; 
+      ctx.textBaseline = 'middle';
       ctx.fillText(`⚖️ Sikap/Pengamalan ini termasuk Sila ke berapa?`, canvas.width/2, 90);
 
-      ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.roundRect(100, 130, 600, 80, 12); ctx.fill();
-      ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#1e293b'; 
+      ctx.beginPath(); 
+      ctx.roundRect(100, 130, 600, 80, 12); 
+      ctx.fill();
+      ctx.strokeStyle = '#6366f1'; 
+      ctx.lineWidth = 2; 
+      ctx.stroke();
 
-      ctx.font = 'bold 24px sans-serif'; ctx.fillStyle = '#facc15';
+      ctx.font = 'bold 24px sans-serif'; 
+      ctx.fillStyle = '#facc15';
       ctx.fillText(`"${q.text}"`, canvas.width/2, 170);
 
-      for (let i = 1; i <= 5; i++) {
-        const x = 70 + (i - 1) * 135;
+      // Gambar 5 tombol dengan urutan nomor sila yang sudah diacak
+      for (let i = 0; i < 5; i++) {
+        const silaNum = activeSilaButtons[i];
+        const x = 70 + i * 135;
         const y = 280;
-        ctx.fillStyle = '#4f46e5'; ctx.beginPath(); ctx.roundRect(x, y, 120, 70, 12); ctx.fill();
-        ctx.fillStyle = '#fff'; ctx.font = 'bold 22px sans-serif'; ctx.fillText(`Sila ${i}`, x + 60, y + 35);
+        ctx.fillStyle = '#4f46e5'; 
+        ctx.beginPath(); 
+        ctx.roundRect(x, y, 120, 70, 12); 
+        ctx.fill();
+        ctx.fillStyle = '#fff'; 
+        ctx.font = 'bold 22px sans-serif'; 
+        ctx.fillText(`Sila ${silaNum}`, x + 60, y + 35);
       }
     }
 
@@ -2046,7 +2107,12 @@
           }
         });
       } else if (selectedGameMode === 3) {
-        bird.velocity = -7.5; playSound('pop');
+        // PERBAIKAN GARUDA: Aktifkan game saat sentuhan/klik pertama
+        if (!isFlappyStarted) {
+          isFlappyStarted = true;
+        }
+        bird.velocity = -7.5; 
+        playSound('pop');
       } else if (selectedGameMode === 6) {
         puzzleGrid.forEach((val, idx) => {
           const x = 250 + (idx % 3) * 105;
@@ -2080,17 +2146,26 @@
           }
         });
       } else if (selectedGameMode === 8) {
-        const q = silaSortQuestions[silaIdx];
-        for (let i = 1; i <= 5; i++) {
-          const x = 70 + (i - 1) * 135;
+        // PERBAIKAN PILAH SILA: Membaca nomor Sila sesuai urutan tombol teracak
+        const q = activeSilaQuestions[silaIdx];
+        for (let i = 0; i < 5; i++) {
+          const silaNum = activeSilaButtons[i]; 
+          const x = 70 + i * 135;
           const y = 280;
           if (clickX >= x && clickX <= x + 120 && clickY >= y && clickY <= y + 70) {
-            if (i === q.correctSila) {
-              playSound('pop'); scoreCount++;
+            if (silaNum === q.correctSila) {
+              playSound('pop'); 
+              scoreCount++;
               document.getElementById('gameTarget').innerText = `${scoreCount}/${targetPops}`;
-              if (scoreCount >= targetPops) endMiniGame(true);
-              else silaIdx++;
-            } else { playSound('fail'); }
+              if (scoreCount >= targetPops) {
+                endMiniGame(true);
+              } else { 
+                silaIdx++;
+                activeSilaButtons = shuffleArray([1, 2, 3, 4, 5]); // Acak ulang urutan tombol untuk soal berikutnya
+              }
+            } else { 
+              playSound('fail'); 
+            }
           }
         }
       }
