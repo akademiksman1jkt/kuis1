@@ -1404,126 +1404,144 @@
     }
 
     function showQuestionModal(box, isBonusStage = false, gameSuccess = false) {
-      const q = box.questionData;
-      let questionTimeLeft = 45;
-      
-      let titleText = `📝 SOAL KOTAK #${box.id}`;
-      if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
+  const q = box.questionData;
+  let questionTimeLeft = 45;
+  
+  let titleText = `📝 SOAL KOTAK #${box.id}`;
+  if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
 
-      const timerHeaderHtml = `
+  // Hentikan timer yang sedang berjalan sebelumnya
+  if (questionTimerInterval) clearInterval(questionTimerInterval);
+
+  // Acak urutan pilihan jawaban
+  let mappedOptions = q.options.map((optText, origIdx) => {
+    let isCorrect = q.isComplex ? q.answer.includes(origIdx) : (origIdx === q.answer);
+    return { text: optText, isCorrect: isCorrect };
+  });
+  let shuffledOptions = shuffleArray(mappedOptions);
+
+  if (q.isComplex) {
+    // === 1. SOAL PILIHAN GANDA KOMPLEKS (CHECKBOX) ===
+    let htmlOptions = '<div id="complexOptionsContainer" class="swal2-checkbox-group select-none" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
+    shuffledOptions.forEach((optObj, idx) => {
+      htmlOptions += `
+        <label for="cb_opt_${idx}" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl cursor-pointer text-white text-xs sm:text-sm">
+          <input type="checkbox" id="cb_opt_${idx}" name="complexOpt" value="${optObj.isCorrect ? '1' : '0'}" class="w-5 h-5 accent-indigo-500 cursor-pointer shrink-0">
+          <span class="leading-snug">${optObj.text}</span>
+        </label>`;
+    });
+    htmlOptions += '</div>';
+
+    Swal.fire({
+      title: titleText,
+      html: `
         <div class="flex justify-between items-center bg-slate-800 p-2.5 rounded-lg mb-3 border border-slate-700 text-sm font-bold text-white">
           <span class="text-indigo-400">⏱️ Sisa Waktu Jawab:</span>
           <span id="swalQTimer" class="text-amber-400 text-base">45s</span>
         </div>
-      `;
-
-      clearInterval(questionTimerInterval);
-
-      let mappedOptions = q.options.map((optText, origIdx) => {
-        let isCorrect = q.isComplex ? q.answer.includes(origIdx) : (origIdx === q.answer);
-        return { text: optText, isCorrect: isCorrect };
-      });
-
-      let shuffledOptions = shuffleArray(mappedOptions);
-
-      if (q.isComplex) {
-        let htmlOptions = '<div id="complexOptionsContainer" class="swal2-checkbox-group select-none" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
-        shuffledOptions.forEach((optObj, idx) => {
-          htmlOptions += `
-            <label for="cb_opt_${idx}" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl cursor-pointer text-white text-xs sm:text-sm">
-              <input type="checkbox" id="cb_opt_${idx}" name="complexOpt" value="${optObj.isCorrect ? '1' : '0'}" class="w-5 h-5 accent-indigo-500 cursor-pointer shrink-0">
-              <span class="leading-snug">${optObj.text}</span>
-            </label>`;
-        });
-        htmlOptions += '</div>';
-
-        Swal.fire({
-          title: titleText,
-          html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>` + htmlOptions,
-          confirmButtonText: 'Kirim Jawaban',
-          confirmButtonColor: '#4f46e5',
-          allowOutsideClick: false,
-          background: '#1e293b',
-          color: '#fff',
-          focusConfirm: false,
-          didOpen: () => {
-            const timerEl = document.getElementById('swalQTimer');
-            questionTimerInterval = setInterval(() => {
-              questionTimeLeft--;
-              if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
-              if (questionTimeLeft <= 0) {
-                clearInterval(questionTimerInterval);
-                Swal.close();
-                evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
-              }
-            }, 1000);
-          },
-          preConfirm: () => {
+        <p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>
+        ${htmlOptions}
+      `,
+      confirmButtonText: 'Kirim Jawaban',
+      confirmButtonColor: '#4f46e5',
+      allowOutsideClick: false,
+      background: '#1e293b',
+      color: '#fff',
+      focusConfirm: false,
+      didOpen: () => {
+        const timerEl = document.getElementById('swalQTimer');
+        questionTimerInterval = setInterval(() => {
+          questionTimeLeft--;
+          if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
+          if (questionTimeLeft <= 0) {
             clearInterval(questionTimerInterval);
-            const checkboxes = Array.from(document.querySelectorAll('input[name="complexOpt"]'));
-            const checkedBoxes = checkboxes.filter(cb => cb.checked);
-
-            if (checkedBoxes.length === 0) { 
-              Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); 
-              return false; 
-            }
-
-            const totalCorrectInQuestion = checkboxes.filter(cb => cb.value === '1').length;
-            const correctCheckedCount = checkedBoxes.filter(cb => cb.value === '1').length;
-            const wrongCheckedCount = checkedBoxes.filter(cb => cb.value === '0').length;
-
-            return (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
+            Swal.close();
+            evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
           }
-        }).then((result) => {
-          clearInterval(questionTimerInterval);
-          if (result.isConfirmed) {
-            evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
-          }
-        });
+        }, 1000);
+      },
+      preConfirm: () => {
+        const checkboxes = Array.from(document.querySelectorAll('input[name="complexOpt"]'));
+        const checkedBoxes = checkboxes.filter(cb => cb.checked);
 
-      } else {
-        const radioInputOptions = shuffledOptions.reduce((acc, optObj, i) => {
-          acc[i] = optObj.text;
-          return acc;
-        }, {});
+        // Validasi wajib memilih minimal 1 opsi
+        if (checkedBoxes.length === 0) { 
+          Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); 
+          return false; 
+        }
 
-        Swal.fire({
-          title: titleText,
-          html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>`,
-          input: 'radio', 
-          inputOptions: radioInputOptions,
-          inputValidator: (value) => { if (!value) return 'Kamu harus memilih satu jawaban!'; },
-          confirmButtonText: 'Kirim Jawaban',
-          confirmButtonColor: '#4f46e5',
-          allowOutsideClick: false,
-          background: '#1e293b',
-          color: '#fff',
-          focusConfirm: false,
-          didOpen: () => {
-            const timerEl = document.getElementById('swalQTimer');
-            questionTimerInterval = setInterval(() => {
-              questionTimeLeft--;
-              if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
-              if (questionTimeLeft <= 0) {
-                clearInterval(questionTimerInterval);
-                Swal.close();
-                evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
-              }
-            }, 1000);
-          },
-          preConfirm: () => { 
-            clearInterval(questionTimerInterval); 
-          }
-        }).then((result) => {
-          clearInterval(questionTimerInterval);
-          if (result.isConfirmed) {
-            const selectedIdx = parseInt(result.value);
-            const isCorrect = shuffledOptions[selectedIdx].isCorrect;
-            evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q);
-          }
-        });
+        const totalCorrectInQuestion = checkboxes.filter(cb => cb.value === '1').length;
+        const correctCheckedCount = checkedBoxes.filter(cb => cb.value === '1').length;
+        const wrongCheckedCount = checkedBoxes.filter(cb => cb.value === '0').length;
+
+        // Kembalikan boolean hasil evaluasi ke .then()
+        return (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
       }
-    }
+    }).then((result) => {
+      clearInterval(questionTimerInterval);
+      if (result.isConfirmed) {
+        // result.value berisi true/false dari preConfirm
+        evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
+      }
+    });
+
+  } else {
+    // === 2. SOAL PILIHAN GANDA BIASA (RADIO HTML MANUAL) ===
+    let htmlRadioOptions = '<div id="radioOptionsContainer" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:12px;">';
+    shuffledOptions.forEach((optObj, idx) => {
+      htmlRadioOptions += `
+        <label for="rb_opt_${idx}" style="background:#0f172a; border:1px solid #334155; padding:10px 14px; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:10px; color:#f8fafc; font-size:0.875rem;">
+          <input type="radio" id="rb_opt_${idx}" name="singleOpt" value="${idx}" style="transform:scale(1.2); accent-color:#6366f1; cursor:pointer;">
+          <span>${optObj.text}</span>
+        </label>`;
+    });
+    htmlRadioOptions += '</div>';
+
+    Swal.fire({
+      title: titleText,
+      html: `
+        <div class="flex justify-between items-center bg-slate-800 p-2.5 rounded-lg mb-3 border border-slate-700 text-sm font-bold text-white">
+          <span class="text-indigo-400">⏱️ Sisa Waktu Jawab:</span>
+          <span id="swalQTimer" class="text-amber-400 text-base">45s</span>
+        </div>
+        <p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>
+        ${htmlRadioOptions}
+      `,
+      confirmButtonText: 'Kirim Jawaban',
+      confirmButtonColor: '#4f46e5',
+      allowOutsideClick: false,
+      background: '#1e293b',
+      color: '#fff',
+      focusConfirm: false,
+      didOpen: () => {
+        const timerEl = document.getElementById('swalQTimer');
+        questionTimerInterval = setInterval(() => {
+          questionTimeLeft--;
+          if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
+          if (questionTimeLeft <= 0) {
+            clearInterval(questionTimerInterval);
+            Swal.close();
+            evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
+          }
+        }, 1000);
+      },
+      preConfirm: () => {
+        const selectedRadio = document.querySelector('input[name="singleOpt"]:checked');
+        if (!selectedRadio) {
+          Swal.showValidationMessage('Kamu harus memilih salah satu jawaban!');
+          return false;
+        }
+        const selectedIdx = parseInt(selectedRadio.value);
+        return shuffledOptions[selectedIdx].isCorrect;
+      }
+    }).then((result) => {
+      clearInterval(questionTimerInterval);
+      if (result.isConfirmed) {
+        evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
+      }
+    });
+  }
+}
 
     function evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q, isTimeout = false) {
       if (isTimeout) {
