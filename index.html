@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <title>Kuis Pendidikan Pancasila Bab 1 Kelas X</title>
   
   <!-- Tailwind CSS CDN -->
@@ -12,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- SortableJS untuk Drag and Drop Interaktif -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <!-- FontAwesome Icons & Plus Jakarta Sans Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,126 +27,114 @@
   </script>
 
   <style>
-  body { font-family: 'Plus Jakarta Sans', sans-serif; }
-  
-  /* FIX SWEETALERT2 LOADING: HILANGKAN KOTAK/GARIS HITAM KOSONG */
-  .swal2-popup .swal2-html-container,
-  .swal2-popup .swal2-actions,
-  .swal2-popup .swal2-validation-message {
-    background: transparent !important;
-    box-shadow: none !important;
-  }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    /* FIX SWEETALERT2 LOADING: HILANGKAN KOTAK/GARIS HITAM KOSONG */
+    .swal2-popup .swal2-html-container,
+    .swal2-popup .swal2-actions,
+    .swal2-popup .swal2-validation-message {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
 
-  /* Sembunyikan elemen container, radio, dan actions jika kosong */
-  .swal2-html-container:empty,
-  .swal2-radio:empty,
-  .swal2-actions:empty {
-    display: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-    background: transparent !important;
-  }
+    /* Sembunyikan elemen container, radio, dan actions jika kosong */
+    .swal2-html-container:empty,
+    .swal2-radio:empty,
+    .swal2-actions:empty {
+      display: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      background: transparent !important;
+    }
 
-  /* Hilangkan border/garis bawaan popup SweetAlert2 */
-  .swal2-popup {
-    border: none !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-  }
+    /* Hilangkan border/garis bawaan popup SweetAlert2 */
+    .swal2-popup {
+      border: none !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    }
 
-  /* STYLE RADIO HANYA BERLAKU JIKA ADA ISINYA (NOT EMPTY) */
-  .swal2-radio:not(:empty) {
-    background: #0f172a !important;
-    border: 1px solid #334155 !important;
-    border-radius: 12px !important;
-    padding: 16px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-    margin-top: 15px !important;
-  }
-  .swal2-radio label {
-    color: #f8fafc !important;
-    font-size: 0.9rem !important;
-    text-align: left !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    width: 100% !important;
-    padding: 10px 14px !important;
-    border-radius: 8px !important;
-    background: #1e293b !important;
-    transition: background 0.2s !important;
-  }
-  .swal2-radio label:hover { background: #334155 !important; }
-  .swal2-radio input[type="radio"] {
-    margin: 0 !important;
-    accent-color: #6366f1 !important;
-    transform: scale(1.2) !important;
-    cursor: pointer !important;
-    flex-shrink: 0 !important;
-  }
+    /* STYLE RADIO HANYA BERLAKU JIKA ADA ISINYA (NOT EMPTY) */
+    .swal2-radio:not(:empty) {
+      background: #0f172a !important;
+      border: 1px solid #334155 !important;
+      border-radius: 12px !important;
+      padding: 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 12px !important;
+      margin-top: 15px !important;
+    }
+    .swal2-radio label {
+      color: #f8fafc !important;
+      font-size: 0.9rem !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      width: 100% !important;
+      padding: 10px 14px !important;
+      border-radius: 8px !important;
+      background: #1e293b !important;
+      transition: background 0.2s !important;
+    }
+    .swal2-radio label:hover { background: #334155 !important; }
+    .swal2-radio input[type="radio"] {
+      margin: 0 !important;
+      accent-color: #6366f1 !important;
+      transform: scale(1.2) !important;
+      cursor: pointer !important;
+      flex-shrink: 0 !important;
+    }
 
-  /* CSS CHECKBOX GROUP BABAK 3 */
-  .swal2-checkbox-group {
-    display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px;
-  }
-  .swal2-checkbox-group label {
-    background: #0f172a; border: 1px solid #334155; padding: 10px 14px;
-    border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc;
-  }
+    /* CSS CHECKBOX GROUP BABAK 3 */
+    .swal2-checkbox-group {
+      display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px;
+    }
+    .swal2-checkbox-group label {
+      background: #0f172a; border: 1px solid #334155; padding: 10px 14px;
+      border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc;
+    }
 
-  /* CSS ANIMASI DIALOG POP-UP MODAL */
-  .dialog-backdrop { transition: opacity 0.25s ease-out; }
-  .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
-  .dialog-hidden { visibility: hidden; pointer-events: none; }
-  .dialog-hidden .dialog-backdrop { opacity: 0; }
-  .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
+    /* CSS ANIMASI DIALOG POP-UP MODAL */
+    .dialog-backdrop { transition: opacity 0.25s ease-out; }
+    .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
+    .dialog-hidden { visibility: hidden; pointer-events: none; }
+    .dialog-hidden .dialog-backdrop { opacity: 0; }
+    .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
 
-  /* STYLE DRAG & DROP SORTABLEJS (BABAK 1) */
-  .sortable-item {
-    touch-action: manipulation; /* Memungkinkan gesture scroll halaman pada kartu */
-    user-select: none;
-  }
+    /* STYLE DRAG & DROP SORTABLEJS (BABAK 1) */
+    .sortable-item {
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
+    .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
 
-  /* Efek kartu bayangan saat ditahan/ditarik */
-  .sortable-ghost {
-    opacity: 0.35;
-    background-color: #312e81 !important; /* Indigo gelap */
-    border: 2px dashed #6366f1 !important; /* Garis putus-putus indigo terang */
-  }
+    /* Area Khusus Handle Geser */
+    .drag-handle {
+      touch-action: none;
+    }
 
-  /* Efek kartu melayang mengikuti ujung jari */
-  .sortable-drag {
-    cursor: grabbing;
-    transform: scale(1.02);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Area Khusus Handle Geser */
-  .drag-handle {
-    touch-action: none; /* Menonaktifkan scroll khusus di area ikon handle ini */
-  }
-
-  /* STYLE KOTAK MISTERI (BABAK 3) */
-  .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-  .box-card:hover:not(.opened) {
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
-  }
-  #gameCanvas {
-    background: linear-gradient(to bottom, #0f172a, #1e1b4b);
-    border-radius: 12px;
-    cursor: pointer;
-    touch-action: none;
-  }
-</style>
+    /* STYLE KOTAK MISTERI (BABAK 3) */
+    .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .box-card:hover:not(.opened) {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+    }
+    #gameCanvas {
+      background: linear-gradient(to bottom, #0f172a, #1e1b4b);
+      border-radius: 12px;
+      cursor: pointer;
+      touch-action: none;
+    }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased relative text-base">
 
-  <!-- NAVBAR RESPONSIF (TERSEMBUNYI SAAT LAYAR LOGIN DENGAN CLASS 'hidden') -->
+  <!-- NAVBAR RESPONSIF -->
   <nav id="mainNavbar" class="hidden bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
@@ -160,10 +147,10 @@
         </div>
       </div>
 
-      <!-- KONTROL NAVIGASI TERPADU: BERANDA, TARGET LOLOS, & KELUAR -->
+      <!-- KONTROL NAVIGASI -->
       <div class="flex items-center gap-2 sm:gap-3">
         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-bold border border-emerald-200">
-          <i class="fa-solid fa-shield-halved text-emerald-500"></i> <span class="hidden sm:inline">Target Lolos:</span> 85%
+          <i class="fa-solid fa-shield-halved text-emerald-500"></i> <span class="hidden sm:inline">Target Lolos Setiap Babab Minimal:</span> 85%
         </span>
 
         <button id="navBtnBeranda" onclick="kembaliKeDashboard()" class="hidden px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-1.5">
@@ -199,12 +186,12 @@
             <i class="fa-solid fa-user-lock"></i>
           </div>
           <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Portal Masuk Kuis</h2>
-          <p class="text-xs sm:text-sm text-slate-500 mt-1">Masukkan User ID & Kata Sandi Anda</p>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Masukkan NISN untuk username & password</p>
         </div>
 
         <form onsubmit="handleLogin(event)" class="space-y-4">
           <div>
-            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">User ID / Username:</label>
+            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Username:</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">
                 <i class="fa-solid fa-user"></i>
@@ -215,7 +202,7 @@
           </div>
 
           <div>
-            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Kata Sandi / Password:</label>
+            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Password:</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">
                 <i class="fa-solid fa-key"></i>
@@ -236,9 +223,8 @@
     <!-- 2. HALAMAN BERANDA / DASHBOARD SISWA -->
     <section id="secDashboard" class="hidden space-y-6">
       
-      <!-- CONTAINER KOTAK BERANDA (IDENTITAS SISWA & GRID MENU BABAK DIBUNGKUS SINI AGAR BISA DIBUAT FULL SCREEN SAAT KUIS DIBUKA) -->
       <div id="containerMenuBabak" class="space-y-6">
-        <!-- IDENTITAS SISWA TERSTRUKTUR & RAPI -->
+        <!-- IDENTITAS SISWA -->
         <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div class="flex items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-500/20 shrink-0">
@@ -265,7 +251,7 @@
           </div>
         </div>
 
-        <!-- GRID KOTAK MENU BABAK KUIS (DENGAN PROGRES, NILAI, & PERCOBAAN) -->
+        <!-- GRID KOTAK MENU BABAK KUIS -->
         <div>
           <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-cubes text-blue-600"></i> Soal
@@ -342,7 +328,7 @@
                   <span id="badgeStatusB3" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500">🔒 Terkunci</span>
                 </div>
                 <h4 class="font-black text-slate-800 text-base mb-1">BABAK 3</h4>
-                <p class="text-xs text-slate-500 font-semibold mb-4">Kotak Misteri </p>
+                <p class="text-xs text-slate-500 font-semibold mb-4">Kotak Misteri</p>
               </div>
 
               <div class="space-y-3 pt-3 border-t border-slate-200/60">
@@ -424,8 +410,7 @@
           </div>
         </div>
       </div>
-
-      <!-- AREA SOAL KUIS DALAM DASHBOARD SISWA (TAMPIL FULL SCREEN KETIKA DIBUKA) -->
+      <!-- AREA SOAL KUIS DALAM DASHBOARD SISWA -->
       <div id="areaKuis" class="hidden bg-white border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-xl shadow-slate-200/50">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-4 mb-6">
           <div>
@@ -437,7 +422,7 @@
           </span>
         </div>
 
-        <!-- PANDUAN PENGERJAAN LEBIH RAPI & TERSTRUKTUR -->
+        <!-- PANDUAN PENGERJAAN -->
         <div id="panduanBabak" class="bg-blue-50/80 border border-blue-200/80 rounded-2xl p-4 sm:p-5 mb-6">
           <div class="flex items-center gap-2 mb-2 text-blue-900 font-extrabold text-sm sm:text-base border-b border-blue-200/60 pb-2">
             <i class="fa-solid fa-circle-info text-blue-600 text-lg"></i>
@@ -448,7 +433,7 @@
 
         <div id="kontenBabak"></div>
 
-        <!-- CONTROL FOOTER BABAK KUIS (TOMBOL KIRIM JAWABAN SPREADSHEET) -->
+        <!-- CONTROL FOOTER BABAK KUIS -->
         <div id="footerControls" class="mt-8 flex justify-between items-center border-t border-slate-100 pt-6 gap-2">
           <button onclick="kembaliKeDashboard()" class="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
             <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
@@ -498,7 +483,7 @@
 
   </main>
 
-  <!-- MODAL GAME MISTERI (UNTUK BABAK 3) -->
+  <!-- MODAL GAME MISTERI (BABAK 3) -->
   <div id="gameModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="relative bg-slate-800 p-6 rounded-2xl max-w-4xl w-full border border-indigo-500/30 text-center shadow-2xl overflow-hidden text-white">
       
@@ -562,6 +547,7 @@
     </div>
   </div>
 
+  <!-- SKRIP JAVASCRIPT UTAMA -->
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjVVRr5QAeZQXD18eKIjlrj-dU-Fuk6xPGTuElMyIaTkR08L5idRVhOtd8aSczXKGG8g/exec";
 
@@ -580,6 +566,8 @@
     };
 
     let onDialogConfirmCallback = null;
+    
+    // SINKRONISASI SINGLE DECLARATION UNTUK SORTABLEINSTANCE
     let sortableInstance = null;
 
     // AUDIO CONTEXT UNTUK GAME MISTERI
@@ -657,6 +645,7 @@
         onDialogConfirmCallback = null;
       }
     }
+
     // =========================================================================
     // DATA SOAL SEMUA BABAK
     // =========================================================================
@@ -727,7 +716,6 @@
       { text: "Trisila: Sosio-nasionalisme, Sosio-demokrasi, dan Ketuhanan", tokoh: "Sukarno" },
       { text: "Ekasila: Gotong Royong sebagai pilar utama kehidupan berbangsa", tokoh: "Sukarno" }
     ];
-
     const quizQuestions = [
       { question: "Siapakah Ketua BPUPK yang melontarkan pertanyaan utama mengenai dasar negara Indonesia merdeka pada pembukaan sidang pertama?", options: ["Ir. Sukarno", "Drs. Mohammad Hatta", "Mr. Muhammad Yamin", "Prof. Dr. Mr. R. Soepomo", "dr. K.R.T. Radjiman Wedyodiningrat"], answer: 4 },
       { question: "Kapan sidang pertama Dokuritsu Zyunbi Tyoosakai (BPUPK) dilaksanakan?", options: ["29 Mei – 1 Juni 1945", "28 Mei – 1 Juni 1945", "1 Juni – 18 Agustus 1945", "22 Juni – 18 Agustus 1945", "10 Juli – 17 Juli 1945"], answer: 0 },
@@ -850,64 +838,61 @@
     // =========================================================================
 
     function handleLogin(e) {
-  e.preventDefault();
-  const usernameInput = document.getElementById("inputNisn").value.trim();
-  const passwordInput = document.getElementById("inputPassword").value.trim();
+      e.preventDefault();
+      const usernameInput = document.getElementById("inputNisn").value.trim();
+      const passwordInput = document.getElementById("inputPassword").value.trim();
 
-  // PEMBAHARUAN SWAL: Mengabaikan container HTML agar tidak muncul garis/kotak hitam
-  Swal.fire({ 
-    title: "Memeriksa Akun...", 
-    showConfirmButton: false, 
-    allowOutsideClick: false,
-    background: '#ffffff',
-    color: '#0f172a',
-    customClass: {
-      htmlContainer: 'hidden' // Sembunyikan elemen HTML container via Tailwind
-    },
-    didOpen: () => {
-      Swal.showLoading();
-      const htmlEl = Swal.getHtmlContainer();
-      if (htmlEl) htmlEl.style.display = 'none';
-    } 
-  });
+      Swal.fire({ 
+        title: "Memeriksa Akun...", 
+        showConfirmButton: false, 
+        allowOutsideClick: false,
+        background: '#ffffff',
+        color: '#0f172a',
+        customClass: { htmlContainer: 'hidden' },
+        didOpen: () => {
+          Swal.showLoading();
+          const htmlEl = Swal.getHtmlContainer();
+          if (htmlEl) htmlEl.style.display = 'none';
+        } 
+      });
 
-  const payload = { action: "login", username: usernameInput, password: passwordInput };
+      const payload = { action: "login", username: usernameInput, password: passwordInput };
 
-  fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => {
-    Swal.close();
-    if (data.status === "success") {
-      siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        Swal.close();
+        if (data.status === "success") {
+          siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
 
-      if (data.role === "admin") {
-        document.getElementById("secLogin").classList.add("hidden");
-        document.getElementById("secAdmin").classList.remove("hidden");
-        document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, ${siswaCurrent.nama}!`;
-        renderAdminTab(1);
-      } else {
-        initLoginBerandaSiswa();
-      }
-    } else {
-      tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
+          if (data.role === "admin") {
+            document.getElementById("secLogin").classList.add("hidden");
+            document.getElementById("secAdmin").classList.remove("hidden");
+            document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, ${siswaCurrent.nama}!`;
+            renderAdminTab(1);
+          } else {
+            initLoginBerandaSiswa();
+          }
+        } else {
+          tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
+        }
+      })
+      .catch(() => {
+        Swal.close();
+        if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
+          siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
+          document.getElementById("secLogin").classList.add("hidden");
+          document.getElementById("secAdmin").classList.remove("hidden");
+          renderAdminTab(1);
+        } else {
+          siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
+          initLoginBerandaSiswa();
+        }
+      });
     }
-  })
-  .catch(() => {
-    Swal.close();
-    if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
-      siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
-      document.getElementById("secLogin").classList.add("hidden");
-      document.getElementById("secAdmin").classList.remove("hidden");
-      renderAdminTab(1);
-    } else {
-      siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
-      initLoginBerandaSiswa();
-    }
-  });
-}
 
     function initLoginBerandaSiswa() {
       document.getElementById("labelUserRole").innerText = "Profil Siswa Aktif";
@@ -915,7 +900,6 @@
       document.getElementById("dispNisn").innerText = `NISN: ${siswaCurrent.nisn}`;
       document.getElementById("dispKelas").innerText = `Kelas: ${siswaCurrent.kelas}`;
 
-      // BUKA NAVBAR UTAMA & TOMBOL NAVIGASI SETELAH LOGIN BERHASIL
       document.getElementById("mainNavbar").classList.remove("hidden");
       document.getElementById("navBtnBeranda").classList.remove("hidden");
       document.getElementById("navBtnLogout").classList.remove("hidden");
@@ -927,86 +911,84 @@
     }
 
     function updateBerandaCardsUI() {
-  // JIKA SEDANG DALAM MODE PRATINJAU ADMIN: Tetapkan semua babak terbuka
-  if (isAdminPreviewMode) {
-    document.getElementById("bannerAdminPreview").classList.remove("hidden");
-    document.getElementById("labelUserRole").innerText = "Pengawas Admin";
-    document.getElementById("dispNama").innerText = siswaCurrent.nama + " (Mode Pratinjau)";
-    document.getElementById("dispNisn").innerText = `AKUN: ${siswaCurrent.nisn}`;
+      if (isAdminPreviewMode) {
+        document.getElementById("bannerAdminPreview").classList.remove("hidden");
+        document.getElementById("labelUserRole").innerText = "Pengawas Admin";
+        document.getElementById("dispNama").innerText = siswaCurrent.nama + " (Mode Pratinjau)";
+        document.getElementById("dispNisn").innerText = `AKUN: ${siswaCurrent.nisn}`;
 
-    for (let i = 1; i <= 5; i++) {
-      const card = document.getElementById(`cardBabak${i}`);
-      const badge = document.getElementById(`badgeStatusB${i}`);
-      const btnAction = document.getElementById(`btnActionB${i}`);
+        for (let i = 1; i <= 5; i++) {
+          const card = document.getElementById(`cardBabak${i}`);
+          const badge = document.getElementById(`badgeStatusB${i}`);
+          const btnAction = document.getElementById(`btnActionB${i}`);
 
-      if (card) card.className = "bg-white border-2 border-amber-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-      if (badge) {
-        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700";
-        badge.innerText = "Pratinjau Admin";
+          if (card) card.className = "bg-white border-2 border-amber-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700";
+            badge.innerText = "Pratinjau Admin";
+          }
+          if (btnAction) {
+            btnAction.disabled = false;
+            btnAction.className = "w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+            btnAction.innerHTML = `<span>Buka Babak</span> <i class="fa-solid fa-eye"></i>`;
+          }
+        }
+        return;
       }
-      if (btnAction) {
-        btnAction.disabled = false;
-        btnAction.className = "w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
-        btnAction.innerHTML = `<span>Buka Babak</span> <i class="fa-solid fa-eye"></i>`;
+
+      document.getElementById("bannerAdminPreview").classList.add("hidden");
+      let totalPassed = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        const item = rekapSiswa[i];
+        const card = document.getElementById(`cardBabak${i}`);
+        const badge = document.getElementById(`badgeStatusB${i}`);
+        const valScore = document.getElementById(`valScoreB${i}`);
+        const valPercobaan = document.getElementById(`valPercobaanB${i}`);
+        const btnAction = document.getElementById(`btnActionB${i}`);
+
+        if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
+        if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
+
+        if (item.status === 'lolos') {
+          totalPassed++;
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
+            badge.innerText = "🎉 Lolos (≥85%)";
+          }
+          if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+          if (btnAction && i > 1) {
+            btnAction.disabled = false;
+            btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+            btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
+          }
+        } else if (item.status === 'terbuka') {
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
+            badge.innerText = "Terbuka";
+          }
+          if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+          if (btnAction && i > 1) {
+            btnAction.disabled = false;
+            btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
+          }
+        } else {
+          if (badge) {
+            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
+            badge.innerText = "🔒 Terkunci";
+          }
+          if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
+          if (btnAction && i > 1) {
+            btnAction.disabled = true;
+            btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
+            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
+          }
+        }
       }
+
+      document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
     }
-    return; // Hentikan eksekusi agar tidak tertimpa status siswa biasa
-  }
-
-  // JIKA SISWA BIASA: Terapkan aturan penguncian normal
-  document.getElementById("bannerAdminPreview").classList.add("hidden");
-  let totalPassed = 0;
-
-  for (let i = 1; i <= 5; i++) {
-    const item = rekapSiswa[i];
-    const card = document.getElementById(`cardBabak${i}`);
-    const badge = document.getElementById(`badgeStatusB${i}`);
-    const valScore = document.getElementById(`valScoreB${i}`);
-    const valPercobaan = document.getElementById(`valPercobaanB${i}`);
-    const btnAction = document.getElementById(`btnActionB${i}`);
-
-    if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
-    if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
-
-    if (item.status === 'lolos') {
-      totalPassed++;
-      if (badge) {
-        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
-        badge.innerText = "🎉 Lolos (≥85%)";
-      }
-      if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-      if (btnAction && i > 1) {
-        btnAction.disabled = false;
-        btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
-        btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
-      }
-    } else if (item.status === 'terbuka') {
-      if (badge) {
-        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
-        badge.innerText = "Terbuka";
-      }
-      if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-      if (btnAction && i > 1) {
-        btnAction.disabled = false;
-        btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
-        btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
-      }
-    } else {
-      if (badge) {
-        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
-        badge.innerText = "🔒 Terkunci";
-      }
-      if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
-      if (btnAction && i > 1) {
-        btnAction.disabled = true;
-        btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
-        btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
-      }
-    }
-  }
-
-  document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
-}
 
     function lihatModeSiswaPreview() {
       isAdminPreviewMode = true;
@@ -1052,7 +1034,6 @@
       if (babak4TimerInterval) clearInterval(babak4TimerInterval);
       document.getElementById("bannerAdminPreview").classList.add("hidden");
 
-      // SEMBUNYIKAN NAVBAR SAAT KELUAR/LOGOUT
       document.getElementById("mainNavbar").classList.add("hidden");
       document.getElementById("navBtnBeranda").classList.add("hidden");
       document.getElementById("navBtnLogout").classList.add("hidden");
@@ -1065,17 +1046,13 @@
       document.getElementById("areaKuis").classList.add("hidden");
     }
 
-    // 1. MEMBUKA BABAK (MENYEMBUNYIKAN KOTAK BERANDA -> SEHINGGA AREA KUIS TAMPIL FULL SCREEN)
     function bukaBabak(n) {
       babakActive = n;
       if (babak4TimerInterval) clearInterval(babak4TimerInterval);
 
       rekapSiswa[n].percobaan++;
 
-      // Sembunyikan Kotak Beranda
       document.getElementById("containerMenuBabak").classList.add("hidden");
-
-      // Tampilkan Area Kuis Layar Penuh
       document.getElementById("areaKuis").classList.remove("hidden");
       document.getElementById("infoPercobaan").innerHTML = `<i class="fa-solid fa-rotate-right text-amber-500"></i> Percobaan Ke-${rekapSiswa[n].percobaan}`;
       
@@ -1097,7 +1074,7 @@
           <ul class="list-disc list-inside space-y-1">
             <li>Hapus <strong>5 tanggal yang tidak sesuai</strong> dengan menekan tombol sampah (<i class="fa-solid fa-trash-can text-rose-500"></i>).</li>
             <li>Geser & urutkan <strong>20 tanggal sisanya</strong> secara kronologis dari paling awal hingga paling akhir.</li>
-            <li><strong>Sentuh & geser pada seluruh area kartu</strong> untuk memindahkan posisinya secara bebas.</li>
+            <li><strong>Gunakan ikon pegangan (<i class="fa-solid fa-grip-vertical text-blue-600"></i>)</strong> untuk memindahkan posisi kartu tanggal.</li>
             <li>Setelah urutan tepat, klik tombol <strong>"Lanjut ke Tahap 2"</strong>.</li>
           </ul>
         `;
@@ -1161,12 +1138,9 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 2. KEMBALI KE BERANDA (MENGEMBALIKAN KOTAK BERANDA KEMBALI MUNCUL)
     function kembaliKeDashboard() {
       if (babak4TimerInterval) clearInterval(babak4TimerInterval);
       document.getElementById("areaKuis").classList.add("hidden");
-
-      // Tampilkan kembali Kotak Beranda
       document.getElementById("containerMenuBabak").classList.remove("hidden");
 
       updateBerandaCardsUI();
@@ -1174,69 +1148,68 @@
     }
 
     // =========================================================================
-    // RENDER BABAK 1 (DRAG & DROP DARI SELURUH AREA KARTU)
+    // RENDER BABAK 1 (DRAG & DROP SENSITIF DENGAN HANDLE KHUSUS)
     // =========================================================================
 
     let activeTahap1Dates = [];
-let sortableInstance = null; // Memastikan instance terdefinisi agar tidak error saat destroy()
 
-function renderBabak1Tahap1(c) {
-  c.innerHTML = `<div id="timelineTahap1List" class="space-y-3"></div>`;
-  const combined = [...timelineEvents.map(e => ({ id: e.id, date: e.date, isPengecoh: false })), ...tanggalPengecoh];
-  activeTahap1Dates = shuffleArray(combined);
+    function renderBabak1Tahap1(c) {
+      c.innerHTML = `<div id="timelineTahap1List" class="space-y-3"></div>`;
+      const combined = [...timelineEvents.map(e => ({ id: e.id, date: e.date, isPengecoh: false })), ...tanggalPengecoh];
+      activeTahap1Dates = shuffleArray(combined);
 
-  renderTimelineTahap1Items();
-}
-
-function renderTimelineTahap1Items() {
-  const listEl = document.getElementById("timelineTahap1List");
-  listEl.innerHTML = "";
-
-  activeTahap1Dates.forEach((item) => {
-    listEl.innerHTML += `
-      <div data-id="${item.id}" class="drag-item p-3.5 bg-slate-50 border-2 border-slate-200 hover:border-blue-400 rounded-2xl transition shadow-sm flex items-center justify-between gap-3 select-none">
-        
-        <!-- ZONA TEKS (Aman disentuh untuk Scroll di HP) -->
-        <div class="flex items-center gap-3 flex-1 pointer-events-none">
-          <span class="font-extrabold text-slate-800 text-sm sm:text-base">${item.date}</span>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <!-- TOMBOL HAPUS -->
-          <button onclick="hapusTanggalTahap1(${item.id})" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Hapus Tanggal Pengecoh">
-            <i class="fa-solid fa-trash-can text-base"></i>
-          </button>
-
-          <!-- DRAG HANDLE KHUSUS (Satu-satunya area untuk geser/drag) -->
-          <div class="drag-handle touch-none cursor-grab active:cursor-grabbing p-2 text-slate-400 hover:text-blue-600 active:text-blue-700 transition shrink-0">
-            <i class="fa-solid fa-grip-vertical text-lg pointer-events-none"></i>
-          </div>
-        </div>
-
-      </div>`;
-  });
-
-  if (sortableInstance) sortableInstance.destroy();
-
-  // KONFIGURASI SORTABLEJS DENGAN HANDLE KHUSUS & DELAY SENTUHAN
-  sortableInstance = new Sortable(listEl, {
-    draggable: '.drag-item',
-    handle: '.drag-handle',       // Mengembalikan fungsi handle agar area kartu aman untuk scroll
-    animation: 200,
-    ghostClass: 'drag-ghost',
-    chosenClass: 'drag-chosen',
-    delay: 100,                   // Tahan 100ms di layar HP sebelum drag aktif
-    delayOnTouchOnly: true,       // Delay hanya berlaku pada HP/layar sentuh
-    touchStartThreshold: 3,       // Menjaga agar usapan ringan saat scroll tidak memicu drag
-    forceFallback: true,
-    fallbackTolerance: 3,
-    onEnd: function () {
-      // Menyingkronkan urutan data array activeTahap1Dates dengan urutan elemen HTML setelah di-drag
-      const updatedIds = Array.from(listEl.children).map(el => parseInt(el.getAttribute('data-id')));
-      activeTahap1Dates = updatedIds.map(id => activeTahap1Dates.find(item => item.id === id));
+      renderTimelineTahap1Items();
     }
-  });
-}
+
+    function renderTimelineTahap1Items() {
+      const listEl = document.getElementById("timelineTahap1List");
+      listEl.innerHTML = "";
+
+      activeTahap1Dates.forEach((item) => {
+        listEl.innerHTML += `
+          <div data-id="${item.id}" class="drag-item p-3.5 bg-slate-50 border-2 border-slate-200 hover:border-blue-400 rounded-2xl transition shadow-sm flex items-center justify-between gap-3 select-none">
+            
+            <!-- ZONA TEKS (Aman disentuh untuk Scroll di HP) -->
+            <div class="flex items-center gap-3 flex-1 pointer-events-none">
+              <span class="font-extrabold text-slate-800 text-sm sm:text-base">${item.date}</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <!-- TOMBOL HAPUS -->
+              <button onclick="hapusTanggalTahap1(${item.id})" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Hapus Tanggal Pengecoh">
+                <i class="fa-solid fa-trash-can text-base"></i>
+              </button>
+
+              <!-- DRAG HANDLE KHUSUS (Satu-satunya area untuk geser/drag) -->
+              <div class="drag-handle touch-none cursor-grab active:cursor-grabbing p-2 text-slate-400 hover:text-blue-600 active:text-blue-700 transition shrink-0">
+                <i class="fa-solid fa-grip-vertical text-lg pointer-events-none"></i>
+              </div>
+            </div>
+
+          </div>`;
+      });
+
+      if (sortableInstance) sortableInstance.destroy();
+
+      // KONFIGURASI SORTABLEJS DENGAN HANDLE KHUSUS & DELAY SENTUHAN
+      sortableInstance = new Sortable(listEl, {
+        draggable: '.drag-item',
+        handle: '.drag-handle',       // Mengembalikan fungsi handle agar area kartu aman untuk scroll
+        animation: 200,
+        ghostClass: 'drag-ghost',
+        chosenClass: 'drag-chosen',
+        delay: 100,                   // Tahan 100ms di layar HP sebelum drag aktif
+        delayOnTouchOnly: true,       // Delay hanya berlaku pada HP/layar sentuh
+        touchStartThreshold: 3,       // Menjaga agar usapan ringan saat scroll tidak memicu drag
+        forceFallback: true,
+        fallbackTolerance: 3,
+        onEnd: function () {
+          // Menyingkronkan urutan data array activeTahap1Dates dengan urutan elemen HTML setelah di-drag
+          const updatedIds = Array.from(listEl.children).map(el => parseInt(el.getAttribute('data-id')));
+          activeTahap1Dates = updatedIds.map(id => activeTahap1Dates.find(item => item.id === id));
+        }
+      });
+    }
 
     function hapusTanggalTahap1(id) {
       activeTahap1Dates = activeTahap1Dates.filter(d => d.id !== id);
@@ -1315,22 +1288,20 @@ function renderTimelineTahap1Items() {
     let questionTimerInterval = null;
 
     function initBoxesMisteri() {
-  if (boxesData.length > 0) return;
-  const fixedGameBoxes = [3, 5, 6, 7, 10, 11, 14, 18, 19, 21, 23, 27, 28, 29, 30, 31, 33, 35, 36, 37, 43, 44, 45, 47, 48];
+      if (boxesData.length > 0) return;
+      const fixedGameBoxes = [3, 5, 6, 7, 10, 11, 14, 18, 19, 21, 23, 27, 28, 29, 30, 31, 33, 35, 36, 37, 43, 44, 45, 47, 48];
+      const shuffledQuestions = shuffleArray(quizQuestions);
 
-  // 1. Acak daftar soal quizQuestions agar setiap siswa mendapat urutan soal berbeda
-  const shuffledQuestions = shuffleArray(quizQuestions);
-
-  for (let i = 1; i <= TOTAL_BOXES; i++) {
-    boxesData.push({
-      id: i,
-      type: fixedGameBoxes.includes(i) ? 'game' : 'question',
-      questionData: shuffledQuestions[i - 1], // Mengambil dari array yang sudah diacak
-      status: 'closed',
-      scoreEarned: 0
-    });
-  }
-}
+      for (let i = 1; i <= TOTAL_BOXES; i++) {
+        boxesData.push({
+          id: i,
+          type: fixedGameBoxes.includes(i) ? 'game' : 'question',
+          questionData: shuffledQuestions[i - 1],
+          status: 'closed',
+          scoreEarned: 0
+        });
+      }
+    }
 
     function renderGridKotakMisteri(c) {
       c.innerHTML = `
@@ -1381,132 +1352,126 @@ function renderTimelineTahap1Items() {
     }
 
     function showQuestionModal(box, isBonusStage = false, gameSuccess = false) {
-  const q = box.questionData;
-  let questionTimeLeft = 45;
-  
-  let titleText = `📝 SOAL KOTAK #${box.id}`;
-  if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
+      const q = box.questionData;
+      let questionTimeLeft = 45;
+      
+      let titleText = `📝 SOAL KOTAK #${box.id}`;
+      if (isBonusStage) titleText = `🎯 SOAL BONUS KOTAK #${box.id} (Sempurnakan Skor 100!)`;
 
-  const timerHeaderHtml = `
-    <div class="flex justify-between items-center bg-slate-800 p-2.5 rounded-lg mb-3 border border-slate-700 text-sm font-bold text-white">
-      <span class="text-indigo-400">⏱️ Sisa Waktu Jawab:</span>
-      <span id="swalQTimer" class="text-amber-400 text-base">45s</span>
-    </div>
-  `;
+      const timerHeaderHtml = `
+        <div class="flex justify-between items-center bg-slate-800 p-2.5 rounded-lg mb-3 border border-slate-700 text-sm font-bold text-white">
+          <span class="text-indigo-400">⏱️ Sisa Waktu Jawab:</span>
+          <span id="swalQTimer" class="text-amber-400 text-base">45s</span>
+        </div>
+      `;
 
-  clearInterval(questionTimerInterval);
-
-  // Mapped Opsi dengan status kebenaran awal
-  let mappedOptions = q.options.map((optText, origIdx) => {
-    let isCorrect = q.isComplex ? q.answer.includes(origIdx) : (origIdx === q.answer);
-    return { text: optText, isCorrect: isCorrect };
-  });
-
-  // Acak pilihan jawaban
-  let shuffledOptions = shuffleArray(mappedOptions);
-
-  if (q.isComplex) {
-    let htmlOptions = '<div id="complexOptionsContainer" class="swal2-checkbox-group select-none" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
-    shuffledOptions.forEach((optObj, idx) => {
-      htmlOptions += `
-        <label for="cb_opt_${idx}" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl cursor-pointer text-white text-xs sm:text-sm">
-          <input type="checkbox" id="cb_opt_${idx}" name="complexOpt" value="${optObj.isCorrect ? '1' : '0'}" class="w-5 h-5 accent-indigo-500 cursor-pointer shrink-0">
-          <span class="leading-snug">${optObj.text}</span>
-        </label>`;
-    });
-    htmlOptions += '</div>';
-
-    Swal.fire({
-      title: titleText,
-      html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>` + htmlOptions,
-      confirmButtonText: 'Kirim Jawaban',
-      confirmButtonColor: '#4f46e5',
-      allowOutsideClick: false,
-      background: '#1e293b',
-      color: '#fff',
-      focusConfirm: false,
-      didOpen: () => {
-        // PERBAIKAN: Memastikan Timer Terpasang Setelah Popup Muncul
-        const timerEl = document.getElementById('swalQTimer');
-        questionTimerInterval = setInterval(() => {
-          questionTimeLeft--;
-          if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
-          if (questionTimeLeft <= 0) {
-            clearInterval(questionTimerInterval);
-            Swal.close();
-            evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
-          }
-        }, 1000);
-      },
-      preConfirm: () => {
-        clearInterval(questionTimerInterval);
-        const checkboxes = Array.from(document.querySelectorAll('input[name="complexOpt"]'));
-        const checkedBoxes = checkboxes.filter(cb => cb.checked);
-
-        if (checkedBoxes.length === 0) { 
-          Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); 
-          return false; 
-        }
-
-        const totalCorrectInQuestion = checkboxes.filter(cb => cb.value === '1').length;
-        const correctCheckedCount = checkedBoxes.filter(cb => cb.value === '1').length;
-        const wrongCheckedCount = checkedBoxes.filter(cb => cb.value === '0').length;
-
-        // Evaluasi kebenaran mutlak (Semua yang benar dicentang & tidak ada yang salah tercentang)
-        return (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
-      }
-    }).then((result) => {
       clearInterval(questionTimerInterval);
-      if (result.isConfirmed) {
-        evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
-      }
-    });
 
-  } else {
-    // Pilihan Ganda Biasa (Single Choice)
-    const radioInputOptions = shuffledOptions.reduce((acc, optObj, i) => {
-      acc[i] = optObj.text;
-      return acc;
-    }, {});
+      let mappedOptions = q.options.map((optText, origIdx) => {
+        let isCorrect = q.isComplex ? q.answer.includes(origIdx) : (origIdx === q.answer);
+        return { text: optText, isCorrect: isCorrect };
+      });
 
-    Swal.fire({
-      title: titleText,
-      html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>`,
-      input: 'radio', 
-      inputOptions: radioInputOptions,
-      inputValidator: (value) => { if (!value) return 'Kamu harus memilih satu jawaban!'; },
-      confirmButtonText: 'Kirim Jawaban',
-      confirmButtonColor: '#4f46e5',
-      allowOutsideClick: false,
-      background: '#1e293b',
-      color: '#fff',
-      focusConfirm: false,
-      didOpen: () => {
-        // PERBAIKAN: Timer Aktif untuk Soal Pilihan Ganda
-        const timerEl = document.getElementById('swalQTimer');
-        questionTimerInterval = setInterval(() => {
-          questionTimeLeft--;
-          if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
-          if (questionTimeLeft <= 0) {
+      let shuffledOptions = shuffleArray(mappedOptions);
+
+      if (q.isComplex) {
+        let htmlOptions = '<div id="complexOptionsContainer" class="swal2-checkbox-group select-none" style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
+        shuffledOptions.forEach((optObj, idx) => {
+          htmlOptions += `
+            <label for="cb_opt_${idx}" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl cursor-pointer text-white text-xs sm:text-sm">
+              <input type="checkbox" id="cb_opt_${idx}" name="complexOpt" value="${optObj.isCorrect ? '1' : '0'}" class="w-5 h-5 accent-indigo-500 cursor-pointer shrink-0">
+              <span class="leading-snug">${optObj.text}</span>
+            </label>`;
+        });
+        htmlOptions += '</div>';
+
+        Swal.fire({
+          title: titleText,
+          html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>` + htmlOptions,
+          confirmButtonText: 'Kirim Jawaban',
+          confirmButtonColor: '#4f46e5',
+          allowOutsideClick: false,
+          background: '#1e293b',
+          color: '#fff',
+          focusConfirm: false,
+          didOpen: () => {
+            const timerEl = document.getElementById('swalQTimer');
+            questionTimerInterval = setInterval(() => {
+              questionTimeLeft--;
+              if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
+              if (questionTimeLeft <= 0) {
+                clearInterval(questionTimerInterval);
+                Swal.close();
+                evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
+              }
+            }, 1000);
+          },
+          preConfirm: () => {
             clearInterval(questionTimerInterval);
-            Swal.close();
-            evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
+            const checkboxes = Array.from(document.querySelectorAll('input[name="complexOpt"]'));
+            const checkedBoxes = checkboxes.filter(cb => cb.checked);
+
+            if (checkedBoxes.length === 0) { 
+              Swal.showValidationMessage('Pilih setidaknya satu jawaban!'); 
+              return false; 
+            }
+
+            const totalCorrectInQuestion = checkboxes.filter(cb => cb.value === '1').length;
+            const correctCheckedCount = checkedBoxes.filter(cb => cb.value === '1').length;
+            const wrongCheckedCount = checkedBoxes.filter(cb => cb.value === '0').length;
+
+            return (correctCheckedCount === totalCorrectInQuestion) && (wrongCheckedCount === 0);
           }
-        }, 1000);
-      },
-      preConfirm: () => { 
-        clearInterval(questionTimerInterval); 
+        }).then((result) => {
+          clearInterval(questionTimerInterval);
+          if (result.isConfirmed) {
+            evaluateAnswerResult(box, result.value, isBonusStage, gameSuccess, q);
+          }
+        });
+
+      } else {
+        const radioInputOptions = shuffledOptions.reduce((acc, optObj, i) => {
+          acc[i] = optObj.text;
+          return acc;
+        }, {});
+
+        Swal.fire({
+          title: titleText,
+          html: timerHeaderHtml + `<p class="text-slate-200 text-left font-semibold text-sm sm:text-base mb-2">${q.question}</p>`,
+          input: 'radio', 
+          inputOptions: radioInputOptions,
+          inputValidator: (value) => { if (!value) return 'Kamu harus memilih satu jawaban!'; },
+          confirmButtonText: 'Kirim Jawaban',
+          confirmButtonColor: '#4f46e5',
+          allowOutsideClick: false,
+          background: '#1e293b',
+          color: '#fff',
+          focusConfirm: false,
+          didOpen: () => {
+            const timerEl = document.getElementById('swalQTimer');
+            questionTimerInterval = setInterval(() => {
+              questionTimeLeft--;
+              if (timerEl) timerEl.innerText = `${questionTimeLeft}s`;
+              if (questionTimeLeft <= 0) {
+                clearInterval(questionTimerInterval);
+                Swal.close();
+                evaluateAnswerResult(box, false, isBonusStage, gameSuccess, q, true);
+              }
+            }, 1000);
+          },
+          preConfirm: () => { 
+            clearInterval(questionTimerInterval); 
+          }
+        }).then((result) => {
+          clearInterval(questionTimerInterval);
+          if (result.isConfirmed) {
+            const selectedIdx = parseInt(result.value);
+            const isCorrect = shuffledOptions[selectedIdx].isCorrect;
+            evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q);
+          }
+        });
       }
-    }).then((result) => {
-      clearInterval(questionTimerInterval);
-      if (result.isConfirmed) {
-        const selectedIdx = parseInt(result.value);
-        const isCorrect = shuffledOptions[selectedIdx].isCorrect;
-        evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q);
-      }
-    });
-  }
-}
+    }
 
     function evaluateAnswerResult(box, isCorrect, isBonusStage, gameSuccess, q, isTimeout = false) {
       if (isTimeout) {
@@ -2078,7 +2043,7 @@ function renderTimelineTahap1Items() {
     }
 
     // =========================================================================
-    // RENDER BABAK 2, 4 (DRAG & DROP & RANDOM), 5 & MODE ADMIN
+    // RENDER BABAK 2, 4, 5 & MODE ADMIN
     // =========================================================================
 
     function renderBabak2(c) {
@@ -2106,7 +2071,6 @@ function renderTimelineTahap1Items() {
       });
     }
 
-    // STATE BABAK 4
     let babak4CurrentIndex = 0;
     let babak4UserAnswers = Array(20).fill("");
     let babak4TimerInterval = null;
@@ -2129,8 +2093,6 @@ function renderTimelineTahap1Items() {
 
       c.innerHTML = `
         <div class="max-w-3xl mx-auto bg-white border-2 border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
-          
-          <!-- TIMER & NO SOAL -->
           <div class="flex justify-between items-center bg-blue-50/80 p-3.5 sm:p-4 rounded-2xl border border-blue-100">
             <span class="text-xs sm:text-sm font-extrabold text-blue-700 uppercase tracking-wider">
               <i class="fa-solid fa-list-ol mr-1.5"></i> Soal Ke- <span class="text-blue-900 text-base">${babak4CurrentIndex + 1}</span> dari 20
@@ -2141,12 +2103,10 @@ function renderTimelineTahap1Items() {
             </div>
           </div>
 
-          <!-- PERTANYAAN HOTS -->
           <div class="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-inner">
             <p class="text-base sm:text-lg font-extrabold leading-relaxed text-slate-800">${item.q}</p>
           </div>
 
-          <!-- KOTAK DROP ZONE JAWABAN -->
           <div class="space-y-2">
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">
               <i class="fa-solid fa-box-archive mr-1 text-blue-600"></i> Kotak Area Jawaban Anda:
@@ -2163,7 +2123,6 @@ function renderTimelineTahap1Items() {
             </div>
           </div>
 
-          <!-- PILIHAN OPSI JAWABAN -->
           <div class="space-y-2">
             <div class="flex justify-between items-center">
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -2181,7 +2140,6 @@ function renderTimelineTahap1Items() {
             </div>
           </div>
 
-          <!-- NAVIGASI -->
           <div class="flex justify-between items-center pt-4 border-t border-slate-100 gap-3">
             <button onclick="navBabak4(-1)" ${babak4CurrentIndex === 0 ? "disabled" : ""} 
               class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition flex items-center gap-2">
@@ -2374,132 +2332,128 @@ function renderTimelineTahap1Items() {
       }
     }
 
-  
     // SUBMIT DAN PENGIRIMAN HASIL BABAK KE SPREADSHEET
-function submitBabakCurrent() {
-  let skorMurni = 0;
+    function submitBabakCurrent() {
+      let skorMurni = 0;
 
-  if (babakActive === 1) {
-    let correctOrderCount = 0;
-    let correctMatchCount = 0;
+      if (babakActive === 1) {
+        let correctOrderCount = 0;
+        let correctMatchCount = 0;
 
-    savedTahap1UserOrder.forEach((id, idx) => {
-      if (id === idx + 1) correctOrderCount++;
-      const selectedText = document.getElementById(`selTahap2Text_${id}`) ? document.getElementById(`selTahap2Text_${id}`).value : "";
-      const targetObj = timelineEvents.find(e => e.id === id);
-      if (targetObj && selectedText === targetObj.text) correctMatchCount++;
-    });
+        savedTahap1UserOrder.forEach((id, idx) => {
+          if (id === idx + 1) correctOrderCount++;
+          const selectedText = document.getElementById(`selTahap2Text_${id}`) ? document.getElementById(`selTahap2Text_${id}`).value : "";
+          const targetObj = timelineEvents.find(e => e.id === id);
+          if (targetObj && selectedText === targetObj.text) correctMatchCount++;
+        });
 
-    const scoreOrder = (correctOrderCount / timelineEvents.length) * 50;
-    const scoreMatch = (correctMatchCount / timelineEvents.length) * 50;
-    skorMurni = Math.round(scoreOrder + scoreMatch);
-  } else if (babakActive === 2) {
-    let correctCount = 0;
-    gagasanCards.forEach((item, idx) => {
-      const val = document.getElementById(`selGagasan_${idx}`) ? document.getElementById(`selGagasan_${idx}`).value : "";
-      if (val === item.tokoh) correctCount++;
-    });
-    skorMurni = Math.round((correctCount / gagasanCards.length) * 100);
-  } else if (babakActive === 3) {
-    if (openedCountMisteri === 0 && !isAdminPreviewMode) {
-      tampilkanDialogNotif('PERHATIAN', 'Buka & selesaikan setidaknya beberapa Kotak Misteri terlebih dahulu!', 'warning');
-      return;
+        const scoreOrder = (correctOrderCount / timelineEvents.length) * 50;
+        const scoreMatch = (correctMatchCount / timelineEvents.length) * 50;
+        skorMurni = Math.round(scoreOrder + scoreMatch);
+      } else if (babakActive === 2) {
+        let correctCount = 0;
+        gagasanCards.forEach((item, idx) => {
+          const val = document.getElementById(`selGagasan_${idx}`) ? document.getElementById(`selGagasan_${idx}`).value : "";
+          if (val === item.tokoh) correctCount++;
+        });
+        skorMurni = Math.round((correctCount / gagasanCards.length) * 100);
+      } else if (babakActive === 3) {
+        if (openedCountMisteri === 0 && !isAdminPreviewMode) {
+          tampilkanDialogNotif('PERHATIAN', 'Buka & selesaikan setidaknya beberapa Kotak Misteri terlebih dahulu!', 'warning');
+          return;
+        }
+        skorMurni = openedCountMisteri > 0 ? Math.min(100, Math.round(scoreMisteriTotal / openedCountMisteri)) : 0;
+      } else if (babakActive === 4) {
+        if (babak4TimerInterval) clearInterval(babak4TimerInterval);
+
+        let correctCount = 0;
+        isianQuestions.forEach((item, idx) => {
+          const val = babak4UserAnswers[idx];
+          if (val === item.a) correctCount++;
+        });
+        skorMurni = Math.round((correctCount / isianQuestions.length) * 100);
+      } else if (babakActive === 5) {
+        let correctCount = 0;
+        esaiData.forEach((item, qIdx) => {
+          const targetAnswer = item.words.join(" ");
+          const userAns = (userEsaiAnswers[qIdx] || []).join(" ");
+          if (userAns === targetAnswer) correctCount++;
+        });
+        skorMurni = Math.round((correctCount / esaiData.length) * 100);
+      }
+
+      kirimKeAppsScript(babakActive, rekapSiswa[babakActive].percobaan, skorMurni);
     }
-    skorMurni = openedCountMisteri > 0 ? Math.min(100, Math.round(scoreMisteriTotal / openedCountMisteri)) : 0;
-  } else if (babakActive === 4) {
-    if (babak4TimerInterval) clearInterval(babak4TimerInterval);
-
-    let correctCount = 0;
-    isianQuestions.forEach((item, idx) => {
-      const val = babak4UserAnswers[idx];
-      if (val === item.a) correctCount++;
-    });
-    skorMurni = Math.round((correctCount / isianQuestions.length) * 100);
-  } else if (babakActive === 5) {
-    let correctCount = 0;
-    esaiData.forEach((item, qIdx) => {
-      const targetAnswer = item.words.join(" ");
-      const userAns = (userEsaiAnswers[qIdx] || []).join(" ");
-      if (userAns === targetAnswer) correctCount++;
-    });
-    skorMurni = Math.round((correctCount / esaiData.length) * 100);
-  }
-
-  // Kirim data ke Apps Script (termasuk untuk mode Admin)
-  kirimKeAppsScript(babakActive, rekapSiswa[babakActive].percobaan, skorMurni);
-}
 
     function kirimKeAppsScript(babak, percobaan, skorMurni) {
-  // PERBAIKAN: Menambahkan opsi agar tidak memunculkan kotak/garis hitam
-  Swal.fire({ 
-    title: "Mengirim ...", 
-    html: "", 
-    showConfirmButton: false, 
-    allowOutsideClick: false,
-    background: '#ffffff',
-    color: '#0f172a',
-    didOpen: () => {
-      Swal.showLoading();
-      const htmlContainer = Swal.getHtmlContainer();
-      if (htmlContainer) {
-        htmlContainer.style.display = 'none';
-      }
-    } 
-  });
+      Swal.fire({ 
+        title: "Mengirim ...", 
+        html: "", 
+        showConfirmButton: false, 
+        allowOutsideClick: false,
+        background: '#ffffff',
+        color: '#0f172a',
+        didOpen: () => {
+          Swal.showLoading();
+          const htmlContainer = Swal.getHtmlContainer();
+          if (htmlContainer) {
+            htmlContainer.style.display = 'none';
+          }
+        } 
+      });
 
-  const payload = {
-    action: "submitScore",
-    idSiswa: siswaCurrent.nisn,
-    namaSiswa: siswaCurrent.nama,
-    babak: babak,
-    percobaan: percobaan,
-    skorMurni: skorMurni,
-    jawaban: { timestamp: new Date() }
-  };
+      const payload = {
+        action: "submitScore",
+        idSiswa: siswaCurrent.nisn,
+        namaSiswa: siswaCurrent.nama,
+        babak: babak,
+        percobaan: percobaan,
+        skorMurni: skorMurni,
+        jawaban: { timestamp: new Date() }
+      };
 
-  fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => {
-    Swal.close();
-    if (data.status === "success") {
-      const skorAkhir = data.skorAkhir || skorMurni;
-      
-      rekapSiswa[babak].skor = skorAkhir;
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        Swal.close();
+        if (data.status === "success") {
+          const skorAkhir = data.skorAkhir || skorMurni;
+          
+          rekapSiswa[babak].skor = skorAkhir;
 
-      if (skorAkhir >= 85 || data.bisaLanjut) {
-        rekapSiswa[babak].status = 'lolos';
-        
-        // Buka babak berikutnya jika lolos
-        if (babak < 5) {
-          rekapSiswa[babak + 1].status = 'terbuka';
+          if (skorAkhir >= 85 || data.bisaLanjut) {
+            rekapSiswa[babak].status = 'lolos';
+            
+            if (babak < 5) {
+              rekapSiswa[babak + 1].status = 'terbuka';
+            }
+
+            tampilkanDialogNotif('SELAMAT! 🎉', `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
+          } else {
+            rekapSiswa[babak].status = 'terbuka';
+            tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Data tersimpan. Silakan ulangi babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+          }
+        } else {
+          tampilkanDialogNotif('ERROR SERVER', data.message, 'error');
         }
+      })
+      .catch(() => {
+        Swal.close();
+        rekapSiswa[babak].skor = skorMurni;
 
-        tampilkanDialogNotif('SELAMAT! 🎉', `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan ke Spreadsheet!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
-      } else {
-        rekapSiswa[babak].status = 'terbuka';
-        tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Data tersimpan di Spreadsheet. Silakan ulangi babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
-      }
-    } else {
-      tampilkanDialogNotif('ERROR SERVER', data.message, 'error');
+        if (skorMurni >= 85) {
+          rekapSiswa[babak].status = 'lolos';
+          if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
+          tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
+        } else {
+          rekapSiswa[babak].status = 'terbuka';
+          tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+        }
+      });
     }
-  })
-  .catch(() => {
-    Swal.close();
-    rekapSiswa[babak].skor = skorMurni;
-
-    if (skorMurni >= 85) {
-      rekapSiswa[babak].status = 'lolos';
-      if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
-      tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
-    } else {
-      rekapSiswa[babak].status = 'terbuka';
-      tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
-    }
-  });
-}
   </script>
 </body>
 </html>
