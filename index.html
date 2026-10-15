@@ -1614,13 +1614,30 @@
       { shape: [[0, 1, 0], [1, 1, 1]], color: '#a855f7' }, { shape: [[1, 0, 0], [1, 1, 1]], color: '#f97316' }
     ];
 
-    function startMiniGame(box) {
-      currentBoxForGame = box; scoreCount = 0; timeLeft = 30;
-      selectedGameMode = Math.floor(Math.random() * 10);
+    // ===== ANTREAN MINI-GAME MERATA (0-9) =====
+    let availableGameModes = [];
 
-      const iconEl = document.getElementById('gameIcon'); const titleEl = document.getElementById('overlayTitle');
-      const tutorialEl = document.getElementById('overlayTutorial'); const gameTitleEl = document.getElementById('gameTitle');
+    function getNextGameMode() {
+      if (availableGameModes.length === 0) {
+        availableGameModes = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      }
+      return availableGameModes.pop();
+    }
+
+    function startMiniGame(box) {
+      currentBoxForGame = box; 
+      scoreCount = 0; 
+      timeLeft = 30;
+      
+      // Ambil mode game berikutnya dari antrean teracak merata
+      selectedGameMode = getNextGameMode();
+
+      const iconEl = document.getElementById('gameIcon'); 
+      const titleEl = document.getElementById('overlayTitle');
+      const tutorialEl = document.getElementById('overlayTutorial'); 
+      const gameTitleEl = document.getElementById('gameTitle');
       const gameDescEl = document.getElementById('gameDesc');
+      
       gameControls.classList.add('hidden');
       livesContainer.classList.add('hidden');
       typingContainer.classList.add('hidden');
@@ -1693,7 +1710,7 @@
       ball.x = 400; ball.y = 150; ball.dx = 7; ball.dy = -7;
 
       if (selectedGameMode === 0) { for(let i=0; i<8; i++) spawnBalloon(); }
-      else if (selectedGameMode === 1) { for(let i=0; i<4; i++) spawnFallingItem(); }
+      else if (selectedGameMode === 1) { for(let i=0; i<6; i++) spawnFallingItem(); }
       else if (selectedGameMode === 2) { initMemoryCards16(); }
       else if (selectedGameMode === 3) { 
         pipes = []; // Kosongkan pipa awal, baru spawn setelah layar disentuh
@@ -1747,7 +1764,22 @@
     }
 
     function spawnBalloon() { balloons.push({ x: Math.random()*(canvas.width-80)+40, y: canvas.height+40, radius: 22+Math.random()*12, speed: 3.2+Math.random()*2.2, color: `hsl(${Math.random()*360}, 80%, 60%)` }); }
-    function spawnFallingItem() { fallingItems.push({ x: Math.random()*(canvas.width-60)+30, y: -40, speed: 4.2+Math.random()*2.5, symbol: ['⭐','⚙️','🌳','🐂','🌾'][Math.floor(Math.random()*5)] }); }
+    function spawnFallingItem() {
+      // 40% Peluang muncul jebakan, 60% Peluang muncul Lambang Pancasila
+      const isBomb = Math.random() < 0.4; 
+      const symbolList = ['⭐', '⚙️', '🌳', '🐂', '🌾'];
+      const bombList = ['💣', '💀', '🗑️'];
+
+      fallingItems.push({
+        x: Math.random() * (canvas.width - 60) + 30,
+        y: -40,
+        speed: 4.2 + Math.random() * 2.5,
+        symbol: isBomb 
+          ? bombList[Math.floor(Math.random() * bombList.length)] 
+          : symbolList[Math.floor(Math.random() * symbolList.length)],
+        isBomb: isBomb
+      });
+    }
     function spawnPipe() { pipes.push({ x: canvas.width, top: Math.random() * 200 + 40, gap: 125, passed: false }); }
     function spawnStar() { fallingStars.push({ x: Math.random()*(canvas.width-60)+30, y: -20, speed: 3.8+Math.random()*2.2 }); }
 
@@ -1760,15 +1792,44 @@
     }
 
     function drawCatchGame() {
-      ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.roundRect(basket.x, canvas.height - 35, basket.width, basket.height, 10); ctx.fill();
+      // Gambar Keranjang
+      ctx.fillStyle = '#6366f1'; 
+      ctx.beginPath(); 
+      ctx.roundRect(basket.x, canvas.height - 35, basket.width, basket.height, 10); 
+      ctx.fill();
+
       fallingItems.forEach((item, index) => {
-        item.y += item.speed; ctx.font = '36px sans-serif'; ctx.fillText(item.symbol, item.x, item.y);
+        item.y += item.speed; 
+        ctx.font = '36px sans-serif'; 
+        ctx.fillText(item.symbol, item.x, item.y);
+
+        // Deteksi tabrakan item dengan keranjang
         if (item.y >= canvas.height - 45 && item.y <= canvas.height - 15 && item.x >= basket.x - 20 && item.x <= basket.x + basket.width + 20) {
-          playSound('pop'); fallingItems.splice(index, 1); scoreCount++;
-          document.getElementById('gameTarget').innerText = `${scoreCount}/${targetPops}`;
+          
+          if (item.isBomb) {
+            // JIKA MENANGKAP JEBAKAN: Suara fail, kurangi skor (minimal 0)
+            playSound('fail'); 
+            scoreCount = Math.max(0, scoreCount - 1);
+            document.getElementById('gameTarget').innerText = `${scoreCount}/${targetPops}`;
+            
+            // Indikator visual batas keranjang merah saat kena jebakan
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(basket.x - 5, canvas.height - 40, basket.width + 10, basket.height + 10);
+          } else {
+            // JIKA MENANGKAP LAMBANG PANCASILA: Tambah skor
+            playSound('pop'); 
+            scoreCount++;
+            document.getElementById('gameTarget').innerText = `${scoreCount}/${targetPops}`;
+            if (scoreCount >= targetPops) endMiniGame(true);
+          }
+
+          fallingItems.splice(index, 1); 
           spawnFallingItem();
-          if (scoreCount >= targetPops) endMiniGame(true);
-        } else if (item.y > canvas.height + 20) { fallingItems.splice(index, 1); spawnFallingItem(); }
+        } else if (item.y > canvas.height + 20) { 
+          fallingItems.splice(index, 1); 
+          spawnFallingItem(); 
+        }
       });
     }
 
@@ -1833,9 +1894,10 @@
   ctx.beginPath(); 
   ctx.arc(150, bird.y, 18, 0, Math.PI * 2); 
   ctx.fill();
-  ctx.font = '20px sans-serif'; 
+  ctx.font = '28px sans-serif'; // Ukuran diperbesar sedikit agar terlihat jelas
   ctx.textAlign = 'center';
-  ctx.fillText('🦅', 150, bird.y + 7);
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🦅', 150, bird.y);
 }
 
     function initTetris() { tetrisBoard = Array(tetrisRows).fill().map(() => Array(tetrisCols).fill(0)); spawnTetromino(); }
