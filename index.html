@@ -27,110 +27,131 @@
   </script>
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    
-    /* FIX SWEETALERT2 LOADING: HILANGKAN KOTAK/GARIS HITAM KOSONG */
-    .swal2-popup .swal2-html-container,
-    .swal2-popup .swal2-actions,
-    .swal2-popup .swal2-validation-message {
-      background: transparent !important;
-      box-shadow: none !important;
-    }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  
+  /* FIX SWEETALERT2 LOADING: HILANGKAN KOTAK/GARIS HITAM KOSONG */
+  .swal2-popup .swal2-html-container,
+  .swal2-popup .swal2-actions,
+  .swal2-popup .swal2-validation-message {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
 
-    /* Sembunyikan elemen container, radio, dan actions jika kosong */
-    .swal2-html-container:empty,
-    .swal2-radio:empty,
-    .swal2-actions:empty {
-      display: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      border: none !important;
-      background: transparent !important;
-    }
+  /* Sembunyikan elemen container, radio, dan actions jika kosong */
+  .swal2-html-container:empty,
+  .swal2-radio:empty,
+  .swal2-actions:empty {
+    display: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
 
-    /* Hilangkan border/garis bawaan popup SweetAlert2 */
-    .swal2-popup {
-      border: none !important;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    }
+  /* Hilangkan border/garis bawaan popup SweetAlert2 */
+  .swal2-popup {
+    border: none !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  }
 
-    /* STYLE RADIO HANYA BERLAKU JIKA ADA ISINYA (NOT EMPTY) */
-    .swal2-radio:not(:empty) {
-      background: #0f172a !important;
-      border: 1px solid #334155 !important;
-      border-radius: 12px !important;
-      padding: 16px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 12px !important;
-      margin-top: 15px !important;
-    }
-    .swal2-radio label {
-      color: #f8fafc !important;
-      font-size: 0.9rem !important;
-      text-align: left !important;
-      cursor: pointer !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 12px !important;
-      width: 100% !important;
-      padding: 10px 14px !important;
-      border-radius: 8px !important;
-      background: #1e293b !important;
-      transition: background 0.2s !important;
-    }
-    .swal2-radio label:hover { background: #334155 !important; }
-    .swal2-radio input[type="radio"] {
-      margin: 0 !important;
-      accent-color: #6366f1 !important;
-      transform: scale(1.2) !important;
-      cursor: pointer !important;
-      flex-shrink: 0 !important;
-    }
+  /* STYLE RADIO HANYA BERLAKU JIKA ADA ISINYA (NOT EMPTY) */
+  .swal2-radio:not(:empty) {
+    background: #0f172a !important;
+    border: 1px solid #334155 !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-top: 15px !important;
+  }
+  .swal2-radio label {
+    color: #f8fafc !important;
+    font-size: 0.9rem !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    background: #1e293b !important;
+    transition: background 0.2s !important;
+  }
+  .swal2-radio label:hover { background: #334155 !important; }
+  .swal2-radio input[type="radio"] {
+    margin: 0 !important;
+    accent-color: #6366f1 !important;
+    transform: scale(1.2) !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+  }
 
-    /* CSS CHECKBOX GROUP BABAK 3 */
-    .swal2-checkbox-group {
-      display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px;
-    }
-    .swal2-checkbox-group label {
-      background: #0f172a; border: 1px solid #334155; padding: 10px 14px;
-      border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc;
-    }
+  /* CSS CHECKBOX GROUP BABAK 3 */
+  .swal2-checkbox-group {
+    display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 15px;
+  }
+  .swal2-checkbox-group label {
+    background: #0f172a; border: 1px solid #334155; padding: 10px 14px;
+    border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #f8fafc;
+  }
 
-    /* CSS ANIMASI DIALOG POP-UP MODAL */
-    .dialog-backdrop { transition: opacity 0.25s ease-out; }
-    .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
-    .dialog-hidden { visibility: hidden; pointer-events: none; }
-    .dialog-hidden .dialog-backdrop { opacity: 0; }
-    .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
+  /* CSS ANIMASI DIALOG POP-UP MODAL */
+  .dialog-backdrop { transition: opacity 0.25s ease-out; }
+  .dialog-card { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out; }
+  .dialog-hidden { visibility: hidden; pointer-events: none; }
+  .dialog-hidden .dialog-backdrop { opacity: 0; }
+  .dialog-hidden .dialog-card { opacity: 0; transform: scale(0.92) translateY(16px); }
 
-    /* STYLE DRAG & DROP SORTABLEJS (BABAK 1) */
-    .sortable-item {
-      touch-action: manipulation;
-      user-select: none;
-    }
-    .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
-    .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
+  /* STYLE DRAG & DROP SORTABLEJS (BABAK 1) */
+  .sortable-item {
+    touch-action: manipulation;
+    user-select: none;
+  }
+  .drag-ghost { opacity: 0.4; background-color: #dbeafe !important; border-color: #3b82f6 !important; }
+  .drag-chosen { box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3); }
 
-    /* Area Khusus Handle Geser */
-    .drag-handle {
-      touch-action: none;
-    }
+  /* Area Khusus Handle Geser */
+  .drag-handle {
+    touch-action: none;
+  }
 
-    /* STYLE KOTAK MISTERI (BABAK 3) */
-    .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .box-card:hover:not(.opened) {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
-    }
-    #gameCanvas {
-      background: linear-gradient(to bottom, #0f172a, #1e1b4b);
-      border-radius: 12px;
-      cursor: pointer;
-      touch-action: none;
-    }
-  </style>
+  /* EFEK ANIMASI KUSTOM DRAG & DROP PERBAIKAN BABAK 1 */
+  .sortable-ghost-custom {
+    opacity: 0.3 !important;
+    background-color: #eff6ff !important;
+    border: 2px dashed #3b82f6 !important;
+  }
+
+  .sortable-chosen-custom {
+    background-color: #f0f9ff !important;
+    border-color: #0284c7 !important;
+  }
+
+  .sortable-drag-custom {
+    opacity: 0.95 !important;
+    transform: scale(1.02) rotate(1.5deg) !important; /* Efek miring & membesar saat diseret */
+    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.25), 0 8px 10px -6px rgba(59, 130, 246, 0.2) !important;
+    background-color: #ffffff !important;
+    border-color: #2563eb !important;
+    cursor: grabbing !important;
+  }
+
+  /* STYLE KOTAK MISTERI (BABAK 3) */
+  .box-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .box-card:hover:not(.opened) {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+  }
+  #gameCanvas {
+    background: linear-gradient(to bottom, #0f172a, #1e1b4b);
+    border-radius: 12px;
+    cursor: pointer;
+    touch-action: none;
+  }
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased relative text-base">
 
@@ -1153,6 +1174,10 @@
 
     let activeTahap1Dates = [];
 
+    // =========================================================================
+    // REVISI BABAK 1: DRAG & DROP HOLD (TOUGH-HOLD) + KONFIRMASI HAPUS
+    // =========================================================================
+
     function renderBabak1Tahap1(c) {
       c.innerHTML = `<div id="timelineTahap1List" class="space-y-3"></div>`;
       const combined = [...timelineEvents.map(e => ({ id: e.id, date: e.date, isPengecoh: false })), ...tanggalPengecoh];
@@ -1167,46 +1192,73 @@
 
       activeTahap1Dates.forEach((item) => {
         listEl.innerHTML += `
-          <div data-id="${item.id}" class="drag-item p-3.5 bg-slate-50 border-2 border-slate-200 hover:border-blue-400 rounded-2xl transition shadow-sm flex items-center justify-between gap-3 select-none">
+          <div data-id="${item.id}" class="drag-item p-4 bg-white border-2 border-slate-200 hover:border-blue-500 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-between gap-3 select-none cursor-grab active:cursor-grabbing">
             
-            <!-- ZONA TEKS (Aman disentuh untuk Scroll di HP) -->
-            <div class="flex items-center gap-3 flex-1 pointer-events-none">
-              <span class="font-extrabold text-slate-800 text-sm sm:text-base">${item.date}</span>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <!-- TOMBOL HAPUS -->
-              <button onclick="hapusTanggalTahap1(${item.id})" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Hapus Tanggal Pengecoh">
-                <i class="fa-solid fa-trash-can text-base"></i>
-              </button>
-
-              <!-- DRAG HANDLE KHUSUS (Satu-satunya area untuk geser/drag) -->
-              <div class="drag-handle touch-none cursor-grab active:cursor-grabbing p-2 text-slate-400 hover:text-blue-600 active:text-blue-700 transition shrink-0">
-                <i class="fa-solid fa-grip-vertical text-lg pointer-events-none"></i>
+            <!-- INDIKATOR VISUAL DRAG & TEKS TANGGAL -->
+            <div class="flex items-center gap-3.5 flex-1">
+              <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold shrink-0">
+                <i class="fa-solid fa-grip-vertical"></i>
+              </div>
+              <div>
+                <span class="font-extrabold text-slate-800 text-sm sm:text-base block">${item.date}</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 font-semibold">Tahan/Hold untuk menggeser urutan</span>
               </div>
             </div>
+
+            <!-- TOMBOL HAPUS DENGAN KONFIRMASI DIALOG -->
+            <button onclick="konfirmasiHapusTanggal(${item.id}, '${item.date}')" 
+                    class="p-2.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors duration-150 shrink-0" 
+                    title="Hapus Tanggal Pengecoh">
+              <i class="fa-solid fa-trash-can text-lg"></i>
+            </button>
 
           </div>`;
       });
 
       if (sortableInstance) sortableInstance.destroy();
 
-      // KONFIGURASI SORTABLEJS DENGAN HANDLE KHUSUS & DELAY SENTUHAN
+      // KONFIGURASI SORTABLEJS PERBAIKAN: DENGAN DELAY HOLD 300MS & ANIMASI KELAS KUSTOM
       sortableInstance = new Sortable(listEl, {
         draggable: '.drag-item',
-        handle: '.drag-handle',       // Mengembalikan fungsi handle agar area kartu aman untuk scroll
-        animation: 200,
-        ghostClass: 'drag-ghost',
-        chosenClass: 'drag-chosen',
-        delay: 100,                   // Tahan 100ms di layar HP sebelum drag aktif
-        delayOnTouchOnly: true,       // Delay hanya berlaku pada HP/layar sentuh
-        touchStartThreshold: 3,       // Menjaga agar usapan ringan saat scroll tidak memicu drag
-        forceFallback: true,
+        animation: 250,                       // Animasi perpindahan lebih halus (250ms)
+        easing: "cubic-bezier(1, 0, 0, 1)",
+        delay: 300,                           // WAJIB TAHAN / HOLD 300ms agar scroll HP aman
+        delayOnTouchOnly: true,               // Delay tahan berlaku untuk layar sentuh HP
+        touchStartThreshold: 5,               // Toleransi pergerakan jari sebelum memicu drag
+        ghostClass: 'sortable-ghost-custom',  // Efek bayangan kotak asal
+        chosenClass: 'sortable-chosen-custom',// Efek saat kartu dipilih
+        dragClass: 'sortable-drag-custom',    // Efek melayang saat kartu diseret
+        forceFallback: true,                  // Menjamin animasi konsisten di semua browser HP
         fallbackTolerance: 3,
         onEnd: function () {
-          // Menyingkronkan urutan data array activeTahap1Dates dengan urutan elemen HTML setelah di-drag
           const updatedIds = Array.from(listEl.children).map(el => parseInt(el.getAttribute('data-id')));
           activeTahap1Dates = updatedIds.map(id => activeTahap1Dates.find(item => item.id === id));
+        }
+      });
+    }
+
+    // FUNGSI KONFIRMASI HAPUS TANGGAL (SWEETALERT2)
+    function konfirmasiHapusTanggal(id, namaTanggal) {
+      Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: `Apakah Anda yakin ingin menghapus tanggal "${namaTanggal}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        background: '#ffffff',
+        color: '#0f172a',
+        customClass: {
+          popup: 'rounded-3xl border border-slate-100 shadow-xl',
+          confirmButton: 'rounded-xl font-bold px-5 py-2.5 text-sm',
+          cancelButton: 'rounded-xl font-bold px-5 py-2.5 text-sm'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          hapusTanggalTahap1(id);
+          playSound('pop');
         }
       });
     }
