@@ -1891,10 +1891,14 @@
       }
 
       // Gambar Burung Garuda Murni (Tanpa Lingkaran Merah)
+      ctx.save(); // Simpan kondisi canvas saat ini
+      ctx.translate(150, bird.y); // Geser titik koordinat ke posisi burung
+      ctx.scale(-1, 1); // Balik arah secara horizontal (cermin Kiri -> Kanan)
       ctx.font = '28px sans-serif'; 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('🦅', 150, bird.y);
+      ctx.fillText('🦅', 0, 0); // Gambar emoji di titik pusat lokal (0, 0)
+      ctx.restore();
     }
 
     function handleFlappyHit() {
