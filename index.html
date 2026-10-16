@@ -647,14 +647,23 @@
       </div>
 
       <!-- INPUT TYPING GAME -->
-      <div id="typingContainer" class="mt-2 hidden w-full max-w-sm">
-        <div class="flex gap-2">
-          <input type="text" id="typingInput" placeholder="Ketik kata di atas..." class="w-full px-3 py-2 bg-slate-900 border-2 border-yellow-400 rounded-xl text-yellow-300 font-bold text-sm uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-xl">
-          <button onclick="checkTypedWord()" class="bg-emerald-600 active:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow-lg flex items-center justify-center shrink-0 active:scale-95 transition">
-            <i class="fa-solid fa-paper-plane text-base"></i>
-          </button>
-        </div>
-      </div>
+      <!-- KONTANER INPUT KETIK (DIPERBAIKI: RAPI DI BAWAH CANVAS & PAS DI HP) -->
+<div id="typingContainer" class="mt-3 hidden w-full max-w-sm mx-auto px-2">
+  <div class="flex items-center gap-2 w-full">
+    <input 
+      type="text" 
+      id="typingInput" 
+      placeholder="Ketik kata di atas..." 
+      class="flex-1 min-w-0 px-3 py-2.5 bg-slate-900 border-2 border-amber-400 rounded-xl text-amber-300 font-black text-sm sm:text-base uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg"
+    >
+    <button 
+      onclick="checkTypedWord()" 
+      class="bg-emerald-600 active:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg flex items-center justify-center shrink-0 active:scale-95 transition"
+    >
+      <i class="fa-solid fa-paper-plane text-base"></i>
+    </button>
+  </div>
+</div>
 
       <!-- KONTROL TETRIS (DIPERBAIKI: BERADA DI BAWAH CANVAS & RAPI TERBAGI 2 TANGAN) -->
       <div id="gameControls" class="mt-2.5 hidden w-full max-w-sm">
@@ -2231,25 +2240,27 @@
     function drawTypingGame() {
   const targetWord = typingWords[typingIdx];
   
-  // Teks Petunjuk
-  ctx.font = 'bold 20px sans-serif'; 
+  // 1. Teks Petunjuk Atas
+  ctx.font = 'bold 22px sans-serif'; 
   ctx.fillStyle = '#94a3b8'; 
   ctx.textAlign = 'center'; 
   ctx.textBaseline = 'middle';
-  ctx.fillText('Ketik kata berikut:', canvas.width / 2, 140);
+  ctx.fillText('Ketik kata berikut:', canvas.width / 2, 200);
 
-  // Teks Kata Target (DIPERBESAR & MEMBERIKAN BACKGROUND HIGHLIGHT)
+  // 2. Kotak Background Highlight Kata Target
+  const boxWidth = Math.min(600, canvas.width - 80);
   ctx.fillStyle = '#1e293b';
   ctx.beginPath();
-  ctx.roundRect(canvas.width / 2 - 250, 200, 500, 100, 16);
+  ctx.roundRect(canvas.width / 2 - boxWidth / 2, 260, boxWidth, 110, 16);
   ctx.fill();
   ctx.strokeStyle = '#facc15';
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  ctx.font = 'black 48px sans-serif'; // Ukuran font diperbesar dari 42px ke 48px
+  // 3. Teks Kata Target (Besar & Jelas di Tengah Canvas)
+  ctx.font = 'black 42px sans-serif'; 
   ctx.fillStyle = '#facc15';
-  ctx.fillText(targetWord, canvas.width / 2, 250);
+  ctx.fillText(targetWord, canvas.width / 2, 315);
 }
 
     function checkTypedWord() {
