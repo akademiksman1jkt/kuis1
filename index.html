@@ -644,22 +644,40 @@
         <canvas id="gameCanvas" width="800" height="500" class="w-full h-auto aspect-[4/3] max-h-[50vh] sm:max-h-[60vh] object-contain mx-auto border-2 border-indigo-500/50 shadow-inner rounded-xl touch-none"></canvas>
         
         <!-- INPUT TIKET / TYPING GAME -->
-        <div id="typingContainer" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 hidden flex gap-1.5 sm:gap-2 w-11/12 max-w-md z-10">
-          <input type="text" id="typingInput" placeholder="Ketik kata di atas..." class="w-full px-3 py-2 sm:px-4 sm:py-3 bg-slate-900/90 border-2 border-yellow-400 rounded-xl text-yellow-300 font-bold text-sm sm:text-xl uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-2xl">
-          <button onclick="checkTypedWord()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-paper-plane text-base sm:text-xl"></i>
-          </button>
-        </div>
-      </div>
+        <div id="typingContainer" class="mt-3 hidden w-full max-w-md mx-auto">
+  <div class="flex gap-2">
+    <input type="text" id="typingInput" placeholder="Ketik kata di atas..." class="w-full px-4 py-3 bg-slate-900 border-2 border-yellow-400 rounded-xl text-yellow-300 font-black text-lg uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-xl">
+    <button onclick="checkTypedWord()" class="bg-emerald-600 active:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl shadow-lg flex items-center justify-center shrink-0 active:scale-95 transition">
+      <i class="fa-solid fa-paper-plane text-lg"></i>
+    </button>
+  </div>
+</div>
 
       <!-- KONTROL TETRIS / ARROW BUTTONS -->
-      <div id="gameControls" class="mt-2 sm:mt-3 justify-center gap-1.5 sm:gap-3 hidden">
-        <button onclick="handleControl('left')" class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-arrow-left"></i> Kiri</button>
-        <button onclick="handleControl('rotate')" class="bg-amber-500 hover:bg-amber-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-rotate-right"></i> Putar</button>
-        <button onclick="handleControl('right')" class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-arrow-right"></i> Kanan</button>
-        <button onclick="handleControl('down')" class="bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-arrow-down"></i> Jatuh</button>
-      </div>
+      <div id="gameControls" class="mt-3 hidden w-full max-w-md mx-auto px-2">
+  <div class="flex justify-between items-center gap-4">
+    
+    <!-- TANGAN KIRI: PERGERAKAN (KIRI & KANAN) -->
+    <div class="flex gap-2 flex-1">
+      <button onclick="handleControl('left')" class="flex-1 bg-indigo-600 active:bg-indigo-700 text-white py-3.5 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition border-b-4 border-indigo-900 flex items-center justify-center">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <button onclick="handleControl('right')" class="flex-1 bg-indigo-600 active:bg-indigo-700 text-white py-3.5 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition border-b-4 border-indigo-900 flex items-center justify-center">
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
+
+    <!-- TANGAN KANAN: AKSI (PUTAR & JATUH) -->
+    <div class="flex gap-2 flex-1">
+      <button onclick="handleControl('rotate')" class="flex-1 bg-amber-500 active:bg-amber-600 text-white py-3.5 rounded-2xl font-black text-sm shadow-lg active:scale-95 transition border-b-4 border-amber-800 flex items-center justify-center gap-1">
+        <i class="fa-solid fa-rotate-right text-base"></i> Putar
+      </button>
+      <button onclick="handleControl('down')" class="flex-1 bg-emerald-600 active:bg-emerald-700 text-white py-3.5 rounded-2xl font-black text-sm shadow-lg active:scale-95 transition border-b-4 border-emerald-900 flex items-center justify-center gap-1">
+        <i class="fa-solid fa-angles-down text-base"></i> Jatuh
+      </button>
+    </div>
+
+  </div>
 </div>
 
 <!-- MODAL DIALOG NOTIFIKASI -->
@@ -2215,13 +2233,28 @@
     }
 
     function drawTypingGame() {
-      const targetWord = typingWords[typingIdx];
-      ctx.font = 'bold 22px sans-serif'; ctx.fillStyle = '#94a3b8'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(`Ketik kata berikut:`, canvas.width/2, 120);
+  const targetWord = typingWords[typingIdx];
+  
+  // Teks Petunjuk
+  ctx.font = 'bold 20px sans-serif'; 
+  ctx.fillStyle = '#94a3b8'; 
+  ctx.textAlign = 'center'; 
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Ketik kata berikut:', canvas.width / 2, 140);
 
-      ctx.font = 'black 42px sans-serif'; ctx.fillStyle = '#facc15';
-      ctx.fillText(targetWord, canvas.width/2, 190);
-    }
+  // Teks Kata Target (DIPERBESAR & MEMBERIKAN BACKGROUND HIGHLIGHT)
+  ctx.fillStyle = '#1e293b';
+  ctx.beginPath();
+  ctx.roundRect(canvas.width / 2 - 250, 200, 500, 100, 16);
+  ctx.fill();
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.font = 'black 48px sans-serif'; // Ukuran font diperbesar dari 42px ke 48px
+  ctx.fillStyle = '#facc15';
+  ctx.fillText(targetWord, canvas.width / 2, 250);
+}
 
     function checkTypedWord() {
       if (selectedGameMode !== 9) return;
@@ -2269,6 +2302,49 @@
     canvas.addEventListener('mousemove', updatePointerPosition);
     canvas.addEventListener('touchmove', updatePointerPosition);
 
+    // =========================================================================
+    // LOKASI PEMASANGAN: KONTROL GESTUR SENTUHAN (SWIPE / TAP) KHUSUS TETRIS (MODE 4)
+    // =========================================================================
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (selectedGameMode !== 4) return; // Hanya berjalan saat game Tetris
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', (e) => {
+      if (selectedGameMode !== 4) return;
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      const touchDuration = Date.now() - touchStartTime;
+
+      const minSwipeDistance = 30; // Jarak usapan minimal dalam piksel
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Usap Horizontal (Kiri / Kanan)
+        if (Math.abs(deltaX) > minSwipeDistance) {
+          if (deltaX > 0) handleControl('right');
+          else handleControl('left');
+        }
+      } else {
+        // Usap Vertikal (Bawah) / Ketuk (Tap)
+        if (deltaY > minSwipeDistance) {
+          handleControl('down'); // Usap ke bawah -> Balok Jatuh
+        } else if (touchDuration < 250 && Math.abs(deltaX) < 15 && Math.abs(deltaY) < 15) {
+          handleControl('rotate'); // Ketuk ringan -> Putar Balok
+        }
+      }
+    }, { passive: true });
+
+    // =========================================================================
+    // EVENT LISTENER KLIK CANVAS (LAMA ANDA)
+    // =========================================================================
     canvas.addEventListener('click', (e) => {
       if (!overlay.classList.contains('hidden')) return;
       const rect = canvas.getBoundingClientRect();
