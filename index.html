@@ -223,6 +223,34 @@
       font-size: 0.85rem !important;
     }
   }
+    /* =========================================================================
+   MEMAKSA TAMPILAN RESPONSIVE LAYAR HP VERTIKAL (PORTRAIT)
+   ========================================================================= */
+
+@media (max-width: 640px) {
+  /* Memastikan Modal tidak melebihi tinggi layar HP */
+  #gameModal > div {
+    width: 96vw !important;
+    max-height: 94vh !important;
+    padding: 12px !important;
+  }
+
+  /* Canvas Mengikuti Skala HP Secara Otomatis */
+  #gameCanvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 48vh !important; /* Mencegah canvas meluber ke bawah */
+    aspect-ratio: 4 / 3 !important;
+  }
+
+  /* Mengecilkan Teks Judul & Status di HP Vertikal */
+  #gameTitle {
+    font-size: 1.1rem !important;
+  }
+  #gameDesc {
+    font-size: 0.8rem !important;
+  }
+}
 </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased relative text-base">
@@ -577,68 +605,75 @@
   </main>
 
   <!-- MODAL GAME MISTERI (BABAK 3) -->
-  <div id="gameModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="relative bg-slate-800 p-6 rounded-2xl max-w-4xl w-full border border-indigo-500/30 text-center shadow-2xl overflow-hidden text-white">
+  <div id="gameModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4">
+    <!-- POPUP CONTAINER: Menggunakan max-h-[92vh] & overflow-y-auto agar tidak pernah terpotong di layar HP -->
+    <div class="relative bg-slate-800 p-3 sm:p-6 rounded-2xl max-w-4xl w-full border border-indigo-500/30 text-center shadow-2xl overflow-y-auto max-h-[92vh] text-white flex flex-col justify-between my-auto">
       
-      <div id="gameStartOverlay" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center p-6 z-20">
-        <div id="gameIcon" class="text-6xl mb-2 animate-bounce">🔥</div>
-        <h3 id="overlayTitle" class="text-2xl md:text-3xl font-black text-yellow-400 mb-2">TANTANGAN MINI GAME!</h3>
+      <!-- OVERLAY START TUTORIAL GAME -->
+      <div id="gameStartOverlay" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 z-20">
+        <div id="gameIcon" class="text-4xl sm:text-6xl mb-1 sm:mb-2 animate-bounce">🔥</div>
+        <h3 id="overlayTitle" class="text-xl sm:text-3xl font-black text-yellow-400 mb-2">TANTANGAN MINI GAME!</h3>
         
-        <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 max-w-lg mb-6 text-left shadow-inner">
-          <h4 class="text-amber-400 font-bold text-sm uppercase tracking-wider mb-1 flex items-center gap-2">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-3 sm:p-4 max-w-lg mb-4 sm:mb-6 text-left shadow-inner">
+          <h4 class="text-amber-400 font-bold text-xs sm:text-sm uppercase tracking-wider mb-1 flex items-center gap-2">
             <i class="fa-solid fa-circle-info"></i> Cara Bermain (Tutorial):
           </h4>
-          <p id="overlayTutorial" class="text-slate-300 text-sm leading-relaxed">
+          <p id="overlayTutorial" class="text-slate-300 text-xs sm:text-sm leading-relaxed">
             Ikuti petunjuk di layar untuk menyelesaikan mini-game ini.
           </p>
         </div>
 
-        <button onclick="runMiniGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-3.5 px-8 rounded-full text-lg shadow-xl hover:shadow-emerald-500/30 transform transition hover:scale-105 active:scale-95 flex items-center gap-3 cursor-pointer">
-          <i class="fa-solid fa-play text-xl"></i> Mulai Main (Durasi 30 Detik)
+        <button onclick="runMiniGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-2.5 px-6 sm:py-3.5 sm:px-8 rounded-full text-sm sm:text-lg shadow-xl hover:shadow-emerald-500/30 transform transition hover:scale-105 active:scale-95 flex items-center gap-2 sm:gap-3 cursor-pointer">
+          <i class="fa-solid fa-play text-base sm:text-xl"></i> Mulai Main (Durasi 30 Detik)
         </button>
       </div>
 
-      <h2 id="gameTitle" class="text-2xl md:text-3xl font-bold text-yellow-400 mb-1">🎮 TANTANGAN MINI-GAME!</h2>
-      <p id="gameDesc" class="text-slate-300 text-sm md:text-base mb-3">Selesaikan tantangan!</p>
+      <!-- HEADER JUDUL & DESKRIPSI -->
+      <h2 id="gameTitle" class="text-lg sm:text-3xl font-bold text-yellow-400 mb-0.5 sm:mb-1">🎮 TANTANGAN MINI-GAME!</h2>
+      <p id="gameDesc" class="text-slate-300 text-xs sm:text-base mb-2 sm:mb-3">Selesaikan tantangan!</p>
       
-      <div class="flex justify-between items-center px-4 mb-3 text-base md:text-lg font-bold">
+      <!-- STATUS BAR (TARGET, NYAWA, TIMER) -->
+      <div class="flex justify-between items-center px-2 sm:px-4 mb-2 sm:mb-3 text-xs sm:text-lg font-bold bg-slate-900/50 py-1.5 sm:py-2 rounded-xl border border-slate-700/50">
         <span class="text-emerald-400">Target: <span id="gameTarget">0/12</span></span>
         <span id="livesContainer" class="hidden text-rose-400">Nyawa: <span id="livesDisplay">❤️❤️❤️</span></span>
         <span class="text-rose-400">Sisa Waktu: <span id="gameTimer">30</span>s</span>
       </div>
 
-      <div class="relative w-full max-w-[800px] mx-auto">
-        <canvas id="gameCanvas" width="800" height="500" class="w-full h-auto mx-auto border-2 border-indigo-500/50 shadow-inner rounded-xl"></canvas>
+      <!-- CONTAINER CANVAS GAME (Menggunakan aspect-[4/3] & max-h agar otomatis tersetel di HP) -->
+      <div class="relative w-full max-w-[800px] mx-auto flex-1 flex items-center justify-center min-h-0">
+        <canvas id="gameCanvas" width="800" height="500" class="w-full h-auto aspect-[4/3] max-h-[50vh] sm:max-h-[60vh] object-contain mx-auto border-2 border-indigo-500/50 shadow-inner rounded-xl touch-none"></canvas>
         
-        <div id="typingContainer" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden flex gap-2 w-11/12 max-w-md z-10">
-          <input type="text" id="typingInput" placeholder="Ketik kata di atas..." class="w-full px-4 py-3 bg-slate-900/90 border-2 border-yellow-400 rounded-xl text-yellow-300 font-bold text-xl uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-2xl">
-          <button onclick="checkTypedWord()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg flex items-center justify-center">
-            <i class="fa-solid fa-paper-plane text-xl"></i>
+        <!-- INPUT TIKET / TYPING GAME -->
+        <div id="typingContainer" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 hidden flex gap-1.5 sm:gap-2 w-11/12 max-w-md z-10">
+          <input type="text" id="typingInput" placeholder="Ketik kata di atas..." class="w-full px-3 py-2 sm:px-4 sm:py-3 bg-slate-900/90 border-2 border-yellow-400 rounded-xl text-yellow-300 font-bold text-sm sm:text-xl uppercase tracking-wider text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-2xl">
+          <button onclick="checkTypedWord()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-paper-plane text-base sm:text-xl"></i>
           </button>
         </div>
       </div>
 
-      <div id="gameControls" class="mt-3 flex justify-center gap-3 hidden">
-        <button onclick="handleControl('left')" class="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-arrow-left"></i> Kiri</button>
-        <button onclick="handleControl('rotate')" class="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-rotate-right"></i> Putar</button>
-        <button onclick="handleControl('right')" class="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-arrow-right"></i> Kanan</button>
-        <button onclick="handleControl('down')" class="bg-emerald-600 hover:bg-emerald-700 px-5 py-2 rounded-lg font-bold text-lg"><i class="fa-solid fa-arrow-down"></i> Jatuh</button>
+      <!-- KONTROL TETRIS / ARROW BUTTONS -->
+      <div id="gameControls" class="mt-2 sm:mt-3 justify-center gap-1.5 sm:gap-3 hidden">
+        <button onclick="handleControl('left')" class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-arrow-left"></i> Kiri</button>
+        <button onclick="handleControl('rotate')" class="bg-amber-500 hover:bg-amber-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-rotate-right"></i> Putar</button>
+        <button onclick="handleControl('right')" class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-arrow-right"></i> Kanan</button>
+        <button onclick="handleControl('down')" class="bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-lg flex items-center gap-1"><i class="fa-solid fa-arrow-down"></i> Jatuh</button>
       </div>
     </div>
-  </div>
+</div>
 
-  <!-- MODAL DIALOG NOTIFIKASI -->
-  <div id="dialogNotifikasiWrapper" class="fixed inset-0 z-50 flex items-center justify-center p-4 dialog-hidden">
+<!-- MODAL DIALOG NOTIFIKASI -->
+<div id="dialogNotifikasiWrapper" class="fixed inset-0 z-50 flex items-center justify-center p-4 dialog-hidden">
     <div onclick="tutupDialogNotifikasi()" class="dialog-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-    <div class="dialog-card bg-white rounded-3xl max-w-[92vw] sm:max-w-md w-full p-6 sm:p-10 text-center shadow-2xl relative z-10 border border-slate-100">
-      <div id="dialogIconContainer" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-5 sm:mb-6">
+    <div class="dialog-card bg-white rounded-3xl max-w-[92vw] sm:max-w-md w-full p-5 sm:p-8 text-center shadow-2xl relative z-10 border border-slate-100 my-auto">
+      <div id="dialogIconContainer" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 flex items-center justify-center mx-auto mb-3 sm:mb-5">
         <div id="dialogIconInner"></div>
       </div>
-      <h2 id="dialogTitle" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight mb-2 sm:mb-3 uppercase">JUDUL NOTIFIKASI</h2>
-      <p id="dialogMessage" class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 max-w-xs mx-auto">Pesan informasi detail.</p>
-      <button id="dialogBtnAction" onclick="tutupDialogNotifikasi()" class="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition duration-200 text-xs sm:text-sm">Tutup</button>
+      <h2 id="dialogTitle" class="text-lg sm:text-2xl font-extrabold text-slate-800 tracking-tight mb-2 uppercase">JUDUL NOTIFIKASI</h2>
+      <p id="dialogMessage" class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 max-w-xs mx-auto">Pesan informasi detail.</p>
+      <button id="dialogBtnAction" onclick="tutupDialogNotifikasi()" class="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-xl shadow-md transition duration-200 text-xs sm:text-sm">Tutup</button>
     </div>
-  </div>
+</div>
 
   <!-- SKRIP JAVASCRIPT UTAMA -->
   <script>
