@@ -2916,14 +2916,13 @@
   .then(data => {
     Swal.close();
     if (data.status === "success") {
-      const skorAkhir = data.skorAkhir !== undefined ? data.skorAkhir : skorMurni;
-      
-      rekapSiswa[babak].skor = skorAkhir;
+      // 1. TAMPILAN UI SELALU MENAMPILKAN SKOR MURNI
+      rekapSiswa[babak].skor = skorMurni;
 
-      // HANYA LOLOS JIKA SERVER MENGONFIRMASI STATUS "LOLOS" (SKOR AKHIR >= 85)
-      const isLolos = data.statusLolos ? (data.statusLolos === "LOLOS") : (skorAkhir >= 85);
+      // 2. KELULUSAN UI BERBASIS SKOR MURNI >= 85 (ATAU BISA LANJUT UI DARI SERVER)
+      const isLolosUI = (skorMurni >= 85) || (data.bisaLanjutUI === true);
 
-      if (isLolos) {
+      if (isLolosUI) {
         rekapSiswa[babak].status = 'lolos';
         
         if (babak < 5) {
@@ -2932,7 +2931,7 @@
 
         tampilkanDialogNotif(
           'SELAMAT! 🎉', 
-          `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan!`, 
+          `Skor Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Kamu berhasil menyelesaikan babak ini!`, 
           'info', 
           'Kembali ke Beranda', 
           kembaliKeDashboard
@@ -2940,14 +2939,13 @@
       } else {
         rekapSiswa[babak].status = 'terbuka';
         
-        // PASTI KUNCI KEMBALI BABAK BERIKUTNYA JIKA SEBELUMNYA SEMPAT TERBUKA
         if (babak < 5) {
           rekapSiswa[babak + 1].status = 'terkunci';
         }
 
         tampilkanDialogNotif(
           'BELUM LOLOS! ❌', 
-          `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Silakan ulangi babak ini!`, 
+          `Skor Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan ulangi babak ini!`, 
           'warning', 
           'Coba Lagi', 
           () => bukaBabak(babak)
@@ -2968,11 +2966,11 @@
     if (skorMurni >= 85) {
       rekapSiswa[babak].status = 'lolos';
       if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
-      tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
+      tampilkanDialogNotif('SELAMAT! 🎉', `Skor Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
     } else {
       rekapSiswa[babak].status = 'terbuka';
       if (babak < 5) rekapSiswa[babak + 1].status = 'terkunci';
-      tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+      tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
     }
     updateBerandaCardsUI();
   });
