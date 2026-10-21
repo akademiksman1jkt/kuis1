@@ -1083,9 +1083,17 @@
       Swal.close();
       if (data.status === "success") {
         const babakLolos = data.completedBabak || 0;
+        const detail = data.detailBabak || {};
 
-        // Buka akses babak yang sudah dilolosi dan babak berikutnya
+        // Loop untuk memperbarui skor, percobaan, dan status setiap babak
         for (let b = 1; b <= 5; b++) {
+          // 1. SINKRONKAN SKOR DAN PERCOBAAN DARI SERVER
+          if (detail[b]) {
+            rekapSiswa[b].skor = detail[b].skor !== undefined ? detail[b].skor : null;
+            rekapSiswa[b].percobaan = detail[b].percobaan || 0;
+          }
+
+          // 2. TENTUKAN STATUS KELULUSAN / AKSES BABAK
           if (b <= babakLolos) {
             rekapSiswa[b].status = 'lolos';
           } else if (b === babakLolos + 1) {
@@ -1095,10 +1103,10 @@
           }
         }
 
-        // Perbarui tampilan kartu babak di beranda
+        // 3. RE-RENDER TAMPILAN KARTU DI BERANDA
         updateBerandaCardsUI();
 
-        // Tampilkan notifikasi pemulihan progress
+        // 4. NOTIFIKASI
         if (babakLolos > 0) {
           tampilkanDialogNotif(
             'SELAMAT DATANG KEMBALI! 👋', 
