@@ -403,9 +403,9 @@
                     <strong id="valPercobaanB1" class="text-slate-700 font-bold">0x</strong>
                   </div>
                 </div>
-                <button onclick="bukaBabak(1)" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
-                  <span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>
-                </button>
+                <button id="btnActionB1" onclick="bukaBabak(1)" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+  <span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>
+</button>
               </div>
             </div>
 
@@ -989,61 +989,65 @@
     // =========================================================================
 
     function handleLogin(e) {
-      e.preventDefault();
-      const usernameInput = document.getElementById("inputNisn").value.trim();
-      const passwordInput = document.getElementById("inputPassword").value.trim();
+  e.preventDefault();
+  const usernameInput = document.getElementById("inputNisn").value.trim();
+  const passwordInput = document.getElementById("inputPassword").value.trim();
 
-      Swal.fire({ 
-        title: "Memeriksa Akun...", 
-        showConfirmButton: false, 
-        allowOutsideClick: false,
-        background: '#ffffff',
-        color: '#0f172a',
-        customClass: { htmlContainer: 'hidden' },
-        didOpen: () => {
-          Swal.showLoading();
-          const htmlEl = Swal.getHtmlContainer();
-          if (htmlEl) htmlEl.style.display = 'none';
-        } 
-      });
+  Swal.fire({ 
+    title: "Memeriksa Akun...", 
+    showConfirmButton: false, 
+    allowOutsideClick: false,
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { htmlContainer: 'hidden' },
+    didOpen: () => {
+      Swal.showLoading();
+      const htmlEl = Swal.getHtmlContainer();
+      if (htmlEl) htmlEl.style.display = 'none';
+    } 
+  });
 
-      const payload = { action: "login", username: usernameInput, password: passwordInput };
+  const payload = { action: "login", username: usernameInput, password: passwordInput };
 
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        Swal.close();
-        if (data.status === "success") {
-          siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    Swal.close();
+    if (data.status === "success") {
+      siswaCurrent = { nisn: data.username, nama: data.nama || data.username, role: data.role, kelas: data.kelas || 'X-1' };
 
-          if (data.role === "admin") {
-            document.getElementById("secLogin").classList.add("hidden");
-            document.getElementById("secAdmin").classList.remove("hidden");
-            document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, ${siswaCurrent.nama}!`;
-            renderAdminTab(1);
-          } else {
-            initLoginBerandaSiswa();
-          }
-        } else {
-          tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
-        }
-      })
-      .catch(() => {
-        Swal.close();
-        if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
-          siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
-          document.getElementById("secLogin").classList.add("hidden");
-          document.getElementById("secAdmin").classList.remove("hidden");
-          renderAdminTab(1);
-        } else {
-          siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
-          initLoginBerandaSiswa();
-        }
-      });
+      if (data.role === "admin") {
+        document.getElementById("secLogin").classList.add("hidden");
+        document.getElementById("secAdmin").classList.remove("hidden");
+        document.getElementById("adminWelcomeTitle").innerText = `Selamat Datang, ${siswaCurrent.nama}!`;
+        renderAdminTab(1);
+      } else {
+        initLoginBerandaSiswa();
+        // INTEGRASI BARU: Cek & buka babak sesuai log di Google Sheets saat siswa login
+        cekDanBukaBabakSiswa(siswaCurrent.nisn);
+      }
+    } else {
+      tampilkanDialogNotif('LOGIN GAGAL', data.message || 'Username/NISN atau Password salah!', 'error');
     }
+  })
+  .catch(() => {
+    Swal.close();
+    if (usernameInput.toLowerCase() === "admin" || passwordInput === "admin123") {
+      siswaCurrent = { nisn: "admin", nama: "Administrator Utama", role: "admin", kelas: "admin" };
+      document.getElementById("secLogin").classList.add("hidden");
+      document.getElementById("secAdmin").classList.remove("hidden");
+      renderAdminTab(1);
+    } else {
+      siswaCurrent = { nisn: usernameInput, nama: "Siswa NISN " + usernameInput, role: "siswa", kelas: "X-1" };
+      initLoginBerandaSiswa();
+      // FALLBACK INTEGRASI: Cek progress meskipun fetch POST login offline
+      cekDanBukaBabakSiswa(siswaCurrent.nisn);
+    }
+  });
+}
 
     function initLoginBerandaSiswa() {
       document.getElementById("labelUserRole").innerText = "Profil Siswa Aktif";
@@ -1060,86 +1064,146 @@
 
       updateBerandaCardsUI();
     }
+    // =========================================================================
+    // FITUR BARU: CEK PROGRESS KELULUSAN DARI TAB LOG_JAWABAN GOOGLE SHEETS
+    // =========================================================================
+    function cekDanBukaBabakSiswa(idSiswa) {
+  Swal.fire({ 
+    title: "Memuat Progress Siswa...", 
+    showConfirmButton: false, 
+    allowOutsideClick: false,
+    background: '#ffffff',
+    color: '#0f172a',
+    didOpen: () => { Swal.showLoading(); } 
+  });
+
+  fetch(`${APPS_SCRIPT_URL}?action=checkProgress&idSiswa=${encodeURIComponent(idSiswa)}`)
+    .then(res => res.json())
+    .then(data => {
+      Swal.close();
+      if (data.status === "success") {
+        const babakLolos = data.completedBabak || 0;
+
+        // Buka akses babak yang sudah dilolosi dan babak berikutnya
+        for (let b = 1; b <= 5; b++) {
+          if (b <= babakLolos) {
+            rekapSiswa[b].status = 'lolos';
+          } else if (b === babakLolos + 1) {
+            rekapSiswa[b].status = 'terbuka';
+          } else {
+            rekapSiswa[b].status = 'terkunci';
+          }
+        }
+
+        // Perbarui tampilan kartu babak di beranda
+        updateBerandaCardsUI();
+
+        // Tampilkan notifikasi pemulihan progress
+        if (babakLolos > 0) {
+          tampilkanDialogNotif(
+            'SELAMAT DATANG KEMBALI! 👋', 
+            `Data kamu terdeteksi telah LOLOS hingga Babak ${babakLolos}. Silakan lanjutkan ke Babak ${Math.min(5, babakLolos + 1)}!`, 
+            'info'
+          );
+        }
+      }
+    })
+    .catch(err => {
+      Swal.close();
+      console.error("Gagal mengecek progress server:", err);
+      updateBerandaCardsUI();
+    });
+}
 
     function updateBerandaCardsUI() {
-      if (isAdminPreviewMode) {
-        document.getElementById("bannerAdminPreview").classList.remove("hidden");
-        document.getElementById("labelUserRole").innerText = "Pengawas Admin";
-        document.getElementById("dispNama").innerText = siswaCurrent.nama + " (Mode Pratinjau)";
-        document.getElementById("dispNisn").innerText = `AKUN: ${siswaCurrent.nisn}`;
+  if (isAdminPreviewMode) {
+    document.getElementById("bannerAdminPreview").classList.remove("hidden");
+    document.getElementById("labelUserRole").innerText = "Pengawas Admin";
+    document.getElementById("dispNama").innerText = siswaCurrent.nama + " (Mode Pratinjau)";
+    document.getElementById("dispNisn").innerText = `AKUN: ${siswaCurrent.nisn}`;
 
-        for (let i = 1; i <= 5; i++) {
-          const card = document.getElementById(`cardBabak${i}`);
-          const badge = document.getElementById(`badgeStatusB${i}`);
-          const btnAction = document.getElementById(`btnActionB${i}`);
-
-          if (card) card.className = "bg-white border-2 border-amber-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700";
-            badge.innerText = "Pratinjau Admin";
-          }
-          if (btnAction) {
-            btnAction.disabled = false;
-            btnAction.className = "w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
-            btnAction.innerHTML = `<span>Buka Babak</span> <i class="fa-solid fa-eye"></i>`;
-          }
-        }
-        return;
+    for (let i = 1; i <= 5; i++) {
+      const card = document.getElementById(`cardBabak${i}`);
+      const badge = document.getElementById(`badgeStatusB${i}`);
+      let btnAction = document.getElementById(`btnActionB${i}`);
+      if (i === 1 && !btnAction) {
+        const card1 = document.getElementById('cardBabak1');
+        if (card1) btnAction = card1.querySelector('button');
       }
 
-      document.getElementById("bannerAdminPreview").classList.add("hidden");
-      let totalPassed = 0;
-
-      for (let i = 1; i <= 5; i++) {
-        const item = rekapSiswa[i];
-        const card = document.getElementById(`cardBabak${i}`);
-        const badge = document.getElementById(`badgeStatusB${i}`);
-        const valScore = document.getElementById(`valScoreB${i}`);
-        const valPercobaan = document.getElementById(`valPercobaanB${i}`);
-        const btnAction = document.getElementById(`btnActionB${i}`);
-
-        if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
-        if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
-
-        if (item.status === 'lolos') {
-          totalPassed++;
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
-            badge.innerText = "🎉 Lolos (≥85%)";
-          }
-          if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-          if (btnAction && i > 1) {
-            btnAction.disabled = false;
-            btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
-            btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
-          }
-        } else if (item.status === 'terbuka') {
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
-            badge.innerText = "Terbuka";
-          }
-          if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
-          if (btnAction && i > 1) {
-            btnAction.disabled = false;
-            btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
-            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
-          }
-        } else {
-          if (badge) {
-            badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
-            badge.innerText = "🔒 Terkunci";
-          }
-          if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
-          if (btnAction && i > 1) {
-            btnAction.disabled = true;
-            btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
-            btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
-          }
-        }
+      if (card) card.className = "bg-white border-2 border-amber-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700";
+        badge.innerText = "Pratinjau Admin";
       }
-
-      document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
+      if (btnAction) {
+        btnAction.disabled = false;
+        btnAction.className = "w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+        btnAction.innerHTML = `<span>Buka Babak</span> <i class="fa-solid fa-eye"></i>`;
+      }
     }
+    return;
+  }
+
+  document.getElementById("bannerAdminPreview").classList.add("hidden");
+  let totalPassed = 0;
+
+  for (let i = 1; i <= 5; i++) {
+    const item = rekapSiswa[i];
+    const card = document.getElementById(`cardBabak${i}`);
+    const badge = document.getElementById(`badgeStatusB${i}`);
+    const valScore = document.getElementById(`valScoreB${i}`);
+    const valPercobaan = document.getElementById(`valPercobaanB${i}`);
+    
+    // Penanganan selector tombol: mencakup Babak 1 dan Babak 2-5
+    let btnAction = document.getElementById(`btnActionB${i}`);
+    if (i === 1 && !btnAction) {
+      const card1 = document.getElementById('cardBabak1');
+      if (card1) btnAction = card1.querySelector('button');
+    }
+
+    if (valScore) valScore.innerText = item.skor !== null ? `${item.skor}` : '--';
+    if (valPercobaan) valPercobaan.innerText = `${item.percobaan}x`;
+
+    if (item.status === 'lolos') {
+      totalPassed++;
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
+        badge.innerText = "🎉 Lolos (≥85%)";
+      }
+      if (card) card.className = "bg-white border-2 border-emerald-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+      if (btnAction) {
+        btnAction.disabled = false;
+        btnAction.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+        btnAction.innerHTML = `<span>Ulangi Babak</span> <i class="fa-solid fa-rotate-right"></i>`;
+      }
+    } else if (item.status === 'terbuka') {
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700";
+        badge.innerText = "Terbuka";
+      }
+      if (card) card.className = "bg-white border-2 border-blue-500 rounded-3xl p-5 flex flex-col justify-between shadow-md hover:shadow-lg transition";
+      if (btnAction) {
+        btnAction.disabled = false;
+        btnAction.className = "w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer";
+        btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-arrow-right"></i>`;
+      }
+    } else {
+      if (badge) {
+        badge.className = "text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-500";
+        badge.innerText = "🔒 Terkunci";
+      }
+      if (card) card.className = "bg-slate-50 border-2 border-slate-200 opacity-60 rounded-3xl p-5 flex flex-col justify-between transition";
+      if (btnAction) {
+        btnAction.disabled = true;
+        btnAction.className = "w-full py-2.5 bg-slate-300 text-slate-500 cursor-not-allowed font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5";
+        btnAction.innerHTML = `<span>Mulai Babak</span> <i class="fa-solid fa-lock"></i>`;
+      }
+    }
+  }
+
+  document.getElementById("txtTotalProgres").innerText = `${totalPassed} / 5 Babak`;
+}
 
     function lihatModeSiswaPreview() {
       isAdminPreviewMode = true;
