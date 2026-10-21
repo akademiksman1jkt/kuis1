@@ -2874,74 +2874,101 @@
     }
 
     function kirimKeAppsScript(babak, percobaan, skorMurni) {
-      Swal.fire({ 
-        title: "Mengirim ...", 
-        html: "", 
-        showConfirmButton: false, 
-        allowOutsideClick: false,
-        background: '#ffffff',
-        color: '#0f172a',
-        didOpen: () => {
-          Swal.showLoading();
-          const htmlContainer = Swal.getHtmlContainer();
-          if (htmlContainer) {
-            htmlContainer.style.display = 'none';
-          }
-        } 
-      });
+  Swal.fire({ 
+    title: "Mengirim ...", 
+    html: "", 
+    showConfirmButton: false, 
+    allowOutsideClick: false,
+    background: '#ffffff',
+    color: '#0f172a',
+    didOpen: () => {
+      Swal.showLoading();
+      const htmlContainer = Swal.getHtmlContainer();
+      if (htmlContainer) {
+        htmlContainer.style.display = 'none';
+      }
+    } 
+  });
 
-      const payload = {
-        action: "submitScore",
-        idSiswa: siswaCurrent.nisn,
-        namaSiswa: siswaCurrent.nama,
-        babak: babak,
-        percobaan: percobaan,
-        skorMurni: skorMurni,
-        jawaban: { timestamp: new Date() }
-      };
+  const payload = {
+    action: "submitScore",
+    idSiswa: siswaCurrent.nisn,
+    namaSiswa: siswaCurrent.nama,
+    babak: babak,
+    percobaan: percobaan,
+    skorMurni: skorMurni,
+    jawaban: { timestamp: new Date() }
+  };
 
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        Swal.close();
-        if (data.status === "success") {
-          const skorAkhir = data.skorAkhir || skorMurni;
-          
-          rekapSiswa[babak].skor = skorAkhir;
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    Swal.close();
+    if (data.status === "success") {
+      const skorAkhir = data.skorAkhir !== undefined ? data.skorAkhir : skorMurni;
+      
+      rekapSiswa[babak].skor = skorAkhir;
 
-          if (skorAkhir >= 85 || data.bisaLanjut) {
-            rekapSiswa[babak].status = 'lolos';
-            
-            if (babak < 5) {
-              rekapSiswa[babak + 1].status = 'terbuka';
-            }
+      // HANYA LOLOS JIKA SERVER MENGONFIRMASI STATUS "LOLOS" (SKOR AKHIR >= 85)
+      const isLolos = data.statusLolos ? (data.statusLolos === "LOLOS") : (skorAkhir >= 85);
 
-            tampilkanDialogNotif('SELAMAT! 🎉', `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
-          } else {
-            rekapSiswa[babak].status = 'terbuka';
-            tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Data tersimpan. Silakan ulangi babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
-          }
-        } else {
-          tampilkanDialogNotif('ERROR SERVER', data.message, 'error');
+      if (isLolos) {
+        rekapSiswa[babak].status = 'lolos';
+        
+        if (babak < 5) {
+          rekapSiswa[babak + 1].status = 'terbuka';
         }
-      })
-      .catch(() => {
-        Swal.close();
-        rekapSiswa[babak].skor = skorMurni;
 
-        if (skorMurni >= 85) {
-          rekapSiswa[babak].status = 'lolos';
-          if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
-          tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
-        } else {
-          rekapSiswa[babak].status = 'terbuka';
-          tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+        tampilkanDialogNotif(
+          'SELAMAT! 🎉', 
+          `Skor Akhir Babak ${babak}: ${skorAkhir} (Lolos Target ≥ 85%). Data berhasil disimpan!`, 
+          'info', 
+          'Kembali ke Beranda', 
+          kembaliKeDashboard
+        );
+      } else {
+        rekapSiswa[babak].status = 'terbuka';
+        
+        // PASTI KUNCI KEMBALI BABAK BERIKUTNYA JIKA SEBELUMNYA SEMPAT TERBUKA
+        if (babak < 5) {
+          rekapSiswa[babak + 1].status = 'terkunci';
         }
-      });
+
+        tampilkanDialogNotif(
+          'BELUM LOLOS! ❌', 
+          `Skor Akhir Babak ${babak}: ${skorAkhir} (Di bawah 85%). Silakan ulangi babak ini!`, 
+          'warning', 
+          'Coba Lagi', 
+          () => bukaBabak(babak)
+        );
+      }
+      
+      // Update tampilan kartu di beranda
+      updateBerandaCardsUI();
+    } else {
+      tampilkanDialogNotif('ERROR SERVER', data.message, 'error');
     }
+  })
+  .catch(() => {
+    Swal.close();
+    rekapSiswa[babak].skor = skorMurni;
+
+    // FALLBACK OFFLINE: Hanya lolos jika skor murni >= 85
+    if (skorMurni >= 85) {
+      rekapSiswa[babak].status = 'lolos';
+      if (babak < 5) rekapSiswa[babak + 1].status = 'terbuka';
+      tampilkanDialogNotif('SELAMAT! 🎉', `Skor Murni Babak ${babak}: ${skorMurni} (Lolos Target ≥ 85%). Hasil berhasil direkap!`, 'info', 'Kembali ke Beranda', kembaliKeDashboard);
+    } else {
+      rekapSiswa[babak].status = 'terbuka';
+      if (babak < 5) rekapSiswa[babak + 1].status = 'terkunci';
+      tampilkanDialogNotif('BELUM LOLOS! ❌', `Skor Murni Babak ${babak}: ${skorMurni} (Di bawah 85%). Silakan mengulang babak ini!`, 'warning', 'Coba Lagi', () => bukaBabak(babak));
+    }
+    updateBerandaCardsUI();
+  });
+}
     // 1. Matikan Klik Kanan
     document.addEventListener('contextmenu', (e) => e.preventDefault());
 
